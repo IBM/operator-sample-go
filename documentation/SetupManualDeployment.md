@@ -55,3 +55,25 @@ Delete all resources:
 $ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
 $ make undeploy IMG="$REGISTRY/$ORG/$IMAGE"
 ```
+
+Test the conversions between v1alpha1 and v1beta1:
+
+v1alpha1:
+
+```
+$ kubectl apply -f config/samples/application.sample_v1alpha1_application.yaml
+$ kubectl delete -f config/samples/application.sample_v1alpha1_application.yaml
+$ kubectl exec -n application-alpha $(kubectl get pods -n application-alpha | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
+$ kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-alpha -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/" 
+$ kubectl get applications.v1beta1.application.sample.ibm.com/application -n application-alpha -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/" 
+```
+
+v1beta1:
+
+```
+$ kubectl apply -f config/samples/application.sample_v1beta1_application.yaml
+$ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
+$ kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
+$ kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/" 
+$ kubectl get applications.v1beta1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/" 
+```
