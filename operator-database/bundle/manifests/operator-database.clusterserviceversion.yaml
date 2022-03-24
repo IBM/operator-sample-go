@@ -119,7 +119,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/nheidloff/database-controller:v1
+                image: docker.io/ibm/database-operator:v1.0.0
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -199,5 +199,5 @@ spec:
   maturity: alpha
   provider:
     name: database.sample.third.party
-    url: https://github.com/nheidloff/operator-sample-go
+    url: https://github.com/ibm/operator-sample-go
   version: 0.0.1

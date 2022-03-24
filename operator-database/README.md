@@ -9,7 +9,7 @@ The instructions below assume that you use the managed Kubernetes service on the
 Get the code:
 
 ```
-$ https://github.com/nheidloff/operator-sample-go.git
+$ https://github.com/ibm/operator-sample-go.git
 $ cd operator-database
 $ code .
 ```
@@ -21,23 +21,45 @@ $ ibmcloud login -a cloud.ibm.com -r eu-de -g resource-group-niklas-heidloff7 --
 $ ibmcloud ks cluster config --cluster xxxxxxx
 ```
 
-Configure Kubernetes:
+Install custom resource definition:
 
 ```
 $ kubectl apply -f config/crd/bases/database.sample.third.party_databases.yaml
 ```
 
-From a terminal in VSCode run these commands:
+From a terminal in VSCode run this command:
 
 ```
 $ make install run
-$ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml -n database 
 ```
 
-You can now see the custom resource in the Kubernetes dashboard or by using kubectl.
-
-All resources can be deleted:
+From a second terminal run this command:
 
 ```
-$ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml -n database
+$ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
+```
+
+Delete all resources:
+
+```
+$ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
+$ make uninstall
+```
+
+Build and push the image:
+
+```
+$ make docker-build docker-push IMG="docker.io/nheidloff/database-operator:v1.0.0"
+```
+
+Deploy the operator:
+
+```
+$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.0"
+```
+
+Undeploy the operator:
+
+```
+$ make undeploy IMG="$REGISTRY/$ORG/$IMAGE"
 ```

@@ -5,7 +5,7 @@ plugins:
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}
 projectName: operator-database
-repo: github.com/nheidloff/operator-sample-go/operator-database
+repo: github.com/ibm/operator-sample-go/operator-database
 resources:
 - api:
     crdVersion: v1
@@ -14,6 +14,6 @@ resources:
   domain: third.party
   group: database.sample
   kind: Database
-  path: github.com/nheidloff/operator-sample-go/operator-database/api/v1alpha1
+  path: github.com/ibm/operator-sample-go/operator-database/api/v1alpha1
   version: v1alpha1
 version: "3"
