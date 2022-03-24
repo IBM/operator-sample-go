@@ -45,8 +45,8 @@ Verify the setup:
 ```
 $ kubectl get all -n operator-application-system
 $ kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
-$ POD_NAME=$(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}')
 $ kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
+$ kubectl logs -n operator-application-system $(kubectl get pods -n operator-application-system | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager
 ```
 
 Delete all resources:

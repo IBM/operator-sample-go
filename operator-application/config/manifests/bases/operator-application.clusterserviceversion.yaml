@@ -13,6 +13,10 @@ spec:
     - displayName: Application
       kind: Application
       name: applications.application.sample.ibm.com
+      version: v1beta1
+    - displayName: Application
+      kind: Application
+      name: applications.application.sample.ibm.com
       version: v1alpha1
   description: operator-application
   displayName: operator-application
