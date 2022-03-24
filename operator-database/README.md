@@ -1,10 +1,8 @@
 # Database Operator
 
-See below for instructions how to set up and run the database operator as well as the used commands for the development of it.
+See below for instructions how to set up and run the database operator either locally or on Kubernetes.
 
-### Setup and Usage
-
-The instructions below assume that you use the managed Kubernetes service on the IBM Cloud. You can also use any other Kubernetes service or OpenShift.
+Install [prerequisites](../documentation/Prerequisites.md).
 
 Get the code:
 
@@ -21,13 +19,9 @@ $ ibmcloud login -a cloud.ibm.com -r eu-de -g resource-group-niklas-heidloff7 --
 $ ibmcloud ks cluster config --cluster xxxxxxx
 ```
 
-Install custom resource definition:
+**Run operator locally**
 
-```
-$ kubectl apply -f config/crd/bases/database.sample.third.party_databases.yaml
-```
-
-From a terminal in VSCode run this command:
+From a terminal run this command:
 
 ```
 $ make install run
@@ -46,20 +40,23 @@ $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
 $ make uninstall
 ```
 
-Build and push the image:
-
-```
-$ make docker-build docker-push IMG="docker.io/nheidloff/database-operator:v1.0.1"
-```
+**Run operator on Kubernetes**
 
 Deploy the operator:
 
 ```
-$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.1"
+$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.2"
 ```
 
-Undeploy the operator:
+From a terminal run this command:
 
 ```
-$ make undeploy IMG="docker.io/nheidloff/database-operator:v1.0.1"
+$ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
+```
+
+Delete all resources:
+
+```
+$ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
+$ make undeploy IMG="docker.io/nheidloff/database-operator:v1.0.2"
 ```
