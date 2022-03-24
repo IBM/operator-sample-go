@@ -7,4 +7,4 @@ spec:
   displayName: operator-application-catalog
   publisher: Niklas Heidloff
   sourceType: grpc
-  image: docker.io/ibm/application-controller-catalog:v1
+  image: docker.io/nheidloff/application-operator-catalog:v1.0.0

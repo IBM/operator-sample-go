@@ -9,7 +9,7 @@ $ operator-sdk olm install latest
 $ kubectl get all -n olm
 ```
 
-Build and push the Bundle Image:
+Build and push the bundle image:
 
 ```
 $ make generate manifests
@@ -32,10 +32,23 @@ $ operator-sdk run bundle "$REGISTRY/$ORG/$BUNDLE_IMAGE" -n operators
 
 *2. Deploy via kubectl:*
 
+Build and push the catalog image:
+
+```
+$ make catalog-build docker-push CATALOG_IMG="$REGISTRY/$ORG/$CATALOG_IMAGE" BUNDLE_IMGS="$REGISTRY/$ORG/$BUNDLE_IMAGE" IMG="$REGISTRY/$ORG/$CATALOG_IMAGE"
+```
+
+Define "$REGISTRY/$ORG/$CATALOG_IMAGE" in olm/catalogsource.yaml and invoke these commands.
+
 ```
 $ kubectl apply -f olm/catalogsource.yaml
 $ kubectl apply -f olm/subscription.yaml 
 $ kubectl get installplans -n operators
+```
+
+If the install plan requires manual approval, use this command:
+
+```
 $ kubectl -n operators patch installplan install-xxxxx -p '{"spec":{"approved":true}}' --type merge
 ```
 
@@ -77,7 +90,7 @@ $ operator-sdk olm uninstall
 
 ```
 $ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
-$ kubectl delete -f olm/catalogsource.yaml
 $ kubectl delete -f olm/subscription.yaml
+$ kubectl delete -f olm/catalogsource.yaml
 $ operator-sdk olm uninstall
 ```
