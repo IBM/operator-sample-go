@@ -3,8 +3,8 @@ package applicationcontroller
 import (
 	"context"
 
-	applicationsamplev1beta1 "github.com/nheidloff/operator-sample-go/operator-application/api/v1beta1"
-	"github.com/nheidloff/operator-sample-go/operator-application/utilities"
+	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
+	"github.com/ibm/operator-sample-go/operator-application/utilities"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )

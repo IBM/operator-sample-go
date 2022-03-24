@@ -2,21 +2,6 @@
 
 Install [prerequistes](Prerequisites.md).
 
-Get the code:
-
-```
-$ https://github.com/nheidloff/operator-sample-go.git
-$ cd operator-application
-$ code .
-```
-
-Login to Kubernetes:
-
-```
-$ ibmcloud login -a cloud.ibm.com -r eu-de -g resource-group-niklas-heidloff7 --sso
-$ ibmcloud ks cluster config --cluster xxxxxxx
-```
-
 Install cert-manager:
 
 [cert-manager](https://github.com/cert-manager/cert-manager) is needed for webhooks.

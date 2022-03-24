@@ -15,7 +15,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	applicationsamplev1beta1 "github.com/nheidloff/operator-sample-go/operator-application/api/v1beta1"
+	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
 )
 
 type ApplicationReconciler struct {

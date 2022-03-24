@@ -3,8 +3,8 @@ package applicationcontroller
 import (
 	"context"
 
-	applicationsamplev1beta1 "github.com/nheidloff/operator-sample-go/operator-application/api/v1beta1"
-	"github.com/nheidloff/operator-sample-go/operator-application/utilities"
+	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
+	"github.com/ibm/operator-sample-go/operator-application/utilities"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"

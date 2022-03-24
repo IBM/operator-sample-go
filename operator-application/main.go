@@ -14,11 +14,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	databasesamplev1alpha1 "github.com/nheidloff/operator-sample-go/operator-database/api/v1alpha1"
+	databasesamplev1alpha1 "github.com/ibm/operator-sample-go/operator-database/api/v1alpha1"
 
-	applicationsamplev1alpha1 "github.com/nheidloff/operator-sample-go/operator-application/api/v1alpha1"
-	applicationsamplev1beta1 "github.com/nheidloff/operator-sample-go/operator-application/api/v1beta1"
-	applicationcontroller "github.com/nheidloff/operator-sample-go/operator-application/controllers/application"
+	applicationsamplev1alpha1 "github.com/ibm/operator-sample-go/operator-application/api/v1alpha1"
+	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
+	applicationcontroller "github.com/ibm/operator-sample-go/operator-application/controllers/application"
 	//+kubebuilder:scaffold:imports
 )
 

@@ -1,4 +1,4 @@
-module github.com/nheidloff/operator-sample-go/operator-application
+module github.com/ibm/operator-sample-go/operator-application
 
 go 1.17
 

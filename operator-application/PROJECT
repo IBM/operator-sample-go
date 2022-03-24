@@ -5,7 +5,7 @@ plugins:
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}
 projectName: operator-application
-repo: github.com/nheidloff/operator-sample-go/operator-application
+repo: github.com/ibm/operator-sample-go/operator-application
 resources:
 - api:
     crdVersion: v1
@@ -13,7 +13,7 @@ resources:
   domain: ibm.com
   group: application.sample
   kind: Application
-  path: github.com/nheidloff/operator-sample-go/operator-application/api/v1alpha1
+  path: github.com/ibm/operator-sample-go/operator-application/api/v1alpha1
   version: v1alpha1
 - api:
     crdVersion: v1
@@ -22,7 +22,7 @@ resources:
   domain: ibm.com
   group: application.sample
   kind: Application
-  path: github.com/nheidloff/operator-sample-go/operator-application/api/v1beta1
+  path: github.com/ibm/operator-sample-go/operator-application/api/v1beta1
   version: v1beta1
   webhooks:
     defaulting: true

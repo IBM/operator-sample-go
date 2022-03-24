@@ -3,7 +3,7 @@ package applicationcontroller
 import (
 	"fmt"
 
-	applicationsamplev1beta1 "github.com/nheidloff/operator-sample-go/operator-application/api/v1beta1"
+	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
 	"k8s.io/client-go/rest"
 )
 
@@ -16,7 +16,7 @@ var deploymentName string
 var serviceName string
 var containerName string
 
-const image = "docker.io/nheidloff/simple-microservice:latest"
+const image = "docker.io/nheidloff/simple-microservice:v1.0.0"
 const port int32 = 8081
 const nodePort int32 = 30548
 const labelKey = "app"

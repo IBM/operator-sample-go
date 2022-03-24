@@ -2,44 +2,37 @@
 
 Install [prerequistes](Prerequisites.md).
 
-Get the code:
-
-```
-$ https://github.com/nheidloff/operator-sample-go.git
-$ cd operator-application
-$ code .
-```
-
-Login to Kubernetes:
-
-```
-$ ibmcloud login -a cloud.ibm.com -r eu-de -g resource-group-niklas-heidloff7 --sso
-$ ibmcloud ks cluster config --cluster xxxxxxx
-```
-
-Create Database Resource:
+Create database resource:
 
 ```
 $ kubectl apply -f ../operator-database/config/crd/bases/database.sample.third.party_databases.yaml
 ```
 
-From a terminal in VSCode run these commands:
+From a terminal run this command:
 
 ```
 $ make install run ENABLE_WEBHOOKS=false
-$ kubectl apply -f config/samples/application.sample_v1beta1_application.yaml
 ```
+
+From another terminal run these commands:
+
+```
+$ kubectl apply -f config/samples/application.sample_v1beta1_application.yaml
+$ kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
+```
+
+Debug the operator (without webhooks):
 
 To debug, press F5 (Run - Start Debugging) instead of 'make install run'. The directory 'operator-application' needs to be root in VSCode.
 
-The sample endpoint can be triggered via '<your-ip>:30548/hello':
+Verify the microservice installation:
 
 ```
-$ ibmcloud ks worker ls --cluster niklas2-us-south-1-cx2.2x4
-$ open http://159.122.86.194:30548/hello
+$ POD_NAME=$(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}')
+$ kubectl exec -n application-beta $POD_NAME --container application-microservice -- curl http://localhost:8081/hello
 ```
 
-All resources can be deleted:
+Delete all resources:
 
 ```
 $ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml

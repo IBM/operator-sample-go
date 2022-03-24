@@ -13,4 +13,3 @@ spec:
   amountPods: 1
   databaseName: database
   databaseNamespace: database
-  title: Movies

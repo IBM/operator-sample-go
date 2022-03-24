@@ -180,7 +180,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/nheidloff/application-controller:v10
+                image: docker.io/ibm/application-operator:v1.0.0
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -267,5 +267,5 @@ spec:
   maturity: alpha
   provider:
     name: sample.ibm.com
-    url: https://github.com/nheidloff/operator-sample-go
+    url: https://github.com/ibm/operator-sample-go
   version: 0.0.1

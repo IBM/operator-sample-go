@@ -1,7 +1,7 @@
 package v1alpha1
 
 import (
-	"github.com/nheidloff/operator-sample-go/operator-application/api/v1beta1"
+	"github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
