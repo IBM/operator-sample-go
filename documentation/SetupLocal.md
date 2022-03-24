@@ -14,22 +14,21 @@ From a terminal run this command:
 $ make install run ENABLE_WEBHOOKS=false
 ```
 
-From another terminal run these commands:
+From another terminal run this command:
 
 ```
 $ kubectl apply -f config/samples/application.sample_v1beta1_application.yaml
-$ kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
 ```
 
 Debug the operator (without webhooks):
 
 To debug, press F5 (Run - Start Debugging) instead of 'make install run'. The directory 'operator-application' needs to be root in VSCode.
 
-Verify the microservice installation:
+Verify the setup:
 
 ```
-$ POD_NAME=$(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}')
-$ kubectl exec -n application-beta $POD_NAME --container application-microservice -- curl http://localhost:8081/hello
+$ kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
+$ kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
 ```
 
 Delete all resources:

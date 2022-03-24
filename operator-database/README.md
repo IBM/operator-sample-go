@@ -4,21 +4,6 @@ See below for instructions how to set up and run the database operator either lo
 
 Install [prerequisites](../documentation/Prerequisites.md).
 
-Get the code:
-
-```
-$ https://github.com/ibm/operator-sample-go.git
-$ cd operator-database
-$ code .
-```
-
-Login to Kubernetes:
-
-```
-$ ibmcloud login -a cloud.ibm.com -r eu-de -g resource-group-niklas-heidloff7 --sso
-$ ibmcloud ks cluster config --cluster xxxxxxx
-```
-
 **Run operator locally**
 
 From a terminal run this command:

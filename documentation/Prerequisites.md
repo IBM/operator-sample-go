@@ -39,7 +39,7 @@ $ kubectl get all
 **5. Repo**
 
 ```
-$ https://github.com/nheidloff/operator-sample-go.git
+$ git clone https://github.com/nheidloff/operator-sample-go.git
 $ cd operator-application
 $ code .
 ```

@@ -10,17 +10,17 @@ Install cert-manager:
 $ kubectl apply -f https://github.com/jetstack/cert-manager/releases/latest/download/cert-manager.yaml
 ```
 
-Deploy Database Operator:
+Deploy database operator:
 
-Before running the application-controller-bundle (the application operator), the database operator needs to be deployed since it is defined as 'required' in the application CSV.
+Before running the application operator, the database operator needs to be deployed since it is defined as dependency.
 
 ```
 $ cd ../operator-database
-$ operator-sdk run bundle "docker.io/nheidloff/database-controller-bundle:v1" -n operators
+$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.2"
 $ cd ../operator-application
 ```
 
-Build and push the Operator Image:
+Build and push the application operator image:
 
 ```
 $ make generate manifests
@@ -28,27 +28,28 @@ $ docker login $REGISTRY
 $ make docker-build docker-push IMG="$REGISTRY/$ORG/$IMAGE"
 ```
 
-Deploy Operator:
+Deploy the operator:
 
 ```
 $ make deploy IMG="$REGISTRY/$ORG/$IMAGE"
-$ kubectl get all -n operator-application-system
 ```
 
-Test Operator: 
+Create an application resource: 
 
 ```
 $ kubectl apply -f config/samples/application.sample_v1beta1_application.yaml
 ```
 
-The sample endpoint can be triggered via '<your-ip>:30548/hello':
+Verify the setup:
 
 ```
-$ ibmcloud ks worker ls --cluster niklas2-us-south-1-cx2.2x4
-$ open http://159.122.86.194:30548/hello
+$ kubectl get all -n operator-application-system
+$ kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
+$ POD_NAME=$(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}')
+$ kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
 ```
 
-Delete Resources:
+Delete all resources:
 
 ```
 $ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
