@@ -1,0 +1,52 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: '[]'
+    capabilities: Basic Install
+  name: operator-application.v0.0.0
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - displayName: Application
+      kind: Application
+      name: applications.application.sample.ibm.com
+      version: v1alpha1
+  description: operator-application
+  displayName: operator-application
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      deployments: null
+    strategy: ""
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - go
+  - kubernetes
+  - golang
+  - devops
+  - automation
+  - operator
+  - k8s
+  - kubernetes-operator
+  - day2
+  links:
+  - name: Operator Application
+    url: https://operator-application.domain
+  maturity: alpha
+  provider:
+    name: sample.ibm.com
+    url: https://github.com/nheidloff/operator-sample-go
+  version: 0.0.0

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapplication1-deployment-microservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myapplication
+  template:
+    metadata:
+      labels:
+        app: myapplication
+    spec:
+      containers:
+      - name: microservice
+        image: docker.io/nheidloff/simple-microservice
+        env:
+        - name: GREETING_MESSAGE
+          valueFrom:
+            secretKeyRef:
+              name: myapplication1-secret-greeting
+              key: GREETING_MESSAGE
+        ports:
+        - containerPort: 8081
+        livenessProbe:
+          exec:
+            command: ["sh", "-c", "curl -s http://localhost:8081/q/health/live"]
+          initialDelaySeconds: 20
+        readinessProbe:
+          exec:
+            command: ["sh", "-c", "curl -s http://localhost:8081/q/health/ready"]
+          initialDelaySeconds: 40

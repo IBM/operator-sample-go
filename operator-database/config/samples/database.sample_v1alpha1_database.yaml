@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: database
+---
+apiVersion: database.sample.third.party/v1alpha1
+kind: Database
+metadata:
+  name: database
+  namespace: database
+spec:
+  user: name
+  password: password
+  url: url
+  certificate: certificate
