@@ -12,8 +12,6 @@ There are three ways to develop and run the operator:
     * via operator-sdk
     * via kubectl
 
-There is a custom application controller, a database controller simulating an external resource and a sample microservice. The easiest way to get started is to run the application controller locally and to use pre-built images for the dependencies. 
-
 ### Documentation
 
 * [Creating and updating Resources from Operators](http://heidloff.net/article/updating-resources-kubernetes-operators/)
