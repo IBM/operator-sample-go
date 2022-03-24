@@ -1,5 +1,7 @@
 # Setup and manual Deployment
 
+Install [prerequistes](Prerequisites.md).
+
 Get the code:
 
 ```

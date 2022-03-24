@@ -1,4 +1,4 @@
-# simple-microservice
+# Simple Microservice
 
 The microservice provides a hello world endpoint which prints out an input environment variable. The service has been built with Quarkus.
 

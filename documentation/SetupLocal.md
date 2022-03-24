@@ -1,5 +1,7 @@
 # Setup and local Usage
 
+Install [prerequistes](Prerequisites.md).
+
 Get the code:
 
 ```
@@ -41,4 +43,5 @@ All resources can be deleted:
 
 ```
 $ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
+$ make uninstall
 ```

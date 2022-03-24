@@ -4,7 +4,13 @@ This project contains Kubernetes operator samples that demonstrate best practice
 
 ### Setup
 
-There are various ways to run and deploy the samples. Check out the [setup instructions](operator-application/README.md).
+There are three ways to develop and run the operator:
+
+1) [Local Go Operator](documentation/SetupLocal.md) 
+2) [Kubernetes Operator manually deployed](documentation/SetupManualDeployment.md)
+3) [Kubernetes Operator deployed via OLM](documentation/SetupDeploymentViaOLM.md)
+    * via operator-sdk
+    * via kubectl
 
 There is a custom application controller, a database controller simulating an external resource and a sample microservice. The easiest way to get started is to run the application controller locally and to use pre-built images for the dependencies. 
 
@@ -20,18 +26,6 @@ There is a custom application controller, a database controller simulating an ex
 * [Manually deploying Operators to Kubernetes](http://heidloff.net/article/manually-deploying-operators-to-kubernetes/)
 * [Deploying Operators with the Operator Lifecycle Manager](http://heidloff.net/article/deploying-operators-operator-lifecycle-manager-olm/)
 * [Defining Dependencies in Kubernetes Operators](http://heidloff.net/article/defining-dependencies-kubernetes-operators/)
-
-### Capabilities to be added
-
-* Versioning
-* Webhooks
-* Metrics
-* Events
-* Phase 3 - 5
-* Testing
-* Leader strategy
-* Customizable templates
-* Stateful resources
 
 ### Resources
 
