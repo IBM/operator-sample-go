@@ -49,17 +49,17 @@ $ make uninstall
 Build and push the image:
 
 ```
-$ make docker-build docker-push IMG="docker.io/nheidloff/database-operator:v1.0.0"
+$ make docker-build docker-push IMG="docker.io/nheidloff/database-operator:v1.0.1"
 ```
 
 Deploy the operator:
 
 ```
-$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.0"
+$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.1"
 ```
 
 Undeploy the operator:
 
 ```
-$ make undeploy IMG="$REGISTRY/$ORG/$IMAGE"
+$ make undeploy IMG="docker.io/nheidloff/database-operator:v1.0.1"
 ```
