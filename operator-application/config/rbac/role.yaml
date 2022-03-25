@@ -32,6 +32,18 @@ rules:
   - patch
   - update
 - apiGroups:
+  - application.sample.ibm.com
+  resources:
+  - applications/metadata
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
   - ""
   resources:
   - secrets

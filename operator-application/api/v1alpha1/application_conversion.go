@@ -8,31 +8,55 @@ import (
 
 var applicationlog = logf.Log.WithName("application-resource")
 
-// convert this application to the hub version (v1beta1)
+var annotationTitle = "applications.application.sample.ibm.com/title"
+
+// convert this version (src = v1alpha1) to the hub version (dst = v1beta1)
 func (src *Application) ConvertTo(dstRaw conversion.Hub) error {
-	applicationlog.Info("Calling ConvertTo")
+	applicationlog.Info("Conversion Webhook: From v1alpha1 to v1beta1")
 	dst := dstRaw.(*v1beta1.Application)
 	dst.Spec.AmountPods = src.Spec.AmountPods
 	dst.Spec.DatabaseName = src.Spec.DatabaseName
 	dst.Spec.DatabaseNamespace = src.Spec.DatabaseNamespace
 	dst.Spec.SchemaUrl = src.Spec.SchemaUrl
 	dst.Spec.Version = src.Spec.Version
-	dst.Spec.Title = "undefined"
+
+	annotationTitleDefault := "UNDEFINED"
+	if src.ObjectMeta.Annotations == nil {
+		dst.Spec.Title = annotationTitleDefault
+		applicationlog.Info(dst.Spec.Title)
+	} else {
+		title, annotationFound := src.ObjectMeta.Annotations[annotationTitle]
+		if annotationFound {
+			dst.Spec.Title = title
+			applicationlog.Info(dst.Spec.Title)
+		} else {
+			dst.Spec.Title = annotationTitleDefault
+			applicationlog.Info(dst.Spec.Title)
+		}
+	}
+
 	dst.ObjectMeta = src.ObjectMeta
 	dst.Status.Conditions = src.Status.Conditions
+
 	return nil
 }
 
-// convert from the hub version (v1beta1) to this version
+// convert from the hub version (src= v1beta1) to this version (dst = v1alpha1)
 func (dst *Application) ConvertFrom(srcRaw conversion.Hub) error {
-	applicationlog.Info("Calling ConvertFrom")
+	applicationlog.Info("Conversion Webhook: From v1beta1 to v1alpha1")
 	src := srcRaw.(*v1beta1.Application)
+	dst.ObjectMeta = src.ObjectMeta
+	dst.Status.Conditions = src.Status.Conditions
 	dst.Spec.AmountPods = src.Spec.AmountPods
 	dst.Spec.DatabaseName = src.Spec.DatabaseName
 	dst.Spec.DatabaseNamespace = src.Spec.DatabaseNamespace
 	dst.Spec.SchemaUrl = src.Spec.SchemaUrl
 	dst.Spec.Version = src.Spec.Version
-	dst.ObjectMeta = src.ObjectMeta
-	dst.Status.Conditions = src.Status.Conditions
+
+	if dst.ObjectMeta.Annotations == nil {
+		dst.ObjectMeta.Annotations = make(map[string]string)
+	}
+	dst.ObjectMeta.Annotations[annotationTitle] = string(src.Spec.Title)
+
 	return nil
 }
