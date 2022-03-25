@@ -2,13 +2,12 @@ package v1alpha1
 
 import (
 	"github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
+	"github.com/ibm/operator-sample-go/operator-application/variables"
 	"sigs.k8s.io/controller-runtime/pkg/conversion"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 var applicationlog = logf.Log.WithName("application-resource")
-
-var annotationTitle = "applications.application.sample.ibm.com/title"
 
 // convert this version (src = v1alpha1) to the hub version (dst = v1beta1)
 func (src *Application) ConvertTo(dstRaw conversion.Hub) error {
@@ -20,17 +19,16 @@ func (src *Application) ConvertTo(dstRaw conversion.Hub) error {
 	dst.Spec.SchemaUrl = src.Spec.SchemaUrl
 	dst.Spec.Version = src.Spec.Version
 
-	annotationTitleDefault := "UNDEFINED"
 	if src.ObjectMeta.Annotations == nil {
-		dst.Spec.Title = annotationTitleDefault
+		dst.Spec.Title = variables.DEFAULT_ANNOTATION_TITLE
 		applicationlog.Info(dst.Spec.Title)
 	} else {
-		title, annotationFound := src.ObjectMeta.Annotations[annotationTitle]
+		title, annotationFound := src.ObjectMeta.Annotations[variables.ANNOTATION_TITLE]
 		if annotationFound {
 			dst.Spec.Title = title
 			applicationlog.Info(dst.Spec.Title)
 		} else {
-			dst.Spec.Title = annotationTitleDefault
+			dst.Spec.Title = variables.DEFAULT_ANNOTATION_TITLE
 			applicationlog.Info(dst.Spec.Title)
 		}
 	}
@@ -56,7 +54,7 @@ func (dst *Application) ConvertFrom(srcRaw conversion.Hub) error {
 	if dst.ObjectMeta.Annotations == nil {
 		dst.ObjectMeta.Annotations = make(map[string]string)
 	}
-	dst.ObjectMeta.Annotations[annotationTitle] = string(src.Spec.Title)
+	dst.ObjectMeta.Annotations[variables.ANNOTATION_TITLE] = string(src.Spec.Title)
 
 	return nil
 }

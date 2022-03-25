@@ -5,6 +5,7 @@ import (
 
 	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
 	"github.com/ibm/operator-sample-go/operator-application/utilities"
+	"github.com/ibm/operator-sample-go/operator-application/variables"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
@@ -18,11 +19,11 @@ import (
 
 func (reconciler *ApplicationReconciler) defineDeployment(application *applicationsamplev1beta1.Application) *appsv1.Deployment {
 	replicas := application.Spec.AmountPods
-	labels := map[string]string{labelKey: labelValue}
+	labels := map[string]string{variables.LabelKey: variables.LabelValue}
 
 	deployment := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      deploymentName,
+			Name:      variables.DeploymentName,
 			Namespace: application.Namespace,
 		},
 		Spec: appsv1.DeploymentSpec{
@@ -36,26 +37,26 @@ func (reconciler *ApplicationReconciler) defineDeployment(application *applicati
 				},
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
-						Image: image,
-						Name:  containerName,
+						Image: variables.Image,
+						Name:  variables.ContainerName,
 						Ports: []corev1.ContainerPort{{
-							ContainerPort: port,
+							ContainerPort: variables.Port,
 						}},
 						Env: []corev1.EnvVar{{
-							Name: secretGreetingMessageLabel,
+							Name: variables.SecretGreetingMessageLabel,
 							ValueFrom: &v1.EnvVarSource{
 								SecretKeyRef: &v1.SecretKeySelector{
 									LocalObjectReference: v1.LocalObjectReference{
-										Name: secretName,
+										Name: variables.SecretName,
 									},
-									Key: secretGreetingMessageLabel,
+									Key: variables.SecretGreetingMessageLabel,
 								},
 							}},
 						},
 						ReadinessProbe: &v1.Probe{
 							ProbeHandler: v1.ProbeHandler{
 								HTTPGet: &v1.HTTPGetAction{Path: "/q/health/live", Port: intstr.IntOrString{
-									IntVal: port,
+									IntVal: variables.Port,
 								}},
 							},
 							InitialDelaySeconds: 20,
@@ -63,7 +64,7 @@ func (reconciler *ApplicationReconciler) defineDeployment(application *applicati
 						LivenessProbe: &v1.Probe{
 							ProbeHandler: v1.ProbeHandler{
 								HTTPGet: &v1.HTTPGetAction{Path: "/q/health/ready", Port: intstr.IntOrString{
-									IntVal: port,
+									IntVal: variables.Port,
 								}},
 							},
 							InitialDelaySeconds: 40,
@@ -85,17 +86,17 @@ func (reconciler *ApplicationReconciler) reconcileDeployment(ctx context.Context
 	log := log.FromContext(ctx)
 	deployment := &appsv1.Deployment{}
 	deploymentDefinition := reconciler.defineDeployment(application)
-	err := reconciler.Get(ctx, types.NamespacedName{Name: deploymentName, Namespace: application.Namespace}, deployment)
+	err := reconciler.Get(ctx, types.NamespacedName{Name: variables.DeploymentName, Namespace: application.Namespace}, deployment)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			log.Info("Deployment resource " + deploymentName + " not found. Creating or re-creating deployment")
+			log.Info("Deployment resource " + variables.DeploymentName + " not found. Creating or re-creating deployment")
 			err = reconciler.Create(ctx, deploymentDefinition)
 			if err != nil {
 				log.Info("Failed to create deployment resource. Re-running reconcile.")
 				return ctrl.Result{}, err
 			}
 		} else {
-			log.Info("Failed to get deployment resource " + deploymentName + ". Re-running reconcile.")
+			log.Info("Failed to get deployment resource " + variables.DeploymentName + ". Re-running reconcile.")
 			return ctrl.Result{}, err
 		}
 	} else {

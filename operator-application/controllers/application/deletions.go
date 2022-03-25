@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
+	"github.com/ibm/operator-sample-go/operator-application/variables"
 	databasesamplev1alpha1 "github.com/ibm/operator-sample-go/operator-database/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
@@ -24,8 +25,8 @@ func (reconciler *ApplicationReconciler) finalizeApplication(ctx context.Context
 }
 
 func (reconciler *ApplicationReconciler) addFinalizer(ctx context.Context, application *applicationsamplev1beta1.Application) (ctrl.Result, error) {
-	if !controllerutil.ContainsFinalizer(application, finalizer) {
-		controllerutil.AddFinalizer(application, finalizer)
+	if !controllerutil.ContainsFinalizer(application, variables.Finalizer) {
+		controllerutil.AddFinalizer(application, variables.Finalizer)
 		err := reconciler.Update(ctx, application)
 		if err != nil {
 			return ctrl.Result{}, err
@@ -37,12 +38,12 @@ func (reconciler *ApplicationReconciler) addFinalizer(ctx context.Context, appli
 func (reconciler *ApplicationReconciler) tryDeletions(ctx context.Context, application *applicationsamplev1beta1.Application) (ctrl.Result, error) {
 	isApplicationMarkedToBeDeleted := application.GetDeletionTimestamp() != nil
 	if isApplicationMarkedToBeDeleted {
-		if controllerutil.ContainsFinalizer(application, finalizer) {
+		if controllerutil.ContainsFinalizer(application, variables.Finalizer) {
 			if err := reconciler.finalizeApplication(ctx, application); err != nil {
 				return ctrl.Result{}, err
 			}
 
-			controllerutil.RemoveFinalizer(application, finalizer)
+			controllerutil.RemoveFinalizer(application, variables.Finalizer)
 			err := reconciler.Update(ctx, application)
 			if err != nil {
 				return ctrl.Result{}, err

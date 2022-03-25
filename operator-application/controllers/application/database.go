@@ -5,6 +5,7 @@ import (
 	"time"
 
 	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
+	"github.com/ibm/operator-sample-go/operator-application/variables"
 	databasesamplev1alpha1 "github.com/ibm/operator-sample-go/operator-database/api/v1alpha1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -20,10 +21,10 @@ func (reconciler *ApplicationReconciler) defineDatabase(application *application
 			Namespace: application.Spec.DatabaseNamespace,
 		},
 		Spec: databasesamplev1alpha1.DatabaseSpec{
-			User:        databaseUser,
-			Password:    databasePassword,
-			Url:         databaseUrl,
-			Certificate: databaseCertificate,
+			User:        variables.DatabaseUser,
+			Password:    variables.DatabasePassword,
+			Url:         variables.DatabaseUrl,
+			Certificate: variables.DatabaseCertificate,
 		},
 	}
 

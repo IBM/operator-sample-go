@@ -7,6 +7,7 @@ import (
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/client-go/rest"
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -16,7 +17,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
+	"github.com/ibm/operator-sample-go/operator-application/variables"
 )
+
+var managerConfig *rest.Config
 
 type ApplicationReconciler struct {
 	client.Client
@@ -63,8 +67,8 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 		return ctrl.Result{}, err
 	}
 
-	reconciler.setGlobalVariables(application)
-	reconciler.printVariables(application)
+	variables.SetGlobalVariables(application.Name)
+	variables.PrintVariables(application.Name, application.Namespace, application.Spec.Version, application.Spec.AmountPods, application.Spec.DatabaseName, application.Spec.DatabaseNamespace)
 
 	_, err = reconciler.tryDeletions(ctx, application)
 	if err != nil {
