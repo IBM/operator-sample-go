@@ -29,6 +29,7 @@ metadata:
             "amountPods": 1,
             "databaseName": "database",
             "databaseNamespace": "database",
+            "title": "movies",
             "version": "1.0.0"
           }
         }
@@ -194,7 +195,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/nheidloff/application-operator:v1.0.0
+                image: docker.io/nheidloff/application-operator:v1.0.5
                 livenessProbe:
                   httpGet:
                     path: /healthz
