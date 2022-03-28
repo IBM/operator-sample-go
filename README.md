@@ -26,6 +26,7 @@ There are three ways to develop and run the operator:
 * [Defining Dependencies in Operators](http://heidloff.net/article/defining-dependencies-kubernetes-operators/)
 * [Configuring Webhooks for Operators](http://heidloff.net/article/configuring-webhooks-kubernetes-operators/)
 * [Initialization and Validation Webhooks in Operators](http://heidloff.net/article/developing-initialization-validation-webhooks-kubernetes-operators/)
+* [Converting Custom Resource Versions in Operators](http://heidloff.net/article/converting-custom-resource-versions-kubernetes-operators/)
 
 ### Resources
 
