@@ -40,6 +40,6 @@ $ kubectl get all
 
 ```
 $ git clone https://github.com/nheidloff/operator-sample-go.git
-$ cd operator-application
+$ cd operator-sample-go
 $ code .
 ```
