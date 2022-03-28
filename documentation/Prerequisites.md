@@ -10,7 +10,7 @@
 
 **2. Operator SDK**
 
-The repo has been tested with operator-sdk v1.18.1. Note that there is an issue with this version. It doesn't download the tools in the 'bin' directory. You need to use an older version, init a new temporary new project and copy the files in the 'bin' subdirectories of both operators.
+🔴 IMPORTANT: The repo has been tested with operator-sdk v1.18.1. Note that there is an issue with this version. It doesn't download the tools in the 'bin' directory. You need to use the older version v1.18.0 first, init a new temporary new project and copy the downloaded four files from the 'bin' directoy into the 'bin' subdirectories of both operators. After this update to v1.18.1.
 
 **3. Image Registry**
 
