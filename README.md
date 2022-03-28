@@ -23,8 +23,9 @@ There are three ways to develop and run the operator:
 * [Using object-oriented Concepts in Golang based Operators](http://heidloff.net/article/object-oriented-concepts-golang/)
 * [Manually deploying Operators to Kubernetes](http://heidloff.net/article/manually-deploying-operators-to-kubernetes/)
 * [Deploying Operators with the Operator Lifecycle Manager](http://heidloff.net/article/deploying-operators-operator-lifecycle-manager-olm/)
-* [Defining Dependencies in Kubernetes Operators](http://heidloff.net/article/defining-dependencies-kubernetes-operators/)
-* [Configuring Webhooks for Kubernetes Operators](http://heidloff.net/article/configuring-webhooks-kubernetes-operators/)
+* [Defining Dependencies in Operators](http://heidloff.net/article/defining-dependencies-kubernetes-operators/)
+* [Configuring Webhooks for Operators](http://heidloff.net/article/configuring-webhooks-kubernetes-operators/)
+* [Initialization and Validation Webhooks in Operators](http://heidloff.net/article/developing-initialization-validation-webhooks-kubernetes-operators/)
 
 ### Resources
 
