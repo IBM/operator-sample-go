@@ -3,3 +3,5 @@
 !target/*-runner.jar
 !target/lib/*
 !target/quarkus-app/*
+!data.json
+!leader.txt

@@ -21,7 +21,7 @@ bin/
 nb-configuration.xml
 
 # Visual Studio Code
-.vscode
+.vscode/tasks.json
 .factorypath
 .vscode/settings.json
 

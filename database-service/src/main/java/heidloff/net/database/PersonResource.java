@@ -1,5 +1,7 @@
 package heidloff.net.database;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -26,20 +28,27 @@ public class PersonResource {
     public PersonResource() {
     }
 
-    final String DEFAULT_DATA_FILENAME = "data.json";
-    String dataFileName;
+    final String FILENAME_DATA = "data.json";
+    String dataDirectory = "";
+    String pathAndFileName;
 
     @PostConstruct
-    void readData() {
+    void initialize() {
         try {
-            dataFileName = ConfigProvider.getConfig().getValue("data.filename", String.class);
+            dataDirectory = ConfigProvider.getConfig().getValue("data.directory", String.class);
         } catch (Exception e) {
         }
-        if ((dataFileName == null) || (dataFileName.isEmpty())) {
-            dataFileName = DEFAULT_DATA_FILENAME;
+        if ((dataDirectory == null) || (dataDirectory.isEmpty())) {
+            pathAndFileName = FILENAME_DATA;
+        } else {
+            pathAndFileName = dataDirectory + FILENAME_DATA;
         }
+        readData();
+    }
+
+    void readData() {
         try {  
-            String content = new String (Files.readAllBytes(Paths.get(dataFileName)));
+            String content = new String (Files.readAllBytes(Paths.get(pathAndFileName)));
             Jsonb jsonb = JsonbBuilder.create();
             ArrayList<Person> personsArrayList;
             personsArrayList = jsonb.fromJson(content, new ArrayList<Person>(){}.getClass().getGenericSuperclass());
@@ -48,7 +57,20 @@ public class PersonResource {
             });
         } catch (Exception e) {
             System.out.println(e);
-            System.out.println("PersonResource.readDate() - file '" + dataFileName + "' couldn't be accessed");
+            System.out.println("PersonResource.readData() - file '" + pathAndFileName + "' couldn't be accessed");
+        }
+    }
+
+    private void writeData() {
+        try {
+            Jsonb jsonb = JsonbBuilder.create();
+            String personsString = jsonb.toJson(persons);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(pathAndFileName));
+            writer.write(personsString);
+            writer.close();
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println("PersonResource.writeData() - file '" + pathAndFileName + "' couldn't be accessed");
         }
     }
 
@@ -69,9 +91,11 @@ public class PersonResource {
     }
 
     @POST
-    public Set<Person> add(Person person) {
+    public Person add(Person person) {
+        Person newPerson = null;
         if (person.id == null) {
-            persons.add(new Person(person.firstName, person.lastName));
+            newPerson = new Person(person.firstName, person.lastName);
+            persons.add(newPerson);
         } else {
             boolean personExists = false;
             for (Iterator<Person> iterator = persons.iterator(); iterator.hasNext(); ) {
@@ -80,28 +104,33 @@ public class PersonResource {
                     personExists = true;
             }
             if (personExists == false) {
-                persons.add(new Person(person.firstName, person.lastName));
+                newPerson = new Person(person.firstName, person.lastName);
+                persons.add(newPerson);
             }
         }
-        return persons;
+        writeData();
+        return newPerson;
     }
 
     @PUT
-    public Set<Person> update(Person person) {
+    public Person update(Person person) {
+        Person updatedPerson = null;
         if (person.id != null) {
             for (Iterator<Person> iterator = persons.iterator(); iterator.hasNext(); ) {
                 Person existingPerson = iterator.next();
                 if (existingPerson.id.equals(person.id))
                     existingPerson.firstName = person.firstName;
                     existingPerson.lastName = person.lastName;
+                    updatedPerson = existingPerson;
             }
         }
-        return persons;
+        writeData();
+        return updatedPerson;
     }
 
     @DELETE
-    public Set<Person> delete(Person person) {
+    public void delete(Person person) {
         persons.removeIf(existingPerson -> existingPerson.id.contentEquals(person.id));
-        return persons;
+        writeData();
     }
 }
