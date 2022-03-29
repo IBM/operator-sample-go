@@ -29,6 +29,10 @@ There are three ways to develop and run the operator:
 * [Initialization and Validation Webhooks in Operators](http://heidloff.net/article/developing-initialization-validation-webhooks-kubernetes-operators/)
 * [Converting Custom Resource Versions in Operators](http://heidloff.net/article/converting-custom-resource-versions-kubernetes-operators/)
 
+To start developing operators, we recommend to get familiar with the [Kubernetes Operator Metamodel](http://heidloff.net/article/the-kubernetes-operator-metamodel/) first.
+
+<img src="documentation/OperatorMetamodel.png" />
+
 ### Resources
 
 * [Operator SDK Documentation](https://sdk.operatorframework.io/docs/overview/)
