@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 import org.eclipse.microprofile.config.ConfigProvider;
@@ -34,7 +35,30 @@ public class LeaderUtils {
         if ((dataDirectory == null) || (dataDirectory.isEmpty())) {
             pathAndFileNamePodState = FILENAME_POD_STATE;
         } else {
-            pathAndFileNamePodState = dataDirectory + FILENAME_POD_STATE;
+            if (dataDirectory.endsWith("/")) {
+                pathAndFileNamePodState = dataDirectory + FILENAME_POD_STATE;    
+            } else {
+                pathAndFileNamePodState = dataDirectory + "/" + FILENAME_POD_STATE;
+            }            
+        }
+        initializePodConfig();
+    }
+
+    private void initializePodConfig() {
+        boolean fileExists = false;
+        try {
+            Files.readAllBytes(Paths.get(pathAndFileNamePodState));  
+            fileExists = true;  
+        } catch (Exception e) {            
+        }
+        if (fileExists == false) {
+            try {
+                String content = new String (Files.readAllBytes(Paths.get(FILENAME_POD_STATE)));
+                java.nio.file.Path path = Paths.get(pathAndFileNamePodState);
+                byte[] stringToBytes = content.getBytes();
+                Files.write(path, stringToBytes);
+            } catch (Exception e) {
+            }
         }
     }
 

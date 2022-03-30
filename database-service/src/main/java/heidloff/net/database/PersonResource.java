@@ -46,7 +46,7 @@ public class PersonResource {
     @PostConstruct
     void initialize() {
         KubernetesClient client = new DefaultKubernetesClient();
-        // TODO OpenShiftClient osClient = new DefaultOpenShiftClient();
+        // TODO? OpenShiftClient osClient = new DefaultOpenShiftClient();
         
         try {
             dataDirectory = ConfigProvider.getConfig().getValue("data.directory", String.class);
@@ -55,9 +55,32 @@ public class PersonResource {
         if ((dataDirectory == null) || (dataDirectory.isEmpty())) {
             pathAndFileName = FILENAME_DATA;
         } else {
-            pathAndFileName = dataDirectory + FILENAME_DATA;
+            if (dataDirectory.endsWith("/")) {
+                pathAndFileName = dataDirectory + FILENAME_DATA;  
+            } else {
+                pathAndFileName = dataDirectory + "/" + FILENAME_DATA;
+            } 
         }
+        initializeData();
         readData();
+    }
+
+    private void initializeData() {
+        boolean fileExists = false;
+        try {
+            Files.readAllBytes(Paths.get(pathAndFileName));  
+            fileExists = true;  
+        } catch (Exception e) {            
+        }
+        if (fileExists == false) {
+            try {
+                String content = new String (Files.readAllBytes(Paths.get(FILENAME_DATA)));
+                java.nio.file.Path path = Paths.get(pathAndFileName);
+                byte[] stringToBytes = content.getBytes();
+                Files.write(path, stringToBytes);
+            } catch (Exception e) {
+            }
+        }
     }
 
     void readData() {
