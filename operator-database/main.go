@@ -14,7 +14,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
 	databasesamplev1alpha1 "github.com/ibm/operator-sample-go/operator-database/api/v1alpha1"
-	"github.com/ibm/operator-sample-go/operator-database/controllers"
+	databasecontroller "github.com/ibm/operator-sample-go/operator-database/controllers/database"
+	databaseclustercontroller "github.com/ibm/operator-sample-go/operator-database/controllers/databasecluster"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -60,11 +61,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.DatabaseReconciler{
+	if err = (&databasecontroller.DatabaseReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Database")
+		os.Exit(1)
+	}
+	if err = (&databaseclustercontroller.DatabaseClusterReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "DatabaseCluster")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

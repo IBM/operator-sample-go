@@ -1,4 +1,4 @@
-package controllers
+package databasecontroller
 
 import (
 	"context"
@@ -19,7 +19,7 @@ type DatabaseReconciler struct {
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databases,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databases/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databases/finalizers,verbs=update
-func (r *DatabaseReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (reconciler *DatabaseReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 
 	log.Info("Reconcile started")

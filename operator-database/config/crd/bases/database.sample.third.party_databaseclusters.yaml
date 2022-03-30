@@ -5,19 +5,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.8.0
   creationTimestamp: null
-  name: databases.database.sample.third.party
+  name: databaseclusters.database.sample.third.party
 spec:
   group: database.sample.third.party
   names:
-    kind: Database
-    listKind: DatabaseList
-    plural: databases
-    singular: database
+    kind: DatabaseCluster
+    listKind: DatabaseClusterList
+    plural: databaseclusters
+    singular: databasecluster
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
+        description: DatabaseCluster is the Schema for the databaseclusters API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -32,24 +33,18 @@ spec:
           metadata:
             type: object
           spec:
+            description: DatabaseClusterSpec defines the desired state of DatabaseCluster
             properties:
               amountPods:
                 default: 1
                 format: int32
                 minimum: 0
                 type: integer
-              certificate:
-                type: string
-              password:
-                type: string
-              url:
-                type: string
-              user:
-                type: string
             required:
             - amountPods
             type: object
           status:
+            description: DatabaseClusterStatus defines the observed state of DatabaseCluster
             type: object
         type: object
     served: true
