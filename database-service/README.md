@@ -17,6 +17,7 @@ $ open http://localhost:8089/persons
 ```
 $ curl http://localhost:8089/persons
 $ curl -X 'GET' 'http://localhost:8089/persons/e0a08c5b-62d5-4b20-a024-e1c270d901c2'
+$ curl -X 'POST' 'http://localhost:8089/api/leader?setAsLeader=true'
 $ curl -X 'DELETE' \
   'http://localhost:8089/persons' \
   -H 'Content-Type: application/json' \

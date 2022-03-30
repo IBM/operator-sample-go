@@ -33,12 +33,13 @@ public class API {
         return leaderUtils.isLeader();
     }
     
+    // Note: This is for development/debugging only, leader election is done automatically
     @POST
     @Path("/leader")
     public Response setLeader(@QueryParam(value="setAsLeader") String setAsLeader) {
         boolean shouldBeLeader = false;
         if (setAsLeader != null) {
-            if (setAsLeader.trim().equalsIgnoreCase(leaderUtils.IS_LEADER_TRUE)) {
+            if (setAsLeader.trim().equalsIgnoreCase("true")) {
                 shouldBeLeader = true;
             }
         }
@@ -47,9 +48,9 @@ public class API {
     }
 
     @POST
-    @Path("/replicatewithleader")
-    public Response replicateWithLeader(@QueryParam(value="dnsleader") String dnsleader) {
-        return leaderUtils.replicateWithLeader(dnsleader);
+    @Path("/onLeaderUpdated")
+    public Response onLeaderUpdated() {
+        return leaderUtils.onLeaderUpdated();
     }
 
     @GET

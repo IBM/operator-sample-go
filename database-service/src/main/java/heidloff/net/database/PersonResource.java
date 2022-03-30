@@ -2,6 +2,7 @@ package heidloff.net.database;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import io.fabric8.kubernetes.client.DefaultKubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClient;
 
 @Path("/persons")
 public class PersonResource {
@@ -29,6 +33,8 @@ public class PersonResource {
 
     @Inject
     LeaderUtils leaderUtils;
+
+    private final KubernetesClient client = null;
 
     public PersonResource() {
     }
@@ -39,6 +45,9 @@ public class PersonResource {
 
     @PostConstruct
     void initialize() {
+        KubernetesClient client = new DefaultKubernetesClient();
+        // TODO OpenShiftClient osClient = new DefaultOpenShiftClient();
+        
         try {
             dataDirectory = ConfigProvider.getConfig().getValue("data.directory", String.class);
         } catch (Exception e) {
@@ -83,15 +92,22 @@ public class PersonResource {
 
     private Response writeDataIfLeader(Object outputObject) {
         int httpStatus = 200; 
+        boolean newDataWritten = false;
         if (leaderUtils.isLeader() == false) {
             httpStatus = 501; // Not Implemented
         } else {
             try {
                 writeData();
+                newDataWritten = true;
             } catch (RuntimeException e) {
                 httpStatus = 503; // Service Unavailable
             }    
         }
+
+        if (newDataWritten == true) {
+            notifyFollowers();
+        }
+
         if (outputObject != null) {
             return Response.status(httpStatus).entity(outputObject).build();    
         } else {
@@ -166,5 +182,18 @@ public class PersonResource {
     public void updateAllPersons(Set<Person> newPersons) throws RuntimeException {
         persons = newPersons;
         writeData();
+    }
+
+    private void notifyFollowers() {
+
+        // TODO
+
+        String followerDNSOrIPWithPort = "";
+        try {
+            URL apiUrl = new URL("http://" + followerDNSOrIPWithPort + "/onLeaderUpdated");
+            RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().baseUrl(apiUrl).build(RemoteDatabaseService.class);
+            customRestClient.onLeaderUpdated();              
+        } catch (Exception e) {            
+        }
     }
 }
