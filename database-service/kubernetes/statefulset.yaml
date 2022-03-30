@@ -37,7 +37,7 @@ spec:
     spec:
       terminationGracePeriodSeconds: 10
       containers:
-      - name: database-pod
+      - name: database-container
         image: nheidloff/database-service:v1.0.4
         imagePullPolicy: IfNotPresent
         ports:
@@ -49,6 +49,11 @@ spec:
         env:
           - name: DATA_DIRECTORY
             value: /data/
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
   volumeClaimTemplates:
   - metadata:
       name: data-volume

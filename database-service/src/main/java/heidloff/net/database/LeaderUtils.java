@@ -119,9 +119,12 @@ public class LeaderUtils {
         return Response.status(httpStatus).build();    
     }
 
-    public void determineLeader() {
-        System.out.println("LeaderUtils.determineLeader()");
+    public void electLeader() {
+        // Note: This is a very simple leader election only for demo purposes
         String podName = System.getenv("POD_NAME");
-        System.out.println(podName);
+        System.out.println("Pod name: "+ podName);
+        if (podName.endsWith("-0")) {
+            setLeader(true);
+        }
     }
 }

@@ -23,7 +23,7 @@ public class Main {
         
         @Override
         public int run(String... args) throws Exception {            
-            leaderUtils.determineLeader();
+            leaderUtils.electLeader();
             Quarkus.waitForExit();
             return 0;
         }
