@@ -162,4 +162,9 @@ public class PersonResource {
         }
         return writeDataIfLeader(null);
     }
+
+    public void updateAllPersons(Set<Person> newPersons) throws RuntimeException {
+        persons = newPersons;
+        writeData();
+    }
 }

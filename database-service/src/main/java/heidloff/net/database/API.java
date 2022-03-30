@@ -3,6 +3,7 @@ package heidloff.net.database;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -19,6 +20,10 @@ public class API {
 
     @Inject
     LeaderUtils leaderUtils;
+
+    @Inject
+    @RestClient
+    RemoteDatabaseService remoteDatabaseService;
 
     @Consumes("text/plain")
     @Produces("text/plain")
@@ -41,27 +46,36 @@ public class API {
         return Response.status(200).build();
     }
 
+    @POST
+    @Path("/replicatewithleader")
+    public Response replicateWithLeader(@QueryParam(value="dnsleader") String dnsleader) {
+        return leaderUtils.replicateWithLeader(dnsleader);
+    }
+
     @GET
-    @Path("/query")
+    @Path("/executequery")
     public Response executeQuery(@QueryParam(value="query") String query) {
-        // Note: This is only faked
-        // Note: Invoked via JDBC Connection.createStatement().executeQuery() to run SQL queries
+        // Note: This is faked to simulate a JDBC server
+        // Invoked via JDBC Connection.createStatement().executeQuery() to run SQL queries
+        // See https://www.baeldung.com/java-jdbc#1-resultset-interface
         return Response.status(200).entity(personResource.list()).build();
     }
 
     @POST
-    @Path("/statement")
+    @Path("/executestatement")
     public Response executeStatement(@QueryParam(value="statement") String statement) {
-        // Note: This is only faked
-        // Note: Invoked via JDBC Connection.createStatement().execute(), for example to create schemas
+        // Note: This is faked to simulate a JDBC server
+        // Invoked via JDBC Connection.createStatement().execute(), for example to create schemas
+        // See https://www.baeldung.com/java-jdbc#1-statement
         return Response.status(200).build();
     }
 
     @GET
-    @Path("/metadata")
+    @Path("/getmetadata")
     public Response getMetadata(@QueryParam(value="metadata") String metadata) {
-        // Note: This is only faked
-        // Note: Invoked via JDBC Connection.getMetaData(), for example to check whether schema exists
+        // Note: This is faked to simulate a JDBC server
+        // Invoked via JDBC Connection.getMetaData(), for example to check whether schema exists
+        // See https://www.baeldung.com/java-jdbc#1-databasemetadata
         return Response.status(200).build();
     }
 }
