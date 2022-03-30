@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 import org.eclipse.microprofile.config.ConfigProvider;
@@ -118,5 +117,11 @@ public class LeaderUtils {
             }
         }
         return Response.status(httpStatus).build();    
+    }
+
+    public void determineLeader() {
+        System.out.println("LeaderUtils.determineLeader()");
+        String podName = System.getenv("POD_NAME");
+        System.out.println(podName);
     }
 }

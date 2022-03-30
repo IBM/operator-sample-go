@@ -7,7 +7,9 @@ The database-service directory contains a simple database implementation that wr
 
 The easiest way to use this service is to deploy it to Kubernetes by applying the provided yaml which uses an existing image.
 
-TODO: Add details.
+```
+$ kubectl apply -f kubernetes/statefulset.yaml 
+```
 
 
 ### Running the Service locally via Quarkus Dev Mode
@@ -75,7 +77,7 @@ $ unset DATA_DIRECTORY
 ```
 $ export REGISTRY='docker.io'
 $ export ORG='nheidloff'
-$ export IMAGE='database-service:v1.0.1'
+$ export IMAGE='database-service:v1.0.3'
 $ mvn clean install
 $ docker build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
 $ docker tag database-service:latest "$REGISTRY/$ORG/$IMAGE"

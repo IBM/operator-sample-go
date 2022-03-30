@@ -1,37 +1,44 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  name: database
+---
+apiVersion: v1
 kind: Service
 metadata:
   labels:
     app: database-service
   name: database-service
+  namespace: database
 spec:
   clusterIP: None
   ports:
   - port: 8089
   selector:
-    app: database
+    app: database-cluster
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: database
+  name: database-cluster
+  namespace: database
   labels:
-    app: database
+    app: database-cluster
 spec:
   serviceName: database-service
   replicas: 2
   selector:
     matchLabels:
-      app: database
+      app: database-cluster
   template:
     metadata:
       labels:
-        app: database
+        app: database-cluster
     spec:
       terminationGracePeriodSeconds: 10
       containers:
-      - name: database
-        image: nheidloff/database-service:v1.0.0
+      - name: database-pod
+        image: nheidloff/database-service:v1.0.3
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8089
