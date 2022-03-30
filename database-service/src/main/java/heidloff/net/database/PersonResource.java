@@ -23,6 +23,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+
+import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
 
@@ -34,7 +36,7 @@ public class PersonResource {
     @Inject
     LeaderUtils leaderUtils;
 
-    private final KubernetesClient client = null;
+    private KubernetesClient client = null;
 
     public PersonResource() {
     }
@@ -45,8 +47,7 @@ public class PersonResource {
 
     @PostConstruct
     void initialize() {
-        KubernetesClient client = new DefaultKubernetesClient();
-        // TODO? OpenShiftClient osClient = new DefaultOpenShiftClient();
+        this.client = new DefaultKubernetesClient();
         
         try {
             dataDirectory = ConfigProvider.getConfig().getValue("data.directory", String.class);
@@ -140,6 +141,7 @@ public class PersonResource {
 
     @GET
     public Set<Person> list() {
+        System.out.println("PersonResource.list()");
         return persons;
     }
 
@@ -207,16 +209,21 @@ public class PersonResource {
         writeData();
     }
 
-    private void notifyFollowers() {
-
-        // TODO
-
-        String followerDNSOrIPWithPort = "";
-        try {
-            URL apiUrl = new URL("http://" + followerDNSOrIPWithPort + "/onLeaderUpdated");
-            RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().baseUrl(apiUrl).build(RemoteDatabaseService.class);
-            customRestClient.onLeaderUpdated();              
-        } catch (Exception e) {            
-        }
+    public void notifyFollowers() {
+        String serviceName = "database-service";
+        String namespace = System.getenv("NAMESPACE");     
+        PodList podList = this.client.pods().inNamespace(namespace).list();
+        podList.getItems().forEach(pod -> {
+            if (pod.getMetadata().getName().endsWith("-0") == false) {
+                String followerAddress =  pod.getMetadata().getName() + "." + serviceName + "." + namespace + ":8089";
+                System.out.println("Follower found: " + pod.getMetadata().getName() + " - " + followerAddress);
+                try {
+                    URL apiUrl = new URL("http://" + followerAddress + "/onleaderupdated");
+                    RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().baseUrl(apiUrl).build(RemoteDatabaseService.class);
+                    customRestClient.onLeaderUpdated();              
+                } catch (Exception e) {            
+                }
+            }
+        });
     }
 }

@@ -48,8 +48,9 @@ public class API {
     }
 
     @POST
-    @Path("/onLeaderUpdated")
+    @Path("/onleaderupdated")
     public Response onLeaderUpdated() {
+        System.out.println("API.onLeaderUpdated()");
         return leaderUtils.onLeaderUpdated();
     }
 

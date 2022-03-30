@@ -94,6 +94,7 @@ public class LeaderUtils {
     }
 
     public Response onLeaderUpdated() {
+        System.out.println("LeaderUtils.onLeaderUpdated()");
         int httpStatus = 200; 
         if (isLeader() == true) {
             httpStatus = 501; // Not Implemented
