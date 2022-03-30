@@ -4,4 +4,4 @@
 !target/lib/*
 !target/quarkus-app/*
 !data.json
-!leader.txt
+!podstate.json

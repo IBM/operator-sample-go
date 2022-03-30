@@ -1,18 +1,41 @@
 # Database Service
 
-The database service simulates a simple database that writes and reads data to and from a local JSON file. The service has been built with Quarkus.
+The database-service directory contains a simple database implementation that writes and reads data to and from JSON files. The service can be deployed to Kubernetes via StatefulSets. There is one 'leader' pod and multiple 'follower' pods. Watch the video [Kubernetes StatefulSet simply explained | Deployment vs StatefulSet](https://youtu.be/pPQKAR1pA9U) to understand how this service works.
 
-### Run locally
+
+### Getting started
+
+The easiest way to use this service is to deploy it to Kubernetes by applying the provided yaml which uses an existing image.
+
+TODO: Add details.
+
+
+### Running the Service locally via Quarkus Dev Mode
+
+You can run some parts locally for development and debugging purposes via Quarkus dev mode. However leader election and data synchronization do not work.
 
 ```
 $ git clone https://github.com/ibm/operator-sample-go.git
 $ cd database-service
 $ mvn clean quarkus:dev
 $ open http://localhost:8089/q/swagger-ui/
-$ open http://localhost:8089/persons
 ```
 
-### Invoke API
+
+### Running the Service locally via Container
+
+You can run some parts locally for testing via containers. However leader election and data synchronization do not work.
+
+```
+$ git clone https://github.com/ibm/operator-sample-go.git
+$ cd database-service
+$ mvn clean install
+$ docker build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
+$ docker run -i --rm -p 8089:8089 database-service:latest
+$ open http://localhost:8089/q/swagger-ui/
+```
+
+### Testing APIs locally
 
 ```
 $ curl http://localhost:8089/persons
@@ -28,34 +51,33 @@ $ curl -X 'POST' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{
-  "firstName": "Mo",
-  "lastName": "Haghighi",
+  "firstName": "Johanna",
+  "lastName": "Koester",
   "id": "e956b5d0-fa0c-40e8-9da9-333c214dcaf7"
 }'
 $ curl http://localhost:8089/persons
-```
-
-```
-$ curl -X 'GET' 'http://localhost:8089/api/leader'
-$ curl -X 'POST' 'http://localhost:8089/api/leader?setAsLeader=true'
 $ curl -X 'POST' 'http://localhost:8089/api/leader?setAsLeader=false'
+$ curl -X 'GET' 'http://localhost:8089/api/leader'
 $ curl -X 'GET' 'http://localhost:8089/api/query'
 $ curl -X 'POST' 'http://localhost:8089/api/statement'
 $ curl -X 'GET' 'http://localhost:8089/api/metadata'
 ```
 
-To change the directory of the stored files, set the environment variable 'DATA_DIRECTORY'.
-
-### Run as Container
+To change the directory of the stored files, set the environment variable 'DATA_DIRECTORY', for example locally via:
 
 ```
-$ git clone https://github.com/ibm/operator-sample-go.git
-$ cd database-service
+$ export DATA_DIRECTORY=./temp
+$ unset DATA_DIRECTORY
+```
+
+### Building new Image Versions
+
+```
+$ export REGISTRY='docker.io'
+$ export ORG='nheidloff'
+$ export IMAGE='database-service:v1.0.1'
 $ mvn clean install
-$ docker build -f src/main/docker/Dockerfile.jvm -t nheidloff/database-service:v1.0.0 .
-$ docker run -i --rm -p 8089:8089 nheidloff/database-service:v1.0.0
-$ open http://localhost:8089/q/swagger-ui/
-$ open http://localhost:8089/persons
-$ docker tag nheidloff/database-service:v1.0.0 docker.io/nheidloff/database-service:v1.0.0
-$ docker push docker.io/nheidloff/database-service:v1.0.0
+$ docker build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
+$ docker tag database-service:latest "$REGISTRY/$ORG/$IMAGE"
+$ docker push "$REGISTRY/$ORG/$IMAGE"
 ```
