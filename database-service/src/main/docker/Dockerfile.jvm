@@ -9,6 +9,9 @@ COPY --chown=185 target/quarkus-app/quarkus/ /deployments/quarkus/
 COPY --chown=185 data.json /deployments/
 COPY --chown=185 podstate.json /deployments/
 
+COPY --chown=185 data.json /data/
+COPY --chown=185 podstate.json /data/
+
 EXPOSE 8080
 USER 185
 ENV AB_JOLOKIA_OFF=""

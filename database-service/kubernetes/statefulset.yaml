@@ -38,7 +38,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: database-pod
-        image: nheidloff/database-service:v1.0.3
+        image: nheidloff/database-service:v1.0.4
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8089
