@@ -90,7 +90,7 @@ public class LeaderUtils {
     }
 
     private String getLeaderAddress() {
-        return "TODO";
+        return "database-cluster-0.database-service.database:8089";
     }
 
     public Response onLeaderUpdated() {

@@ -218,10 +218,12 @@ public class PersonResource {
                 String followerAddress =  pod.getMetadata().getName() + "." + serviceName + "." + namespace + ":8089";
                 System.out.println("Follower found: " + pod.getMetadata().getName() + " - " + followerAddress);
                 try {
-                    URL apiUrl = new URL("http://" + followerAddress + "/onleaderupdated");
+                    URL apiUrl = new URL("http://" + followerAddress + "/api/onleaderupdated");
                     RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().baseUrl(apiUrl).build(RemoteDatabaseService.class);
                     customRestClient.onLeaderUpdated();              
-                } catch (Exception e) {            
+                } catch (Exception e) { 
+                    System.out.println("/onleaderupdated could not be invoked");
+                    System.out.println(e);           
                 }
             }
         });
