@@ -89,12 +89,9 @@ public class LeaderUtils {
         }        
     }
 
-    private String getLeaderAddress() {
-        return "database-cluster-0.database-service.database:8089";
-    }
-
     public Response onLeaderUpdated() {
         System.out.println("LeaderUtils.onLeaderUpdated()");
+        String leaderAddress = "http://database-cluster-0.database-service.database:8089/persons";
         int httpStatus = 200; 
         if (isLeader() == true) {
             httpStatus = 501; // Not Implemented
@@ -103,17 +100,22 @@ public class LeaderUtils {
             try {
                 // Note: This follower should update from the previous follower (or leader)
                 // For simplification purposes updates are only read from the leader
-                URL apiUrl = new URL("http://" + getLeaderAddress() + "/persons");
+                URL apiUrl = new URL(leaderAddress);
+                System.out.println("Leader found. URL: " + leaderAddress);
                 RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().baseUrl(apiUrl).
                     register(ExceptionMapper.class).build(RemoteDatabaseService.class);
                 persons = customRestClient.getAll();                
             } catch (Exception e) {
+                System.out.println("/persons could not be invoked");
+                System.out.println(e); 
                 httpStatus = 503; // Service Unavailable
             }
             if (persons != null) {
                 try {
                     personResource.updateAllPersons(persons);    
                 } catch (RuntimeException e) {
+                    System.out.println("Data could not be written");
+                    System.out.println(e); 
                     httpStatus = 503; // Service Unavailable
                 }                
             }

@@ -19,7 +19,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: database-container
-        image: nheidloff/database-service:v1.0.15
+        image: nheidloff/database-service:v1.0.17
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8089
