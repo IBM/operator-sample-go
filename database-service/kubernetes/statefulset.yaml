@@ -16,6 +16,8 @@ spec:
       labels:
         app: database-cluster
     spec:
+      securityContext:
+        fsGroup: 2000
       terminationGracePeriodSeconds: 10
       containers:
       - name: database-container
