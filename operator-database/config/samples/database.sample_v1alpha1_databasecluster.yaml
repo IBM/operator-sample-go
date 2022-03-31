@@ -1,0 +1,6 @@
+apiVersion: database.sample.third.party/v1alpha1
+kind: DatabaseCluster
+metadata:
+  name: databasecluster-sample
+spec:
+  # TODO(user): Add fields here

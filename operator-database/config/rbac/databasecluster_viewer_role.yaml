@@ -1,33 +1,20 @@
----
+# permissions for end users to view databaseclusters.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  creationTimestamp: null
-  name: manager-role
+  name: databasecluster-viewer-role
 rules:
 - apiGroups:
   - database.sample.third.party
   resources:
   - databaseclusters
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
-- apiGroups:
-  - database.sample.third.party
-  resources:
-  - databaseclusters/finalizers
-  verbs:
-  - update
 - apiGroups:
   - database.sample.third.party
   resources:
   - databaseclusters/status
   verbs:
   - get
-  - patch
-  - update
