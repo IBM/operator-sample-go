@@ -219,7 +219,8 @@ public class PersonResource {
                 System.out.println("Follower found: " + pod.getMetadata().getName() + " - " + followerAddress);
                 try {
                     URL apiUrl = new URL("http://" + followerAddress + "/api/onleaderupdated");
-                    RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().baseUrl(apiUrl).build(RemoteDatabaseService.class);
+                    RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().
+                    register(ExceptionMapper.class).baseUrl(apiUrl).build(RemoteDatabaseService.class);
                     customRestClient.onLeaderUpdated();              
                 } catch (Exception e) { 
                     System.out.println("/onleaderupdated could not be invoked");

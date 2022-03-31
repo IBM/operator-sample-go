@@ -104,7 +104,8 @@ public class LeaderUtils {
                 // Note: This follower should update from the previous follower (or leader)
                 // For simplification purposes updates are only read from the leader
                 URL apiUrl = new URL("http://" + getLeaderAddress() + "/persons");
-                RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().baseUrl(apiUrl).build(RemoteDatabaseService.class);
+                RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().baseUrl(apiUrl).
+                    register(ExceptionMapper.class).build(RemoteDatabaseService.class);
                 persons = customRestClient.getAll();                
             } catch (Exception e) {
                 httpStatus = 503; // Service Unavailable
@@ -123,8 +124,8 @@ public class LeaderUtils {
     public void electLeader() {
         // Note: This is a very simple leader election only for demo purposes
         String podName = System.getenv("POD_NAME");
-        System.out.println("Pod name: "+ podName);
-        if (podName.endsWith("-0")) {
+        System.out.println("Pod name: "+ podName);        
+        if ((podName != null) && (podName.endsWith("-0"))) {
             setLeader(true);
         }
     }

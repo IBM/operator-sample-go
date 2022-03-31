@@ -77,7 +77,7 @@ $ unset DATA_DIRECTORY
 ```
 $ export REGISTRY='docker.io'
 $ export ORG='nheidloff'
-$ export IMAGE='database-service:v1.0.13'
+$ export IMAGE='database-service:v1.0.15'
 $ mvn clean install
 $ docker build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
 $ docker tag database-service:latest "$REGISTRY/$ORG/$IMAGE"
