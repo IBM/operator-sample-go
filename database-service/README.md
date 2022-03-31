@@ -37,6 +37,7 @@ $ docker run -i --rm -p 8089:8089 database-service:latest
 $ open http://localhost:8089/q/swagger-ui/
 ```
 
+
 ### Testing APIs locally
 
 ```
@@ -72,6 +73,7 @@ $ export DATA_DIRECTORY=./temp
 $ unset DATA_DIRECTORY
 ```
 
+
 ### Building new Image Versions
 
 ```
@@ -82,4 +84,26 @@ $ mvn clean install
 $ docker build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
 $ docker tag database-service:latest "$REGISTRY/$ORG/$IMAGE"
 $ docker push "$REGISTRY/$ORG/$IMAGE"
+```
+
+
+### Testing APIs on Kubernetes
+
+database-cluster-0 is leader, database-cluster-1 is follower. You can only write to the leader. After data has been written to the leader, the followers synchronize this data to their volumes.
+
+```
+$ kubectl exec -n database database-cluster-1 -- curl http://localhost:8089/persons
+$ kubectl exec -n database database-cluster-1 -- curl http://localhost:8089/api/leader
+$ kubectl logs -n database database-cluster-1
+$ kubectl exec -n database database-cluster-1 -- curl -X 'POST' 'http://localhost:8089/persons' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"firstName": "Johanna","lastName": "Koester","id": "e956b5d0-fa0c-40e8-9da9-333c214dcaf7"}'
+$ kubectl exec -n database database-cluster-1 -- curl http://localhost:8089/persons
+```
+
+```
+$ kubectl exec -n database database-cluster-0 -- curl http://localhost:8089/persons
+$ kubectl exec -n database database-cluster-0 -- curl http://localhost:8089/api/leader
+$ kubectl logs -n database database-cluster-0
+$ kubectl exec -n database database-cluster-0 -- curl -X 'POST' 'http://localhost:8089/persons' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"firstName": "Johanna","lastName": "Koester","id": "e956b5d0-fa0c-40e8-9da9-333c214dcaf7"}'
+$ kubectl exec -n database database-cluster-0 -- curl http://localhost:8089/persons
+$ kubectl exec -n database database-cluster-1 -- curl http://localhost:8089/persons
 ```
