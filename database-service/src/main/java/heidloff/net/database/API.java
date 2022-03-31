@@ -60,9 +60,6 @@ public class API {
         // Note: This is faked to simulate a JDBC server
         // Invoked via JDBC Connection.createStatement().executeQuery() to run SQL queries
         // See https://www.baeldung.com/java-jdbc#1-resultset-interface
-
-        personResource.notifyFollowers(); // TODO remove
-
         return Response.status(200).entity(personResource.list()).build();
     }
 

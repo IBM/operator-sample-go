@@ -107,3 +107,8 @@ $ kubectl exec -n database database-cluster-0 -- curl -X 'POST' 'http://localhos
 $ kubectl exec -n database database-cluster-0 -- curl http://localhost:8089/persons
 $ kubectl exec -n database database-cluster-1 -- curl http://localhost:8089/persons
 ```
+
+```
+$ kubectl delete pod database-cluster-0 -n database
+$ kubectl exec -n database database-cluster-0 -- curl http://localhost:8089/persons
+```
