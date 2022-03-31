@@ -28,10 +28,12 @@ spec:
       labels:
         app: database
     spec:
+      securityContext:
+        fsGroup: 2000
       terminationGracePeriodSeconds: 10
       containers:
       - name: database
-        image: nheidloff/database-service:v1.0.0
+        image: nheidloff/database-service:v1.0.17
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8089
