@@ -16,8 +16,16 @@ const DEFAULT_ANNOTATION_TITLE = "My Title"
 const LabelKey = "app"
 const LabelValue = "mydatabase"
 
-const Image = "docker.io/nheidloff/database-service:v1.0.0"
+const Image = "docker.io/nheidloff/database-service:v1.0.17"
+
 const Port int32 = 8089
+
+const DataVolumeName = "data-volume"
+const StorageClassName = "ibmc-vpc-block-5iops-tier"
+const StorageResourceRequirement = "1Gi"
+const DataDirectoryKey = "DATA_DIRECTORY"
+const DataDirectoryValue = "/data"
+const fsGroup = "2000"
 
 func SetGlobalVariables(applicationName string) {
 	SecretName = applicationName + "-secret-greeting"
