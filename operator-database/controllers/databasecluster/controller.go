@@ -50,8 +50,18 @@ func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req 
 		return ctrl.Result{}, err
 	}
 
-	//variables.SetGlobalVariables(database.Name)
-	//variables.PrintVariables(database.Name, database.Namespace, database.Spec.AmountPods)
+	//variables.SetGlobalVariables(databasecluster.Name)
+	//variables.PrintVariables(databasecluster.Name, databasecluster.Namespace, databasecluster.Spec.AmountPods)
+
+	_, err = reconciler.reconcileService(ctx, databasecluster)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	_, err = reconciler.reconcileStatefulSet(ctx, databasecluster)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
 
 	return ctrl.Result{}, nil
 }
