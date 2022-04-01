@@ -5,7 +5,7 @@
 * [operator-sdk](https://sdk.operatorframework.io/docs/installation/) (comes with Golang)
 * git
 * kubectl
-* docker
+* podman
 * [ibmcloud](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli) (if IBM Cloud is used)
 
 **2. Operator SDK**
@@ -14,7 +14,7 @@
 
 **3. Image Registry**
 
-Replace REGISTRY and ORG with your registry account.
+Replace REGISTRY and ORG with your registry account and change the versions.
 
 ```
 $ export REGISTRY='docker.io'

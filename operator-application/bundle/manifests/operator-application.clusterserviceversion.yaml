@@ -87,6 +87,18 @@ spec:
           - patch
           - update
         - apiGroups:
+          - application.sample.ibm.com
+          resources:
+          - applications/metadata
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
           - ""
           resources:
           - secrets
@@ -195,7 +207,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/nheidloff/application-operator:v1.0.5
+                image: docker.io/nheidloff/application-operator:v1.0.15
                 livenessProbe:
                   httpGet:
                     path: /healthz

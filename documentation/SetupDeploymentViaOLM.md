@@ -14,7 +14,8 @@ Build and push the bundle image:
 ```
 $ make generate manifests
 $ make bundle IMG="$REGISTRY/$ORG/$IMAGE"
-$ make bundle-build docker-push BUNDLE_IMG="$REGISTRY/$ORG/$BUNDLE_IMAGE" IMG="$REGISTRY/$ORG/$BUNDLE_IMAGE"
+$ podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$BUNDLE_IMAGE" .
+$ podman push "$REGISTRY/$ORG/$BUNDLE_IMAGE"
 ```
 
 **Deploy the operator**

@@ -24,8 +24,9 @@ Build and push the application operator image:
 
 ```
 $ make generate manifests
-$ docker login $REGISTRY
-$ make docker-build docker-push IMG="$REGISTRY/$ORG/$IMAGE"
+$ podman login $REGISTRY
+$ podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE" .
+$ podman push "$REGISTRY/$ORG/$IMAGE"
 ```
 
 Deploy the operator:
