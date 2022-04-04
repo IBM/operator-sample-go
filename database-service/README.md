@@ -32,8 +32,8 @@ You can run some parts locally for testing via containers. However leader electi
 $ git clone https://github.com/ibm/operator-sample-go.git
 $ cd database-service
 $ mvn clean install
-$ docker build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
-$ docker run -i --rm -p 8089:8089 database-service:latest
+$ podman build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
+$ podman run -i --rm -p 8089:8089 database-service:latest
 $ open http://localhost:8089/q/swagger-ui/
 ```
 
@@ -81,9 +81,9 @@ $ export REGISTRY='docker.io'
 $ export ORG='nheidloff'
 $ export IMAGE='database-service:v1.0.17'
 $ mvn clean install
-$ docker build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
-$ docker tag database-service:latest "$REGISTRY/$ORG/$IMAGE"
-$ docker push "$REGISTRY/$ORG/$IMAGE"
+$ podman build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
+$ podman tag database-service:latest "$REGISTRY/$ORG/$IMAGE"
+$ podman push "$REGISTRY/$ORG/$IMAGE"
 ```
 
 
