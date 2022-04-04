@@ -3,6 +3,7 @@ package databaseclustercontroller
 import (
 	"context"
 
+	variables "github.com/ibm/operator-sample-go/operator-database/variablesdatabasecluster"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -39,6 +40,8 @@ type DatabaseClusterReconciler struct {
 func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 
+	log.Info("Reconcile started for DatabaseCluster CRD")
+
 	databasecluster := &databaseclustersamplev1alpha1.DatabaseCluster{}
 	err := reconciler.Get(ctx, req.NamespacedName, databasecluster)
 	if err != nil {
@@ -50,8 +53,8 @@ func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req 
 		return ctrl.Result{}, err
 	}
 
-	//variables.SetGlobalVariables(databasecluster.Name)
-	//variables.PrintVariables(databasecluster.Name, databasecluster.Namespace, databasecluster.Spec.AmountPods)
+	variables.SetGlobalVariables(databasecluster.Name)
+	variables.PrintVariables(databasecluster.Name, databasecluster.Namespace, databasecluster.Spec.AmountPods)
 
 	_, err = reconciler.reconcileService(ctx, databasecluster)
 	if err != nil {

@@ -22,7 +22,7 @@ type DatabaseReconciler struct {
 func (reconciler *DatabaseReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 
-	log.Info("Reconcile started")
+	log.Info("Reconcile started for Database CRD")
 
 	return ctrl.Result{}, nil
 }

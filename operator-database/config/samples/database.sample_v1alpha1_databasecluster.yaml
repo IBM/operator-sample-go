@@ -1,6 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: database
+---
 apiVersion: database.sample.third.party/v1alpha1
 kind: DatabaseCluster
 metadata:
   name: databasecluster-sample
+  namespace: database
 spec:
-  # TODO(user): Add fields here
+  amountPods: 2
