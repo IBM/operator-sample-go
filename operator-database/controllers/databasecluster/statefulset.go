@@ -5,7 +5,7 @@ import (
 
 	databasesamplev1alpha1 "github.com/ibm/operator-sample-go/operator-database/api/v1alpha1"
 
-	variables "github.com/ibm/operator-sample-go/operator-database/variablesdatabasecontroller"
+	variables "github.com/ibm/operator-sample-go/operator-database/variablesdatabasecluster"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -22,7 +22,8 @@ func (reconciler *DatabaseClusterReconciler) defineStatefulSet(databasecluster *
 	service := &appsv1.StatefulSet{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
-			Name: databasecluster.Name,
+			Name:      databasecluster.Name,
+			Namespace: databasecluster.Namespace,
 		},
 		Spec: appsv1.StatefulSetSpec{
 			Replicas: &databasecluster.Spec.AmountPods,
@@ -37,21 +38,31 @@ func (reconciler *DatabaseClusterReconciler) defineStatefulSet(databasecluster *
 					Containers: []v1.Container{{
 						Image:        variables.Image,
 						Name:         variables.ContainerName,
-						VolumeMounts: []v1.VolumeMount{{Name: variables.DataVolumeName, MountPath: variables.DataDirectoryValue}},
+						VolumeMounts: []v1.VolumeMount{{Name: variables.VolumeMountName, MountPath: variables.DataDirectory}},
 						Ports: []v1.ContainerPort{{
 							ContainerPort: variables.Port,
 						}},
-						Env: []v1.EnvVar{{Name: variables.DataDirectoryKey, Value: variables.DataDirectoryValue}},
+						Env: []v1.EnvVar{
+							{Name: variables.EnvKeyDataDirectory, Value: variables.DataDirectory},
+							{Name: variables.EnvKeyPodname, ValueFrom: &v1.EnvVarSource{FieldRef: &v1.ObjectFieldSelector{
+								APIVersion: "v1",
+								FieldPath:  "metadata.name",
+							}}},
+							{Name: variables.EnvKeyNamespace, ValueFrom: &v1.EnvVarSource{FieldRef: &v1.ObjectFieldSelector{
+								APIVersion: "v1",
+								FieldPath:  "metadata.name",
+							}}},
+						},
 					}},
 					SecurityContext: &v1.PodSecurityContext{
-						RunAsGroup: variables.fsGroup,
+						RunAsGroup: &variables.FsGroup,
 					},
 				},
 			},
 			VolumeClaimTemplates: []v1.PersistentVolumeClaim{{
 				TypeMeta: metav1.TypeMeta{},
 				ObjectMeta: metav1.ObjectMeta{
-					Name: variables.DataVolumeName,
+					Name: variables.VolumeMountName,
 				},
 				Spec: v1.PersistentVolumeClaimSpec{
 					AccessModes: []v1.PersistentVolumeAccessMode{v1.ReadWriteOnce},
@@ -61,7 +72,7 @@ func (reconciler *DatabaseClusterReconciler) defineStatefulSet(databasecluster *
 							v1.ResourceStorage: resource.MustParse("1Gi"),
 						},
 					},
-					StorageClassName: variables.StorageClassName,
+					StorageClassName: &variables.StorageClassName,
 				},
 				Status: v1.PersistentVolumeClaimStatus{},
 			}},
@@ -75,7 +86,7 @@ func (reconciler *DatabaseClusterReconciler) defineStatefulSet(databasecluster *
 
 func (reconciler *DatabaseClusterReconciler) reconcileStatefulSet(ctx context.Context, databasecluster *databasesamplev1alpha1.DatabaseCluster) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	serviceDefinition := reconciler.defineService(databasecluster)
+	serviceDefinition := reconciler.defineStatefulSet(databasecluster)
 	service := &appsv1.StatefulSet{}
 	err := reconciler.Get(ctx, types.NamespacedName{Name: variables.ServiceName, Namespace: databasecluster.Namespace}, service)
 	if err != nil {
