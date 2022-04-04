@@ -4,6 +4,7 @@ import (
 	"context"
 
 	databasesamplev1alpha1 "github.com/ibm/operator-sample-go/operator-database/api/v1alpha1"
+	variables "github.com/ibm/operator-sample-go/operator-database/variablesdatabasecluster"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -11,8 +12,6 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-
-	variables "github.com/ibm/operator-sample-go/operator-database/variablesdatabasecontroller"
 )
 
 func (reconciler *DatabaseClusterReconciler) defineService(databasecluster *databasesamplev1alpha1.DatabaseCluster) *corev1.Service {
