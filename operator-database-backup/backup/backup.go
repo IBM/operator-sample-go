@@ -1,6 +1,7 @@
 package backup
 
 import (
+	"context"
 	"fmt"
 	"os"
 
@@ -19,10 +20,14 @@ var (
 	cosAuthEndpoint     = env.GetString("CLOUD_OBJECT_STORAGE_AUTH_ENDPOINT", "https://iam.cloud.ibm.com/identity/token")
 	cosBucketNamePrefix = env.GetString("CLOUD_OBJECT_STORAGE_BUCKET_NAME_PREFIX", "database-backup-")
 	namespace           = env.GetString("NAMESPACE", "database")
+
+	// internal
+	appContext context.Context
 )
 
 func Run() {
 	fmt.Println("Start backup.Run()")
+	appContext = context.Background()
 
 	if len(backupResourceName) < 1 {
 		exitWithErrorCondition(CONDITION_TYPE_BACKUP_RESOURCE_NAME_DEFINED)
@@ -56,7 +61,7 @@ func Run() {
 	// TODO
 	var controllerRuntimeClient client.Client
 	var object client.Object
-	addConditionSucceeded(controllerRuntimeClient, object)
+	addConditionSucceeded(appContext, controllerRuntimeClient, object)
 }
 
 func exitWithErrorCondition(conditionType string) {
@@ -66,15 +71,17 @@ func exitWithErrorCondition(conditionType string) {
 
 	switch conditionType {
 	case CONDITION_TYPE_BACKUP_RESOURCE_NAME_DEFINED:
-		setConditionBackupResourceNameDefined(controllerRuntimeClient, object)
+		setConditionBackupResourceNameDefined(appContext, controllerRuntimeClient, object)
 	case CONDITION_TYPE_NAMESPACE_DEFINED:
-		setConditionNamespaceDefined(controllerRuntimeClient, object)
+		setConditionNamespaceDefined(appContext, controllerRuntimeClient, object)
 	case CONDITION_TYPE_COS_API_KEY_DEFINED:
-		setConditionCOSAPIKeyDefined(controllerRuntimeClient, object)
+		setConditionCOSAPIKeyDefined(appContext, controllerRuntimeClient, object)
 	case CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED:
-		setConditionCOSServiceInstanceIdNotDefined(controllerRuntimeClient, object)
+		setConditionCOSServiceInstanceIdNotDefined(appContext, controllerRuntimeClient, object)
 	case CONDITION_TYPE_DATA_READ:
-		setConditionDataRead(controllerRuntimeClient, object)
+		setConditionDataRead(appContext, controllerRuntimeClient, object)
+	case CONDITION_TYPE_DATA_WRITTEN:
+		setConditionDataWritten(appContext, controllerRuntimeClient, object)
 	}
 
 	os.Exit(1)

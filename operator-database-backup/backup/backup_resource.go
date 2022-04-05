@@ -1,36 +1,25 @@
 package backup
 
-func defineDatabaseResource() {}
+import (
+	"context"
+	"fmt"
 
-/*
-	database := &databasesamplev1alpha1.Database{
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      application.Spec.DatabaseName,
-			Namespace: application.Spec.DatabaseNamespace,
-		},
-		Spec: databasesamplev1alpha1.DatabaseSpec{
-			User:        variables.DatabaseUser,
-			Password:    variables.DatabasePassword,
-			Url:         variables.DatabaseUrl,
-			Certificate: variables.DatabaseCertificate,
-		},
-	}
-*/
+	databaseoperatorv1alpha1 "github.com/ibm/operator-sample-go/operator-database/api/v1alpha1"
+)
 
-func getBackupResource(namespace string, name string) {}
+func getBackupResource(ctx context.Context, name string, namespace string) {
+	databaseBackup := &databaseoperatorv1alpha1.DatabaseBackup{}
+	fmt.Println(databaseBackup)
 
-/*
-	database := &databasesamplev1alpha1.Database{}
-	databaseDefinition := defineDatabase(application)
-	err := reconciler.Get(ctx, types.NamespacedName{Name: application.Spec.DatabaseName, Namespace: application.Spec.DatabaseNamespace}, database)
+	/*err := reconciler.Get(ctx, types.NamespacedName{Name: application.Spec.DatabaseName, Namespace: application.Spec.DatabaseNamespace}, database)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			add condition
+			//add condition
 		} else {
-			happy path
+			//happy path
 		}
 	} else  {
-		add condition
+		//add condition
 	}
+	*/
 }
-*/

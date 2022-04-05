@@ -2,7 +2,10 @@ module github.com/ibm/operator-sample-go/operator-database-backup
 
 go 1.18
 
-require github.com/IBM/ibm-cos-sdk-go v1.8.0
+require (
+	github.com/IBM/ibm-cos-sdk-go v1.8.0
+	github.com/ibm/operator-sample-go/operator-application v0.0.0-20220405151634-07055dc9ce0f
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -17,6 +20,7 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5 // indirect
 	golang.org/x/net v0.0.0-20211209124913-491a49abca63 // indirect
 	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f // indirect
 	golang.org/x/sys v0.0.0-20211029165221-6e7872819dc8 // indirect
@@ -39,6 +43,7 @@ require (
 )
 
 require (
+	github.com/ibm/operator-sample-go/operator-database v1.0.2
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9
 	sigs.k8s.io/controller-runtime v0.11.2
