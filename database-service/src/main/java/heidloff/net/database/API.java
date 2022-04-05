@@ -22,6 +22,9 @@ public class API {
     LeaderUtils leaderUtils;
 
     @Inject
+    DataSynchronization dataSynchronization;
+
+    @Inject
     @RestClient
     RemoteDatabaseService remoteDatabaseService;
 
@@ -51,7 +54,7 @@ public class API {
     @Path("/onleaderupdated")
     public Response onLeaderUpdated() {
         System.out.println("API.onLeaderUpdated()");
-        return leaderUtils.onLeaderUpdated();
+        return DataSynchronization.synchronizeDataFromLeader(leaderUtils, personResource);
     }
 
     @GET

@@ -2,7 +2,6 @@ package heidloff.net.database;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
@@ -22,12 +22,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import org.eclipse.microprofile.config.ConfigProvider;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
-import io.fabric8.kubernetes.api.model.PodList;
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
-import io.fabric8.kubernetes.client.KubernetesClient;
-
+@ApplicationScoped
 @Path("/persons")
 public class PersonResource {
 
@@ -36,7 +32,8 @@ public class PersonResource {
     @Inject
     LeaderUtils leaderUtils;
 
-    private KubernetesClient client = null;
+    @Inject
+    DataSynchronization dataSynchronization;
 
     public PersonResource() {
     }
@@ -46,9 +43,7 @@ public class PersonResource {
     String pathAndFileName;
 
     @PostConstruct
-    void initialize() {
-        this.client = new DefaultKubernetesClient();
-        
+    void initialize() {       
         try {
             dataDirectory = ConfigProvider.getConfig().getValue("data.directory", String.class);
         } catch (Exception e) {
@@ -62,8 +57,7 @@ public class PersonResource {
                 pathAndFileName = dataDirectory + "/" + FILENAME_DATA;
             } 
         }
-        initializeData();
-        readData();
+        initializeData();        
     }
 
     private void initializeData() {
@@ -75,10 +69,15 @@ public class PersonResource {
         }
         if (fileExists == false) {
             try {
-                String content = new String (Files.readAllBytes(Paths.get(FILENAME_DATA)));
-                java.nio.file.Path path = Paths.get(pathAndFileName);
-                byte[] stringToBytes = content.getBytes();
-                Files.write(path, stringToBytes);
+                if (leaderUtils.isLeader()) {
+                    String content = new String (Files.readAllBytes(Paths.get(FILENAME_DATA)));
+                    java.nio.file.Path path = Paths.get(pathAndFileName);
+                    byte[] stringToBytes = content.getBytes();
+                    Files.write(path, stringToBytes);
+                    readData();
+                } else {
+                    DataSynchronization.synchronizeDataFromLeader(leaderUtils, this);
+                }
             } catch (Exception e) {
             }
         }
@@ -129,7 +128,7 @@ public class PersonResource {
         }
 
         if (newDataWritten == true) {
-            notifyFollowers();
+            DataSynchronization.notifyFollowers();
         }
 
         if (outputObject != null) {
@@ -207,26 +206,5 @@ public class PersonResource {
     public void updateAllPersons(Set<Person> newPersons) throws RuntimeException {
         persons = newPersons;
         writeData();
-    }
-
-    public void notifyFollowers() {
-        String serviceName = "database-service";
-        String namespace = System.getenv("NAMESPACE");     
-        PodList podList = this.client.pods().inNamespace(namespace).list();
-        podList.getItems().forEach(pod -> {
-            if (pod.getMetadata().getName().endsWith("-0") == false) {
-                String followerAddress =  pod.getMetadata().getName() + "." + serviceName + "." + namespace + ":8089";
-                System.out.println("Follower found: " + pod.getMetadata().getName() + " - " + followerAddress);
-                try {
-                    URL apiUrl = new URL("http://" + followerAddress + "/api/onleaderupdated");
-                    RemoteDatabaseService customRestClient = RestClientBuilder.newBuilder().
-                    register(ExceptionMapper.class).baseUrl(apiUrl).build(RemoteDatabaseService.class);
-                    customRestClient.onLeaderUpdated();              
-                } catch (Exception e) { 
-                    System.out.println("/onleaderupdated could not be invoked");
-                    System.out.println(e);           
-                }
-            }
-        });
     }
 }

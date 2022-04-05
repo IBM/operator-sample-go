@@ -9,6 +9,7 @@ The easiest way to use this service is to deploy it to Kubernetes by applying th
 
 ```
 $ kubectl apply -f kubernetes/
+$ kubectl get all -n database
 ```
 
 
@@ -79,7 +80,7 @@ $ unset DATA_DIRECTORY
 ```
 $ export REGISTRY='docker.io'
 $ export ORG='nheidloff'
-$ export IMAGE='database-service:v1.0.17'
+$ export IMAGE='database-service:v1.0.22'
 $ mvn clean install
 $ podman build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
 $ podman tag database-service:latest "$REGISTRY/$ORG/$IMAGE"
@@ -92,23 +93,28 @@ $ podman push "$REGISTRY/$ORG/$IMAGE"
 database-cluster-0 is leader, database-cluster-1 is follower. You can only write to the leader. After data has been written to the leader, the followers synchronize this data to their volumes.
 
 ```
-$ kubectl exec -n database database-cluster-1 -- curl http://localhost:8089/persons
-$ kubectl exec -n database database-cluster-1 -- curl http://localhost:8089/api/leader
+$ kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
+$ kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/api/leader
 $ kubectl logs -n database database-cluster-1
-$ kubectl exec -n database database-cluster-1 -- curl -X 'POST' 'http://localhost:8089/persons' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"firstName": "Johanna","lastName": "Koester","id": "e956b5d0-fa0c-40e8-9da9-333c214dcaf7"}'
-$ kubectl exec -n database database-cluster-1 -- curl http://localhost:8089/persons
+$ kubectl exec -n database database-cluster-1 -- curl -s -X 'POST' 'http://localhost:8089/persons' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"firstName": "Johanna","lastName": "Koester","id": "e956b5d0-fa0c-40e8-9da9-333c214dcaf7"}'
+$ kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
 ```
 
 ```
-$ kubectl exec -n database database-cluster-0 -- curl http://localhost:8089/persons
-$ kubectl exec -n database database-cluster-0 -- curl http://localhost:8089/api/leader
+$ kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/persons
+$ kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
 $ kubectl logs -n database database-cluster-0
-$ kubectl exec -n database database-cluster-0 -- curl -X 'POST' 'http://localhost:8089/persons' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"firstName": "Johanna","lastName": "Koester","id": "e956b5d0-fa0c-40e8-9da9-333c214dcaf7"}'
-$ kubectl exec -n database database-cluster-0 -- curl http://localhost:8089/persons
-$ kubectl exec -n database database-cluster-1 -- curl http://localhost:8089/persons
+$ kubectl exec -n database database-cluster-0 -- curl -s -X 'POST' 'http://localhost:8089/persons' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"firstName": "Johanna","lastName": "Koester","id": "e956b5d0-fa0c-40e8-9da9-333c214dcaf7"}'
+$ kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/persons
+$ kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
 ```
 
 ```
 $ kubectl delete pod database-cluster-0 -n database
-$ kubectl exec -n database database-cluster-0 -- curl http://localhost:8089/persons
+$ kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/persons
+```
+
+```
+$ kubectl scale statefulsets database-cluster --replicas=3 -n database
+$ kubectl exec -n database database-cluster-2 -- curl -s http://localhost:8089/persons
 ```

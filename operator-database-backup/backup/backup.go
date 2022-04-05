@@ -89,3 +89,14 @@ func exitWithErrorCondition(conditionType string) {
 
 	os.Exit(1)
 }
+
+/*
+String leaderAddress = "http://database-cluster-0.database-service.database:8089/persons";
+String serviceName = "database-service";
+        String namespace = System.getenv("NAMESPACE");
+        PodList podList = this.client.pods().inNamespace(namespace).list();
+        podList.getItems().forEach(pod -> {
+            if (pod.getMetadata().getName().endsWith("-0") == false) {
+                String followerAddress =  pod.getMetadata().getName() + "." + serviceName + "." + namespace + ":8089";
+                System.out.println("Follower found: " + pod.getMetadata().getName() + " - " + followerAddress);
+*/
