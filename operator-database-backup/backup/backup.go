@@ -50,7 +50,7 @@ func Run() {
 		exitWithErrorCondition(CONDITION_TYPE_BACKUP_RESOURCE_FOUND, err)
 	}
 	fmt.Println("databaseBackupResource:")
-	fmt.Println(databaseBackupResource)
+	fmt.Println(databaseBackupResource.Name)
 
 	data, err := readData()
 	if err != nil {
@@ -87,7 +87,7 @@ func exitWithErrorCondition(conditionType string, err error) {
 	case CONDITION_TYPE_DATA_WRITTEN:
 		setConditionDataWritten()
 	case CONDITION_TYPE_BACKUP_RESOURCE_FOUND:
-		setConditionDataWritten()
+		setConditionBackupResourceFound()
 	}
 
 	os.Exit(1)
