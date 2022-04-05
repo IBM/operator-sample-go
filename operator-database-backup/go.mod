@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/IBM/ibm-cos-sdk-go v1.8.0
-	github.com/ibm/operator-sample-go/operator-application v0.0.0-20220405151634-07055dc9ce0f
+	github.com/ibm/operator-sample-go/operator-application v1.0.3
 )
 
 require (
@@ -43,7 +43,7 @@ require (
 )
 
 require (
-	github.com/ibm/operator-sample-go/operator-database v1.0.2
+	github.com/ibm/operator-sample-go/operator-database v1.0.3
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9
 	sigs.k8s.io/controller-runtime v0.11.2
