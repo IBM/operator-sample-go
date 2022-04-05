@@ -22,6 +22,9 @@ type DatabaseClusterReconciler struct {
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databaseclusters,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databaseclusters/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databaseclusters/finalizers,verbs=update
+//+kubebuilder:rbac:groups=database.sample.third.party,resources=services,verbs=get;list;watch;create;update;patch;delete
+
+//TODO check the above permissions and, if necessary, add statefulsets, clusterrole, clusterrolebinding etc
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -33,10 +36,6 @@ type DatabaseClusterReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.11.0/pkg/reconcile
 
-//+kubebuilder:rbac:groups=database.sample.third.party,resources=databaseclusters,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=database.sample.third.party,resources=databaseclusters/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=database.sample.third.party,resources=databaseclusterss/finalizers,verbs=update
-//+kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;create;update;patch;delete
 func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 
@@ -60,6 +59,20 @@ func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req 
 	if err != nil {
 		return ctrl.Result{}, err
 	}
+
+	// It seems these resources do not get deleted when the CR is deleted.  Need to fix this and test again.
+	// TODO
+	/*
+		_, err = reconciler.reconcileClusterRole(ctx, databasecluster)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+
+		_, err = reconciler.reconcileClusterRoleBinding(ctx, databasecluster)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	*/
 
 	_, err = reconciler.reconcileStatefulSet(ctx, databasecluster)
 	if err != nil {

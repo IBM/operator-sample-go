@@ -6,6 +6,8 @@ import (
 
 var StatefulSetName string
 var ServiceName string
+var ClusterRoleName string
+var ClusterRoleBindingName string
 var ContainerName string
 var DataDirectory string = "/data"
 
@@ -25,9 +27,13 @@ const EnvKeyDataDirectory = "DATA_DIRECTORY"
 const EnvKeyPodname = "POD_NAME"
 const EnvKeyNamespace = "NAMESPACE"
 
+const RoleBindingServiceAccount = "default"
+
 func SetGlobalVariables(applicationName string) {
 	StatefulSetName = applicationName + "-statefulset-databasecluster"
 	ServiceName = applicationName + "-service-databasecluster"
+	ClusterRoleName = applicationName + "-role-databasecluster"
+	ClusterRoleBindingName = applicationName + "-rolebinding-databasecluster"
 	ContainerName = applicationName + "--databasecluster"
 }
 

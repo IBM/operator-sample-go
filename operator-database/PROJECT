@@ -25,4 +25,13 @@ resources:
   kind: DatabaseCluster
   path: github.com/ibm/operator-sample-go/operator-database/api/v1alpha1
   version: v1alpha1
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: third.party
+  group: database.sample
+  kind: DatabaseBackup
+  path: github.com/ibm/operator-sample-go/operator-database/api/v1alpha1
+  version: v1alpha1
 version: "3"

@@ -2,4 +2,5 @@
 resources:
 - database.sample_v1alpha1_database.yaml
 - database.sample_v1alpha1_databasecluster.yaml
+- database.sample_v1alpha1_databasebackup.yaml
 #+kubebuilder:scaffold:manifestskustomizesamples

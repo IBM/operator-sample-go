@@ -15,6 +15,7 @@ import (
 
 	databasesamplev1alpha1 "github.com/ibm/operator-sample-go/operator-database/api/v1alpha1"
 	databasecontroller "github.com/ibm/operator-sample-go/operator-database/controllers/database"
+	databasebackupcontroller "github.com/ibm/operator-sample-go/operator-database/controllers/databasebackup"
 	databaseclustercontroller "github.com/ibm/operator-sample-go/operator-database/controllers/databasecluster"
 	//+kubebuilder:scaffold:imports
 )
@@ -73,6 +74,13 @@ func main() {
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "DatabaseCluster")
+		os.Exit(1)
+	}
+	if err = (&databasebackupcontroller.DatabaseBackupReconciler{
+		Client: mgr.GetClient(),
+		Scheme: mgr.GetScheme(),
+	}).SetupWithManager(mgr); err != nil {
+		setupLog.Error(err, "unable to create controller", "controller", "DatabaseBackup")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder
