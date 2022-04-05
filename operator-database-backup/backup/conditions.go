@@ -83,3 +83,15 @@ func setConditionDataWritten(controllerRuntimeClient client.Client, object clien
 	//	CONDITION_REASON_DATA_WRITTEN, CONDITION_MESSAGE_DATA_WRITTEN)
 	return nil
 }
+
+// Note: Status of SUCCEEDED can only be True
+const CONDITION_TYPE_SUCCEEDED = "Succeeded"
+const CONDITION_REASON_SUCCEEDED = "InstallSucceeded"
+const CONDITION_MESSAGE_SUCCEEDED = "Application has been installed"
+
+func addConditionSucceeded(controllerRuntimeClient client.Client, object client.Object) error {
+	fmt.Println("Adding SUCCEEDED condition ...")
+	//return utilities.AppendCondition(context.Background(), controllerRuntimeClient, object, CONDITION_TYPE_SUCCEEDED, CONDITION_STATUS_TRUE,
+	//	CONDITION_REASON_SUCCEEDED, CONDITION_MESSAGE_SUCCEEDED)
+	return nil
+}

@@ -9,5 +9,4 @@ import (
 func main() {
 	fmt.Println("Main invoked")
 	backup.Run()
-
 }

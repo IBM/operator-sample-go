@@ -1,7 +1,6 @@
 package backup
 
 import (
-	"context"
 	"fmt"
 	"os"
 
@@ -20,9 +19,6 @@ var (
 	cosAuthEndpoint     = env.GetString("CLOUD_OBJECT_STORAGE_AUTH_ENDPOINT", "https://iam.cloud.ibm.com/identity/token")
 	cosBucketNamePrefix = env.GetString("CLOUD_OBJECT_STORAGE_BUCKET_NAME_PREFIX", "database-backup-")
 	namespace           = env.GetString("NAMESPACE", "database")
-
-	// other variables
-	ctx context.Context
 )
 
 func Run() {
@@ -41,7 +37,8 @@ func Run() {
 		exitWithErrorCondition(CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED)
 	}
 
-	//getBackupResource(BACKUP_RESOURCE_NAME, NAMESPACE)
+	// TODO
+	// getBackupResource(BACKUP_RESOURCE_NAME, NAMESPACE)
 
 	data, err := readData()
 	if err != nil {
@@ -50,14 +47,20 @@ func Run() {
 	fmt.Println("data:")
 	fmt.Println(data)
 
-	err = writedata()
+	err = writeData(data)
 	if err != nil {
 		fmt.Println(err)
 		exitWithErrorCondition(CONDITION_TYPE_DATA_WRITTEN)
 	}
+
+	// TODO
+	var controllerRuntimeClient client.Client
+	var object client.Object
+	addConditionSucceeded(controllerRuntimeClient, object)
 }
 
 func exitWithErrorCondition(conditionType string) {
+	// TODO
 	var controllerRuntimeClient client.Client
 	var object client.Object
 
