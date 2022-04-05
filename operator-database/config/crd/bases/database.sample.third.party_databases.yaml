@@ -33,11 +33,6 @@ spec:
             type: object
           spec:
             properties:
-              amountPods:
-                default: 1
-                format: int32
-                minimum: 0
-                type: integer
               certificate:
                 type: string
               password:
@@ -46,8 +41,6 @@ spec:
                 type: string
               user:
                 type: string
-            required:
-            - amountPods
             type: object
           status:
             type: object
