@@ -26,7 +26,7 @@ var (
 	cosBucketNamePrefix = env.GetString("CLOUD_OBJECT_STORAGE_BUCKET_NAME_PREFIX", "database-backup-")
 	namespace           = env.GetString("NAMESPACE", "database")
 
-	// no environment variables
+	// other variables
 	ctx context.Context
 )
 
@@ -52,6 +52,10 @@ func Run() {
 	}
 
 	//getBackupResource(BACKUP_RESOURCE_NAME, NAMESPACE)
+
+	data := readData()
+	fmt.Println("data:")
+	fmt.Println(data)
 
 	config := aws.NewConfig().
 		WithEndpoint(cosServiceEndpoint).
@@ -81,6 +85,10 @@ func exitWithErrorCondition(conditionType string) {
 	var controllerRuntimeClient client.Client
 	var object client.Object
 	switch conditionType {
+	//	case CONDITION_TYPE_BACKUP_RESOURCE_NAME:
+	//		setBackupResourceNameNotDefined(controllerRuntimeClient, object)
+	case CONDITION_TYPE_NAMESPACE_NOT_DEFINED:
+		setConditionNamespaceNotDefined(controllerRuntimeClient, object)
 	case CONDITION_TYPE_COS_API_KEY_DEFINED:
 		setConditionCOSAPIKeyNotDefined(controllerRuntimeClient, object)
 	case CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED:
@@ -89,14 +97,3 @@ func exitWithErrorCondition(conditionType string) {
 
 	os.Exit(1)
 }
-
-/*
-String leaderAddress = "http://database-cluster-0.database-service.database:8089/persons";
-String serviceName = "database-service";
-        String namespace = System.getenv("NAMESPACE");
-        PodList podList = this.client.pods().inNamespace(namespace).list();
-        podList.getItems().forEach(pod -> {
-            if (pod.getMetadata().getName().endsWith("-0") == false) {
-                String followerAddress =  pod.getMetadata().getName() + "." + serviceName + "." + namespace + ":8089";
-                System.out.println("Follower found: " + pod.getMetadata().getName() + " - " + followerAddress);
-*/
