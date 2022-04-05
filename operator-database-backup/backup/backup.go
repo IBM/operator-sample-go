@@ -4,12 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"time"
 
-	"github.com/IBM/ibm-cos-sdk-go/aws"
-	"github.com/IBM/ibm-cos-sdk-go/aws/credentials/ibmiam"
-	"github.com/IBM/ibm-cos-sdk-go/aws/session"
-	"github.com/IBM/ibm-cos-sdk-go/service/s3"
 	"k8s.io/utils/env"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -33,66 +28,50 @@ var (
 func Run() {
 	fmt.Println("Start backup.Run()")
 
-	currentTime := time.Now()
-	bucketName := cosBucketNamePrefix + currentTime.Format("2006-01-02-15:04:05")
-	fmt.Println("bucketName:")
-	fmt.Println(bucketName)
-
 	if len(backupResourceName) < 1 {
-		exitWithErrorCondition(backupResourceName)
+		exitWithErrorCondition(CONDITION_TYPE_BACKUP_RESOURCE_NAME_DEFINED)
 	}
 	if len(namespace) < 1 {
-		exitWithErrorCondition(namespace)
+		exitWithErrorCondition(CONDITION_TYPE_NAMESPACE_DEFINED)
 	}
 	if len(cosAPIKey) < 1 {
 		exitWithErrorCondition(CONDITION_TYPE_COS_API_KEY_DEFINED)
 	}
 	if len(cosServiceInstanceId) < 1 {
-		exitWithErrorCondition(cosServiceInstanceId)
+		exitWithErrorCondition(CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED)
 	}
 
 	//getBackupResource(BACKUP_RESOURCE_NAME, NAMESPACE)
 
-	data := readData()
+	data, err := readData()
+	if err != nil {
+		exitWithErrorCondition(CONDITION_TYPE_DATA_READ)
+	}
 	fmt.Println("data:")
 	fmt.Println(data)
 
-	config := aws.NewConfig().
-		WithEndpoint(cosServiceEndpoint).
-		WithCredentials(ibmiam.NewStaticCredentials(aws.NewConfig(), cosAuthEndpoint, cosAPIKey, cosServiceInstanceId)).
-		WithS3ForcePathStyle(true)
-
-	session := session.Must(session.NewSession())
-	client := s3.New(session, config)
-
-	/*
-		input := &s3.CreateBucketInput{
-			Bucket: aws.String(newBucket),
-		}
-
-		_, error := client.CreateBucket(input)
-		if error != nil {
-			fmt.Println(error)
-		}
-	*/
-
-	bucketList, _ := client.ListBuckets(&s3.ListBucketsInput{})
-	fmt.Println("bucketList:")
-	fmt.Println(bucketList)
+	err = writedata()
+	if err != nil {
+		fmt.Println(err)
+		exitWithErrorCondition(CONDITION_TYPE_DATA_WRITTEN)
+	}
 }
 
 func exitWithErrorCondition(conditionType string) {
 	var controllerRuntimeClient client.Client
 	var object client.Object
+
 	switch conditionType {
-	//	case CONDITION_TYPE_BACKUP_RESOURCE_NAME:
-	//		setBackupResourceNameNotDefined(controllerRuntimeClient, object)
-	case CONDITION_TYPE_NAMESPACE_NOT_DEFINED:
-		setConditionNamespaceNotDefined(controllerRuntimeClient, object)
+	case CONDITION_TYPE_BACKUP_RESOURCE_NAME_DEFINED:
+		setConditionBackupResourceNameDefined(controllerRuntimeClient, object)
+	case CONDITION_TYPE_NAMESPACE_DEFINED:
+		setConditionNamespaceDefined(controllerRuntimeClient, object)
 	case CONDITION_TYPE_COS_API_KEY_DEFINED:
-		setConditionCOSAPIKeyNotDefined(controllerRuntimeClient, object)
+		setConditionCOSAPIKeyDefined(controllerRuntimeClient, object)
 	case CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED:
 		setConditionCOSServiceInstanceIdNotDefined(controllerRuntimeClient, object)
+	case CONDITION_TYPE_DATA_READ:
+		setConditionDataRead(controllerRuntimeClient, object)
 	}
 
 	os.Exit(1)
