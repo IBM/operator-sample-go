@@ -1,0 +1,12 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: database-backup-manual
+  namespace: database
+spec:
+  template:
+    spec:
+      containers:
+      - name: database-backup
+        image: docker.io/nheidloff/operator-database-backup:v1.0.0
+      restartPolicy: Never
