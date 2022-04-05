@@ -32,8 +32,18 @@ func writedata() error {
 	if error != nil {
 		return error
 	}
+	/*
+		uploader := s3manager.NewUploader(session)
 
-	// TODO: upload file
-
+		output, err := uploader.Upload(&s3manager.UploadInput{
+			Bucket: aws.String(bucketName),
+			Key:    aws.String(bucketName),
+			Body:   data,
+		})
+		if err != nil {
+			log.Fatalf("failed to put file %v, %v", filename, err)
+			return
+		}
+	*/
 	return nil
 }
