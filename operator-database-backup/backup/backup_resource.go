@@ -1,25 +1,23 @@
 package backup
 
-import (
-	"context"
-	"fmt"
-
-	databaseoperatorv1alpha1 "github.com/ibm/operator-sample-go/operator-database/api/v1alpha1"
-)
-
-func getBackupResource(ctx context.Context, name string, namespace string) {
-	databaseBackup := &databaseoperatorv1alpha1.DatabaseBackup{}
-	fmt.Println(databaseBackup)
-
-	/*err := reconciler.Get(ctx, types.NamespacedName{Name: application.Spec.DatabaseName, Namespace: application.Spec.DatabaseNamespace}, database)
-	if err != nil {
-		if errors.IsNotFound(err) {
-			//add condition
-		} else {
-			//happy path
+func getBackupResource() error {
+	/*
+		_, err := client.New(config.GetConfigOrDie(), client.Options{})
+		if err != nil {
+			fmt.Println("failed to create client")
+			os.Exit(1)
 		}
-	} else  {
-		//add condition
-	}
 	*/
+
+	//c, err = controller.NewUnmanaged(meta.GetName(), mgr, controller.Options{Reconciler: r})
+	/*
+		databaseBackupResource := &databaseoperatorv1alpha1.DatabaseBackup{}
+		fmt.Println("n1")
+		if kubernetesClient == nil {
+			fmt.Println("n2")
+		}
+		err = kubernetesClient.Get(applicationContext, types.NamespacedName{Name: backupResourceName, Namespace: namespace}, databaseBackupResource)
+		return err
+	*/
+	return nil
 }

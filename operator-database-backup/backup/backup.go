@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	databaseoperatorv1alpha1 "github.com/ibm/operator-sample-go/operator-database/api/v1alpha1"
 	"k8s.io/utils/env"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -22,66 +23,71 @@ var (
 	namespace           = env.GetString("NAMESPACE", "database")
 
 	// internal
-	appContext context.Context
+	applicationContext     context.Context
+	kubernetesClient       client.Client
+	databaseBackupResource databaseoperatorv1alpha1.DatabaseBackup
 )
 
 func Run() {
 	fmt.Println("Start backup.Run()")
-	appContext = context.Background()
+	applicationContext = context.Background()
 
 	if len(backupResourceName) < 1 {
-		exitWithErrorCondition(CONDITION_TYPE_BACKUP_RESOURCE_NAME_DEFINED)
+		exitWithErrorCondition(CONDITION_TYPE_BACKUP_RESOURCE_NAME_DEFINED, nil)
 	}
 	if len(namespace) < 1 {
-		exitWithErrorCondition(CONDITION_TYPE_NAMESPACE_DEFINED)
+		exitWithErrorCondition(CONDITION_TYPE_NAMESPACE_DEFINED, nil)
 	}
 	if len(cosAPIKey) < 1 {
-		exitWithErrorCondition(CONDITION_TYPE_COS_API_KEY_DEFINED)
+		exitWithErrorCondition(CONDITION_TYPE_COS_API_KEY_DEFINED, nil)
 	}
 	if len(cosServiceInstanceId) < 1 {
-		exitWithErrorCondition(CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED)
+		exitWithErrorCondition(CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED, nil)
 	}
 
-	// TODO
-	// getBackupResource(BACKUP_RESOURCE_NAME, NAMESPACE)
+	err := getBackupResource()
+	if err != nil {
+		exitWithErrorCondition(CONDITION_TYPE_BACKUP_RESOURCE_FOUND, err)
+	}
+	fmt.Println("databaseBackupResource:")
+	fmt.Println(databaseBackupResource)
 
 	data, err := readData()
 	if err != nil {
-		exitWithErrorCondition(CONDITION_TYPE_DATA_READ)
+		exitWithErrorCondition(CONDITION_TYPE_DATA_READ, err)
 	}
 	fmt.Println("data:")
 	fmt.Println(data)
 
 	err = writeData(data)
 	if err != nil {
-		fmt.Println(err)
-		exitWithErrorCondition(CONDITION_TYPE_DATA_WRITTEN)
+		exitWithErrorCondition(CONDITION_TYPE_DATA_WRITTEN, err)
 	}
 
-	// TODO
-	var controllerRuntimeClient client.Client
-	var object client.Object
-	addConditionSucceeded(appContext, controllerRuntimeClient, object)
+	addConditionSucceeded()
 }
 
-func exitWithErrorCondition(conditionType string) {
-	// TODO
-	var controllerRuntimeClient client.Client
-	var object client.Object
+func exitWithErrorCondition(conditionType string, err error) {
+	fmt.Println("Exit backup.Run() with error")
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	switch conditionType {
 	case CONDITION_TYPE_BACKUP_RESOURCE_NAME_DEFINED:
-		setConditionBackupResourceNameDefined(appContext, controllerRuntimeClient, object)
+		setConditionBackupResourceNameDefined()
 	case CONDITION_TYPE_NAMESPACE_DEFINED:
-		setConditionNamespaceDefined(appContext, controllerRuntimeClient, object)
+		setConditionNamespaceDefined()
 	case CONDITION_TYPE_COS_API_KEY_DEFINED:
-		setConditionCOSAPIKeyDefined(appContext, controllerRuntimeClient, object)
+		setConditionCOSAPIKeyDefined()
 	case CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED:
-		setConditionCOSServiceInstanceIdNotDefined(appContext, controllerRuntimeClient, object)
+		setConditionCOSServiceInstanceIdNotDefined()
 	case CONDITION_TYPE_DATA_READ:
-		setConditionDataRead(appContext, controllerRuntimeClient, object)
+		setConditionDataRead()
 	case CONDITION_TYPE_DATA_WRITTEN:
-		setConditionDataWritten(appContext, controllerRuntimeClient, object)
+		setConditionDataWritten()
+	case CONDITION_TYPE_BACKUP_RESOURCE_FOUND:
+		setConditionDataWritten()
 	}
 
 	os.Exit(1)
