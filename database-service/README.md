@@ -8,6 +8,8 @@ The database-service directory contains a simple database implementation that wr
 The easiest way to use this service is to deploy it to Kubernetes by applying the provided yaml which uses an existing image.
 
 ```
+$ git clone https://github.com/ibm/operator-sample-go.git
+$ cd database-service
 $ kubectl apply -f kubernetes/
 $ kubectl get all -n database
 ```
