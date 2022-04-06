@@ -25,7 +25,7 @@ func writeData(data string) error {
 
 	config := aws.NewConfig().
 		WithEndpoint(cosServiceEndpoint).
-		WithRegion(cosRegion).
+		WithRegion(cosRegion).WithDisableSSL(true).
 		WithCredentials(credentials.NewStaticCredentials(cosHmacAccessKeyId, cosHmacSecretAccessKey, "")).
 		WithS3ForcePathStyle(true)
 	session := session.Must(session.NewSession())
