@@ -5,3 +5,5 @@
 !target/quarkus-app/*
 !data.json
 !podstate.json
+!src
+!pom.xml
