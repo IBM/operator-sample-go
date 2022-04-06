@@ -80,11 +80,11 @@ $ unset DATA_DIRECTORY
 ```
 $ export REGISTRY='docker.io'
 $ export ORG='nheidloff'
-$ export IMAGE='database-service:v1.0.22'
+$ export IMAGE_DATABASE_SERVICE='database-service:v1.0.22'
 $ mvn clean install
 $ podman build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
-$ podman tag database-service:latest "$REGISTRY/$ORG/$IMAGE"
-$ podman push "$REGISTRY/$ORG/$IMAGE"
+$ podman tag database-service:latest "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
+$ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
 ```
 
 
