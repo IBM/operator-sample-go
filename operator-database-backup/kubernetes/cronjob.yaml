@@ -11,18 +11,19 @@ spec:
         spec:
           containers:
           - name: database-backup
-            image: docker.io/nheidloff/operator-database-backup:v1.0.4
+            image: docker.io/nheidloff/operator-database-backup:v1.0.6
             imagePullPolicy: IfNotPresent
             env:
             - name: BACKUP_RESOURCE_NAME
               value: "databasebackup-manual"
-            - name: CLOUD_OBJECT_STORAGE_API_KEY
-              value: "xxx"
             - name: NAMESPACE
               value: "database"
-            - name: CLOUD_OBJECT_STORAGE_SERVICE_INSTANCE_ID
+            - name: CLOUD_OBJECT_STORAGE_HMAC_ACCESS_KEY_ID
               value: "xxx"
+            - name: CLOUD_OBJECT_STORAGE_HMAC_SECRET_ACCESS_KEY
+              value: "xxx"
+            - name: CLOUD_OBJECT_STORAGE_REGION
+              value: "eu-geo"
             - name: CLOUD_OBJECT_STORAGE_SERVICE_ENDPOINT
               value: "https://s3.fra.eu.cloud-object-storage.appdomain.cloud"
-          restartPolicy: OnFailure            
-  backoffLimit: 0
+          restartPolicy: OnFailure

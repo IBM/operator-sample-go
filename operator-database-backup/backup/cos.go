@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/IBM/ibm-cos-sdk-go/aws"
-	"github.com/IBM/ibm-cos-sdk-go/aws/credentials/ibmiam"
+	"github.com/IBM/ibm-cos-sdk-go/aws/credentials"
 	"github.com/IBM/ibm-cos-sdk-go/aws/session"
 	"github.com/IBM/ibm-cos-sdk-go/service/s3"
 )
@@ -25,7 +25,8 @@ func writeData(data string) error {
 
 	config := aws.NewConfig().
 		WithEndpoint(cosServiceEndpoint).
-		WithCredentials(ibmiam.NewStaticCredentials(aws.NewConfig(), cosAuthEndpoint, cosAPIKey, cosServiceInstanceId)).
+		WithRegion(cosRegion).
+		WithCredentials(credentials.NewStaticCredentials(cosHmacAccessKeyId, cosHmacSecretAccessKey, "")).
 		WithS3ForcePathStyle(true)
 	session := session.Must(session.NewSession())
 	client := s3.New(session, config)
@@ -33,10 +34,8 @@ func writeData(data string) error {
 	input := &s3.CreateBucketInput{
 		Bucket: aws.String(bucketName),
 	}
-	fmt.Println("Nik Debug 1")
 	_, error := client.CreateBucket(input)
 	if error != nil {
-		fmt.Println("Nik Debug 2") // TokenManagerRetrieveError: error retrieving the token
 		return error
 	}
 	ctx := context.Background()

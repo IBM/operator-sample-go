@@ -9,8 +9,9 @@ $ git clone https://github.com/ibm/operator-sample-go.git
 $ cd operator-database-backup
 $ export BACKUP_RESOURCE_NAME=databasebackup-manual
 $ export NAMESPACE=database
-$ export CLOUD_OBJECT_STORAGE_API_KEY="xxx"
-$ export CLOUD_OBJECT_STORAGE_SERVICE_INSTANCE_ID="xxx"
+$ export CLOUD_OBJECT_STORAGE_HMAC_ACCESS_KEY_ID="xxx"
+$ export CLOUD_OBJECT_STORAGE_HMAC_SECRET_ACCESS_KEY="xxx"
+$ export CLOUD_OBJECT_STORAGE_REGION="eu-geo"
 $ export CLOUD_OBJECT_STORAGE_SERVICE_ENDPOINT="https://s3.fra.eu.cloud-object-storage.appdomain.cloud"
 $ go run main.go
 ```
@@ -22,7 +23,7 @@ To deploy the backup application as Kubernetes job, build and push the image and
 ```
 $ export REGISTRY='docker.io'
 $ export ORG='nheidloff'
-$ export IMAGE_DATABASE_BACKUP='operator-database-backup:v1.0.4'
+$ export IMAGE_DATABASE_BACKUP='operator-database-backup:v1.0.6'
 $ podman build -f Dockerfile -t operator-database-backup .
 $ podman tag operator-database-backup:latest "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"

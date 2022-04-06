@@ -10,26 +10,37 @@ const CONDITION_STATUS_TRUE = "True"
 const CONDITION_STATUS_FALSE = "False"
 const CONDITION_STATUS_UNKNOWN = "Unknown"
 
-// Note: Status of COS_API_KEY_DEFINED can only be False; otherwise there is no condition
-const CONDITION_TYPE_COS_API_KEY_DEFINED = "COSAPIKeyDefined"
-const CONDITION_REASON_COS_API_KEY_DEFINED = "COSAPIKeyDefined"
-const CONDITION_MESSAGE_COS_API_KEY_DEFINED = "Cloud Object Storage API key is not defined"
+// Note: Status of COS_HMAC_ACCESS_KEY_ID_DEFINED can only be False; otherwise there is no condition
+const CONDITION_TYPE_COS_HMAC_ACCESS_KEY_ID_DEFINED = "COSAPIKeyDefined"
+const CONDITION_REASON_COS_HMAC_ACCESS_KEY_ID_DEFINED = "COSAPIKeyDefined"
+const CONDITION_MESSAGE_COS_HMAC_ACCESS_KEY_ID_DEFINED = "Cloud Object Storage API key is not defined"
 
-func setConditionCOSAPIKeyDefined() error {
-	fmt.Println("Adding COS_API_KEY_DEFINED condition ...")
-	return utilities.AppendCondition(applicationContext, kubernetesClient, databaseBackupResource, CONDITION_TYPE_COS_API_KEY_DEFINED, CONDITION_STATUS_FALSE,
-		CONDITION_REASON_COS_API_KEY_DEFINED, CONDITION_MESSAGE_COS_API_KEY_DEFINED)
+func setConditionCOSHmacAccessKeyIdNotDefined() error {
+	fmt.Println("Adding COS_HMAC_ACCESS_KEY_ID_DEFINED condition ...")
+	return utilities.AppendCondition(applicationContext, kubernetesClient, databaseBackupResource, CONDITION_TYPE_COS_HMAC_ACCESS_KEY_ID_DEFINED, CONDITION_STATUS_FALSE,
+		CONDITION_REASON_COS_HMAC_ACCESS_KEY_ID_DEFINED, CONDITION_MESSAGE_COS_HMAC_ACCESS_KEY_ID_DEFINED)
 }
 
-// Note: Status of COS_SERVICE_INSTANCE_ID_DEFINED can only be False; otherwise there is no condition
-const CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED = "COSServiceInstanceIdDefined"
-const CONDITION_REASON_COS_SERVICE_INSTANCE_ID_DEFINED = "COSServiceInstanceIdDefined"
-const CONDITION_MESSAGE_COS_SERVICE_INSTANCE_ID_DEFINED = "Cloud Object Storage service instance id is not defined"
+// Note: Status of COS_HMAC_SECRET_ACCESS_KEY_DEFINED can only be False; otherwise there is no condition
+const CONDITION_TYPE_COS_HMAC_SECRET_ACCESS_KEY_DEFINED = "COSServiceInstanceIdDefined"
+const CONDITION_REASON_COS_HMAC_SECRET_ACCESS_KEY_DEFINED = "COSServiceInstanceIdDefined"
+const CONDITION_MESSAGE_COS_HMAC_SECRET_ACCESS_KEY_DEFINED = "Cloud Object Storage service instance id is not defined"
 
-func setConditionCOSServiceInstanceIdNotDefined() error {
-	fmt.Println("Adding COS_SERVICE_INSTANCE_ID_DEFINED condition ...")
-	return utilities.AppendCondition(applicationContext, kubernetesClient, databaseBackupResource, CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED, CONDITION_STATUS_FALSE,
-		CONDITION_REASON_COS_SERVICE_INSTANCE_ID_DEFINED, CONDITION_MESSAGE_COS_SERVICE_INSTANCE_ID_DEFINED)
+func setConditionCOSHmacSecretAccessKeyNotDefined() error {
+	fmt.Println("Adding COS_HMAC_SECRET_ACCESS_KEY_DEFINED condition ...")
+	return utilities.AppendCondition(applicationContext, kubernetesClient, databaseBackupResource, CONDITION_TYPE_COS_HMAC_SECRET_ACCESS_KEY_DEFINED, CONDITION_STATUS_FALSE,
+		CONDITION_REASON_COS_HMAC_SECRET_ACCESS_KEY_DEFINED, CONDITION_MESSAGE_COS_HMAC_SECRET_ACCESS_KEY_DEFINED)
+}
+
+// Note: Status of COS_REGION_DEFINED can only be False; otherwise there is no condition
+const CONDITION_TYPE_COS_REGION_DEFINED = "COSRegionDefined"
+const CONDITION_REASON_COS_REGION_DEFINED = "COSRegionDefined"
+const CONDITION_MESSAGE_COS_REGION_DEFINED = "Cloud Object Storage region is not defined"
+
+func setConditionCOSRegionNotDefined() error {
+	fmt.Println("Adding COS_REGION_DEFINED condition ...")
+	return utilities.AppendCondition(applicationContext, kubernetesClient, databaseBackupResource, CONDITION_TYPE_COS_REGION_DEFINED, CONDITION_STATUS_FALSE,
+		CONDITION_REASON_COS_REGION_DEFINED, CONDITION_MESSAGE_COS_REGION_DEFINED)
 }
 
 // Note: Status of COS_SERVICE_ENDPOINT_DEFINED can only be False; otherwise there is no condition

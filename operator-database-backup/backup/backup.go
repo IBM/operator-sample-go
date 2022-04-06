@@ -12,14 +12,14 @@ import (
 
 var (
 	// mandatory enviornment variables
-	backupResourceName   = env.GetString("BACKUP_RESOURCE_NAME", "")
-	namespace            = env.GetString("NAMESPACE", "")
-	cosAPIKey            = env.GetString("CLOUD_OBJECT_STORAGE_API_KEY", "")
-	cosServiceInstanceId = env.GetString("CLOUD_OBJECT_STORAGE_SERVICE_INSTANCE_ID", "")
-	cosServiceEndpoint   = env.GetString("CLOUD_OBJECT_STORAGE_SERVICE_ENDPOINT", "")
+	backupResourceName     = env.GetString("BACKUP_RESOURCE_NAME", "")
+	namespace              = env.GetString("NAMESPACE", "")
+	cosHmacAccessKeyId     = env.GetString("CLOUD_OBJECT_STORAGE_HMAC_ACCESS_KEY_ID", "")
+	cosHmacSecretAccessKey = env.GetString("CLOUD_OBJECT_STORAGE_HMAC_SECRET_ACCESS_KEY", "")
+	cosRegion              = env.GetString("CLOUD_OBJECT_STORAGE_REGION", "")
+	cosServiceEndpoint     = env.GetString("CLOUD_OBJECT_STORAGE_SERVICE_ENDPOINT", "")
 
 	// optional environment variables
-	cosAuthEndpoint     = env.GetString("CLOUD_OBJECT_STORAGE_AUTH_ENDPOINT", "https://iam.cloud.ibm.com/identity/token")
 	cosBucketNamePrefix = env.GetString("CLOUD_OBJECT_STORAGE_BUCKET_NAME_PREFIX", "database-backup-")
 
 	// internal
@@ -43,11 +43,14 @@ func Run() {
 	if len(namespace) < 1 {
 		exitWithErrorCondition(CONDITION_TYPE_NAMESPACE_DEFINED, nil)
 	}
-	if len(cosAPIKey) < 1 {
-		exitWithErrorCondition(CONDITION_TYPE_COS_API_KEY_DEFINED, nil)
+	if len(cosHmacAccessKeyId) < 1 {
+		exitWithErrorCondition(CONDITION_TYPE_COS_HMAC_ACCESS_KEY_ID_DEFINED, nil)
 	}
-	if len(cosServiceInstanceId) < 1 {
-		exitWithErrorCondition(CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED, nil)
+	if len(cosHmacSecretAccessKey) < 1 {
+		exitWithErrorCondition(CONDITION_TYPE_COS_HMAC_SECRET_ACCESS_KEY_DEFINED, nil)
+	}
+	if len(cosRegion) < 1 {
+		exitWithErrorCondition(CONDITION_TYPE_COS_REGION_DEFINED, nil)
 	}
 	if len(cosServiceEndpoint) < 1 {
 		exitWithErrorCondition(CONDITION_TYPE_COS_SERVICE_ENDPOINT_DEFINED, nil)
@@ -79,10 +82,12 @@ func exitWithErrorCondition(conditionType string, err error) {
 		err = setConditionBackupResourceNameDefined()
 	case CONDITION_TYPE_NAMESPACE_DEFINED:
 		err = setConditionNamespaceDefined()
-	case CONDITION_TYPE_COS_API_KEY_DEFINED:
-		err = setConditionCOSAPIKeyDefined()
-	case CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED:
-		err = setConditionCOSServiceInstanceIdNotDefined()
+	case CONDITION_TYPE_COS_HMAC_ACCESS_KEY_ID_DEFINED:
+		err = setConditionCOSHmacAccessKeyIdNotDefined()
+	case CONDITION_TYPE_COS_HMAC_SECRET_ACCESS_KEY_DEFINED:
+		err = setConditionCOSHmacSecretAccessKeyNotDefined()
+	case CONDITION_TYPE_COS_REGION_DEFINED:
+		err = setConditionCOSRegionNotDefined()
 	case CONDITION_TYPE_COS_SERVICE_ENDPOINT_DEFINED:
 		err = setConditionCOSServiceEndpointNotDefined()
 	case CONDITION_TYPE_DATA_READ:
