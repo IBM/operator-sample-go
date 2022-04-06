@@ -4,6 +4,9 @@ import (
 	"context"
 
 	variables "github.com/ibm/operator-sample-go/operator-database/variablesdatabasecluster"
+	appsv1 "k8s.io/api/apps/v1"
+	corev1 "k8s.io/api/core/v1"
+	v1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -60,19 +63,15 @@ func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req 
 		return ctrl.Result{}, err
 	}
 
-	// It seems these resources do not get deleted when the CR is deleted.  Need to fix this and test again.
-	// TODO
-	/*
-		_, err = reconciler.reconcileClusterRole(ctx, databasecluster)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
+	_, err = reconciler.reconcileClusterRole(ctx, databasecluster)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
 
-		_, err = reconciler.reconcileClusterRoleBinding(ctx, databasecluster)
-		if err != nil {
-			return ctrl.Result{}, err
-		}
-	*/
+	_, err = reconciler.reconcileClusterRoleBinding(ctx, databasecluster)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
 
 	_, err = reconciler.reconcileStatefulSet(ctx, databasecluster)
 	if err != nil {
@@ -83,8 +82,12 @@ func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req 
 }
 
 // SetupWithManager sets up the controller with the Manager.
-func (r *DatabaseClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (reconciler *DatabaseClusterReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&databaseclustersamplev1alpha1.DatabaseCluster{}).
-		Complete(r)
+		Owns(&corev1.Service{}).
+		Owns(&appsv1.StatefulSet{}).
+		Owns(&v1.ClusterRole{}).
+		Owns(&v1.ClusterRoleBinding{}).
+		Complete(reconciler)
 }
