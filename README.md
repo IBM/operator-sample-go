@@ -28,6 +28,7 @@ There are three ways to develop and run the operator:
 * [Configuring Webhooks for Operators](http://heidloff.net/article/configuring-webhooks-kubernetes-operators/)
 * [Initialization and Validation Webhooks in Operators](http://heidloff.net/article/developing-initialization-validation-webhooks-kubernetes-operators/)
 * [Converting Custom Resource Versions in Operators](http://heidloff.net/article/converting-custom-resource-versions-kubernetes-operators/)
+* [How to build your own Database on Kubernetes](http://heidloff.net/article/how-to-build-your-own-database-on-kubernetes/)
 
 To start developing operators, we recommend to get familiar with the [Kubernetes Operator Metamodel](http://heidloff.net/article/the-kubernetes-operator-metamodel/) first.
 
