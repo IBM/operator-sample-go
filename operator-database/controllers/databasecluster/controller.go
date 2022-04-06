@@ -25,9 +25,13 @@ type DatabaseClusterReconciler struct {
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databaseclusters,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databaseclusters/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databaseclusters/finalizers,verbs=update
-//+kubebuilder:rbac:groups=database.sample.third.party,resources=services,verbs=get;list;watch;create;update;patch;delete
 
-//TODO check the above permissions and, if necessary, add statefulsets, clusterrole, clusterrolebinding etc
+//+kubebuilder:rbac:groups=apps,resources=statefulsets,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
+//+kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=clusterrolebindings,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=clusterroles,verbs=get;list;watch;create;update;patch;delete
 
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
@@ -63,7 +67,7 @@ func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req 
 		return ctrl.Result{}, err
 	}
 
-	_, err = reconciler.reconcileClusterRole(ctx, databasecluster)
+	/*_, err = reconciler.reconcileClusterRole(ctx, databasecluster)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -71,12 +75,12 @@ func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req 
 	_, err = reconciler.reconcileClusterRoleBinding(ctx, databasecluster)
 	if err != nil {
 		return ctrl.Result{}, err
-	}
+	}*/
 
-	_, err = reconciler.reconcileStatefulSet(ctx, databasecluster)
+	/*_, err = reconciler.reconcileStatefulSet(ctx, databasecluster)
 	if err != nil {
 		return ctrl.Result{}, err
-	}
+	}*/
 
 	return ctrl.Result{}, nil
 }
