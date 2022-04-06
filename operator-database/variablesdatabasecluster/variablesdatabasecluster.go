@@ -19,7 +19,7 @@ const ANNOTATION_TITLE = "applications.application.sample.ibm.com/title"
 const DEFAULT_ANNOTATION_TITLE = "My Title"
 const LabelKey = "app"
 const LabelValue = "database-cluster"
-const Image = "docker.io/nheidloff/database-service:v1.0.17"
+const Image = "docker.io/nheidloff/database-service:v1.0.23"
 const Port int32 = 8089
 const VolumeMountName = "data-volume"
 
