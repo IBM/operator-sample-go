@@ -177,8 +177,8 @@ github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ibm/operator-sample-go/operator-application v1.0.3 h1:l3SWrKOiyVfDPy+q9yQEHaNKDvNH8NmWWqvQo70Wj9Q=
 github.com/ibm/operator-sample-go/operator-application v1.0.3/go.mod h1:xa/YHNvKsJX31NBiXRV++rEhL2vh/O2AjC2Y1ihijbU=
-github.com/ibm/operator-sample-go/operator-database v1.0.3 h1:hnPw//TNtgj2USQlzK25QUVhTzY1pqzOW5uTleZTSgM=
-github.com/ibm/operator-sample-go/operator-database v1.0.3/go.mod h1:uM+J9uGiwcqb5SLI26dL7i8AP0RnueUTT308WjD59kE=
+github.com/ibm/operator-sample-go/operator-database v1.0.6 h1:Ww9m33IMuj5L0nsTMQQ0Qz6G4KTulWzWHN66rISrOTw=
+github.com/ibm/operator-sample-go/operator-database v1.0.6/go.mod h1:uM+J9uGiwcqb5SLI26dL7i8AP0RnueUTT308WjD59kE=
 github.com/imdario/mergo v0.3.5/go.mod h1:2EnlNZ0deacrJVfApfmtdGgDfMuh/nq6Ok1EcJh5FfA=
 github.com/imdario/mergo v0.3.12 h1:b6R2BslTbIEToALKP7LxUvijTsNI9TAe80pLWN2g/HU=
 github.com/imdario/mergo v0.3.12/go.mod h1:jmQim1M+e3UYxmgPu/WyfjB3N3VflVyUjjjwH0dnCYA=
