@@ -76,19 +76,23 @@ func exitWithErrorCondition(conditionType string, err error) {
 
 	switch conditionType {
 	case CONDITION_TYPE_BACKUP_RESOURCE_NAME_DEFINED:
-		setConditionBackupResourceNameDefined()
+		err = setConditionBackupResourceNameDefined()
 	case CONDITION_TYPE_NAMESPACE_DEFINED:
-		setConditionNamespaceDefined()
+		err = setConditionNamespaceDefined()
 	case CONDITION_TYPE_COS_API_KEY_DEFINED:
-		setConditionCOSAPIKeyDefined()
+		err = setConditionCOSAPIKeyDefined()
 	case CONDITION_TYPE_COS_SERVICE_INSTANCE_ID_DEFINED:
-		setConditionCOSServiceInstanceIdNotDefined()
+		err = setConditionCOSServiceInstanceIdNotDefined()
 	case CONDITION_TYPE_COS_SERVICE_ENDPOINT_DEFINED:
-		setConditionCOSServiceEndpointNotDefined()
+		err = setConditionCOSServiceEndpointNotDefined()
 	case CONDITION_TYPE_DATA_READ:
-		setConditionDataRead()
+		err = setConditionDataRead()
 	case CONDITION_TYPE_DATA_WRITTEN:
-		setConditionDataWritten()
+		err = setConditionDataWritten()
+	}
+
+	if err != nil {
+		exit(err)
 	}
 
 	os.Exit(1)

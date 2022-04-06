@@ -22,7 +22,7 @@ To deploy the backup application as Kubernetes job, build and push the image and
 ```
 $ export REGISTRY='docker.io'
 $ export ORG='nheidloff'
-$ export IMAGE_DATABASE_BACKUP='operator-database-backup:v1.0.2'
+$ export IMAGE_DATABASE_BACKUP='operator-database-backup:v1.0.4'
 $ podman build -f Dockerfile -t operator-database-backup .
 $ podman tag operator-database-backup:latest "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
@@ -30,7 +30,7 @@ $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 
 Run backup application manually via CronJob:
 
-Update your credentials in cronjob.yaml first.
+Update your credentials in cronjob.yaml first. Additionally you need to deploy the [database-service](https://github.com/IBM/operator-sample-go/blob/main/database-service/README.md#getting-started).
 
 ```
 $ kubectl apply -f ../operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml

@@ -11,7 +11,7 @@ spec:
         spec:
           containers:
           - name: database-backup
-            image: docker.io/nheidloff/operator-database-backup:v1.0.2
+            image: docker.io/nheidloff/operator-database-backup:v1.0.4
             imagePullPolicy: IfNotPresent
             env:
             - name: BACKUP_RESOURCE_NAME

@@ -33,8 +33,10 @@ func writeData(data string) error {
 	input := &s3.CreateBucketInput{
 		Bucket: aws.String(bucketName),
 	}
+	fmt.Println("Nik Debug 1")
 	_, error := client.CreateBucket(input)
 	if error != nil {
+		fmt.Println("Nik Debug 2") // TokenManagerRetrieveError: error retrieving the token
 		return error
 	}
 	ctx := context.Background()
