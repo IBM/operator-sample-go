@@ -58,3 +58,11 @@ type BackupRepo struct {
 func init() {
 	SchemeBuilder.Register(&DatabaseBackup{}, &DatabaseBackupList{})
 }
+
+func (application *DatabaseBackup) GetConditions() []metav1.Condition {
+	return application.Status.Conditions
+}
+
+func (application *DatabaseBackup) SetConditions(conditions []metav1.Condition) {
+	application.Status.Conditions = conditions
+}
