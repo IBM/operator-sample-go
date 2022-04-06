@@ -11,7 +11,12 @@
             "mode": "auto",
             "program": "${workspace}/..",
             "env": {
-                "ENABLE_WEBHOOKS": "false"
+                "ENABLE_WEBHOOKS": "false",
+                "BACKUP_RESOURCE_NAME": "databasebackup-manual",
+                "NAMESPACE": "NAMESPACE",
+                "CLOUD_OBJECT_STORAGE_API_KEY": "xxx",
+                "CLOUD_OBJECT_STORAGE_SERVICE_INSTANCE_ID": "xxx",
+                "CLOUD_OBJECT_STORAGE_SERVICE_ENDPOINT": "https://s3.fra.eu.cloud-object-storage.appdomain.cloud"
               }
         }
     ]

@@ -28,7 +28,6 @@ func getBackupResource() error {
 			return err
 		}
 	}
-	var kubernetesClient client.Client
 	var GroupVersion = schema.GroupVersion{Group: "database.sample.third.party", Version: "v1alpha1"}
 	var SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
 	var databaseOperatorScheme *runtime.Scheme
@@ -45,13 +44,11 @@ func getBackupResource() error {
 		return err
 	}
 
-	databaseBackupResource := &databaseoperatorv1alpha1.DatabaseBackup{}
+	databaseBackupResource = &databaseoperatorv1alpha1.DatabaseBackup{}
 	err = kubernetesClient.Get(applicationContext, types.NamespacedName{Name: backupResourceName, Namespace: namespace}, databaseBackupResource)
 	if err != nil {
 		return err
 	}
-	fmt.Println(databaseBackupResource.Name)
-	fmt.Println(databaseBackupResource.Spec.ManualTrigger.Repo)
 
 	return nil
 }
