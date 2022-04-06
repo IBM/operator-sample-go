@@ -1,31 +1,21 @@
 apiVersion: database.sample.third.party/v1alpha1
 kind: DatabaseBackup
 metadata:
-  name: database-backup
+  name: databasebackup-manual
   namespace: database
 spec:
   repos:
   - name: ibmcos-repo
     type: ibmcos
-      secretName: ibmcos-repo
-      serviceEndpoint: "https://s3.fra.eu.cloud-object-storage.appdomain.cloud"
-      authEndpoint: "https://iam.cloud.ibm.com/identity/token"
-      bucketNamePrefix: "database-backup-"
+    secretName: ibmcos-repo
+    serviceEndpoint: "https://s3.fra.eu.cloud-object-storage.appdomain.cloud"
+    authEndpoint: "https://iam.cloud.ibm.com/identity/token"
+    bucketNamePrefix: "database-backup-"
   manualTrigger:
     enabled: true
     time: "2022-12-15T02:59:43.1Z"
-    repo: ibmco-repo
+    repo: ibmcos-repo
   scheduledTrigger:
-    enabled: true
+    enabled: false
     schedule: "0 * * * *"
-    repo: ibmco-repo
-status:
-  conditions:
-  - lastTransitionTime: "2022-03-14T20:09:36Z"
-    message: "Cloud Object Storage API key is not defined"
-    reason: COSAPIKeyDefined
-    status: "false"
-    type: COSAPIKeyDefined
-  jobs:
-  - name: scheduledBackup
-  - name: manualBackupMonday
+    repo: ibmcos-repo

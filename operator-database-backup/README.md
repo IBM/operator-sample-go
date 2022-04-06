@@ -26,5 +26,17 @@ $ export IMAGE_DATABASE_BACKUP='operator-database-backup:v1.0.2'
 $ podman build -f Dockerfile -t operator-database-backup .
 $ podman tag operator-database-backup:latest "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
-$ kubectl apply -f kubernetes/job.yaml -n database
+```
+
+Run backup application manually via CronJob:
+
+Update your credentials in cronjob.yaml first.
+
+```
+$ kubectl apply -f ../operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml
+$ kubectl apply -f kubernetes/role.yaml
+$ kubectl apply -f kubernetes/cronjob.yaml
+$ kubectl create job --from=cronjob/database-backup manuallytriggered -n database
+$ kubectl get databasebackups databasebackup-manual -n database -oyaml
+$ kubectl logs -n database $(kubectl get pods -n database | awk '/manuallytriggered/ {print $1;exit}')
 ```

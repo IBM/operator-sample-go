@@ -1,3 +1,4 @@
 operator-database-backup
 app
 database-backup*
+cronjob-with-secrets.yaml
