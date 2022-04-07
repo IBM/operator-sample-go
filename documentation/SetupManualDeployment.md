@@ -16,16 +16,14 @@ Before running the application operator, the database operator needs to be deplo
 
 ```
 $ cd ../operator-database
-$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.2"
+$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.5"
 $ cd ../operator-application
 ```
 
 Build and push the application operator image:
 
 ```
-$ make generate manifests
-$ podman login $REGISTRY
-$ podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE" .
+$ podman build -t "$REGISTRY/$ORG/$IMAGE" .
 $ podman push "$REGISTRY/$ORG/$IMAGE"
 ```
 
