@@ -4,7 +4,7 @@ See below for instructions how to set up and run the database operator either lo
 
 Install [prerequisites](../documentation/Prerequisites.md).
 
-**Run operator locally**
+###Run operator locally
 
 From a terminal run this command:
 
@@ -25,7 +25,7 @@ $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
 $ make uninstall
 ```
 
-**Run operator on Kubernetes**
+###Run operator on Kubernetes
 
 Deploy the operator:
 
@@ -49,7 +49,7 @@ $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
 $ make undeploy IMG="docker.io/nheidloff/database-operator:v1.0.5"
 ```
 
-**Build new Image**
+###Build new Image
 
 [text]
 $ code ../versions.env
