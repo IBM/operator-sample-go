@@ -36,8 +36,8 @@ func (reconciler *DatabaseClusterReconciler) defineClusterRole(databasecluster *
 func (reconciler *DatabaseClusterReconciler) reconcileClusterRole(ctx context.Context, databasecluster *databasesamplev1alpha1.DatabaseCluster) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	clusterRoleDefinition := reconciler.defineClusterRole(databasecluster)
-	roleBinding := &v1.RoleBinding{}
-	err := reconciler.Get(ctx, types.NamespacedName{Name: variables.ClusterRoleName, Namespace: databasecluster.Namespace}, roleBinding)
+	clusterRole := &v1.ClusterRole{}
+	err := reconciler.Get(ctx, types.NamespacedName{Name: variables.ClusterRoleName, Namespace: databasecluster.Namespace}, clusterRole)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			log.Info("ClusterRole resource " + variables.ClusterRoleName + " not found. Creating or re-creating ClusterRole")
