@@ -22,7 +22,7 @@ func (reconciler *DatabaseClusterReconciler) defineStatefulSet(databasecluster *
 	service := &appsv1.StatefulSet{
 		TypeMeta: metav1.TypeMeta{},
 		ObjectMeta: metav1.ObjectMeta{
-			Name:      databasecluster.Name,
+			Name:      variables.StatefulSetName,
 			Namespace: databasecluster.Namespace,
 		},
 		Spec: appsv1.StatefulSetSpec{
@@ -88,10 +88,10 @@ func (reconciler *DatabaseClusterReconciler) reconcileStatefulSet(ctx context.Co
 	log := log.FromContext(ctx)
 	serviceDefinition := reconciler.defineStatefulSet(databasecluster)
 	service := &appsv1.StatefulSet{}
-	err := reconciler.Get(ctx, types.NamespacedName{Name: variables.ServiceName, Namespace: databasecluster.Namespace}, service)
+	err := reconciler.Get(ctx, types.NamespacedName{Name: variables.StatefulSetName, Namespace: databasecluster.Namespace}, service)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			log.Info("StatefulSet resource " + variables.ServiceName + " not found. Creating or re-creating service")
+			log.Info("StatefulSet resource " + variables.StatefulSetName + " not found. Creating or re-creating service")
 			err = reconciler.Create(ctx, serviceDefinition)
 			if err != nil {
 				log.Info("Failed to create StatefulSet resource. Re-running reconcile.")

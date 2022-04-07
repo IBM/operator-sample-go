@@ -67,7 +67,7 @@ func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req 
 		return ctrl.Result{}, err
 	}
 
-	/*_, err = reconciler.reconcileClusterRole(ctx, databasecluster)
+	_, err = reconciler.reconcileClusterRole(ctx, databasecluster)
 	if err != nil {
 		return ctrl.Result{}, err
 	}
@@ -75,12 +75,12 @@ func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req 
 	_, err = reconciler.reconcileClusterRoleBinding(ctx, databasecluster)
 	if err != nil {
 		return ctrl.Result{}, err
-	}*/
+	}
 
-	/*_, err = reconciler.reconcileStatefulSet(ctx, databasecluster)
+	_, err = reconciler.reconcileStatefulSet(ctx, databasecluster)
 	if err != nil {
 		return ctrl.Result{}, err
-	}*/
+	}
 
 	return ctrl.Result{}, nil
 }
