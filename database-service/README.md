@@ -80,11 +80,10 @@ $ unset DATA_DIRECTORY
 ### Building new Image Versions
 
 ```
-$ export REGISTRY='docker.io'
-$ export ORG='nheidloff'
-$ export IMAGE_DATABASE_SERVICE='database-service:v1.0.23'
-$ podman build -f src/main/docker/Dockerfile.jvm -t database-service:latest .
-$ podman tag database-service:latest "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
+$ cd database-service
+$ code ../versions.env
+$ source ../versions.env
+$ podman build -f src/main/docker/Dockerfile.jvm -t "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
 ```
 
