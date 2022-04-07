@@ -30,7 +30,7 @@ $ make uninstall
 Deploy the operator:
 
 ```
-$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.3"
+$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.5"
 ```
 
 From a terminal run this command:
@@ -43,5 +43,13 @@ Delete all resources:
 
 ```
 $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
-$ make undeploy IMG="docker.io/nheidloff/database-operator:v1.0.3"
+$ make undeploy IMG="docker.io/nheidloff/database-operator:v1.0.5"
 ```
+
+**Build new Image**
+
+[text]
+$ podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE" .
+$ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE"
+$ make deploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE"
+[/text]  

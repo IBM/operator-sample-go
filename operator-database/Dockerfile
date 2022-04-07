@@ -12,6 +12,9 @@ RUN go mod download
 # Copy the go source
 COPY main.go main.go
 COPY api/ api/
+COPY variablesdatabase/ variablesdatabase/
+COPY variablesdatabasebackup/ variablesdatabasebackup/
+COPY variablesdatabasecluster/ variablesdatabasecluster/
 COPY controllers/ controllers/
 
 # Build
