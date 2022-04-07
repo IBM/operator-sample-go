@@ -19,9 +19,14 @@ Replace REGISTRY and ORG with your registry account and change the versions.
 ```
 $ export REGISTRY='docker.io'
 $ export ORG='nheidloff'
-$ export IMAGE='application-operator:v2.0.0'
-$ export BUNDLE_IMAGE="application-operator-bundle:v2.0.0"
-$ export CATALOG_IMAGE="application-operator-catalog:v2.0.0"
+$ export IMAGE='application-operator:v1.0.16'
+$ export BUNDLE_IMAGE="application-operator-bundle:v1.0.3"
+$ export CATALOG_IMAGE="application-operator-catalog:v1.0.2"
+$ export IMAGE_DATABASE='database-operator:v1.0.4'
+$ export IMAGE_DATABASE_BACKUP='operator-database-backup:v1.0.8'
+$ export IMAGE_DATABASE_SERVICE='database-service:v1.0.23'
+$ export IMAGE_MICROSERVICE='simple-microservice:v1.0.10'
+$ podman login $REGISTRY
 ```
 
 **4. Kubernetes**
