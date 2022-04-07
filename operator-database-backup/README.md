@@ -21,17 +21,16 @@ To debug, add the API key and the instance id to launch.json.
 To deploy the backup application as Kubernetes job, build and push the image and change the reference in kubernetes/job.yaml:
 
 ```
-$ export REGISTRY='docker.io'
-$ export ORG='nheidloff'
-$ export IMAGE_DATABASE_BACKUP='operator-database-backup:v1.0.8'
-$ podman build -f Dockerfile -t operator-database-backup .
-$ podman tag operator-database-backup:latest "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
+$ cd operator-database-backup
+$ code ../versions.env
+$ source ../versions.env
+$ podman build -f Dockerfile -t "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 ```
 
 Run backup application manually via CronJob:
 
-Update your credentials in cronjob.yaml first. Additionally you need to deploy the [database-service](https://github.com/IBM/operator-sample-go/blob/main/database-service/README.md#getting-started).
+Update your credentials and the image version in cronjob.yaml first. Additionally you need to deploy the [database-service](https://github.com/IBM/operator-sample-go/blob/main/database-service/README.md#getting-started).
 
 ```
 $ kubectl apply -f ../operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml
