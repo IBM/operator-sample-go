@@ -30,7 +30,10 @@ $ make uninstall
 Deploy the operator:
 
 ```
-$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.5"
+$ source ../versions.env
+$ make deploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
+$ kubectl apply -f config/rbac/role_patch_.yaml 
+$ kubectl apply -f config/rbac/role_binding_patch.yaml 
 ```
 
 From a terminal run this command:
@@ -49,7 +52,7 @@ $ make undeploy IMG="docker.io/nheidloff/database-operator:v1.0.5"
 **Build new Image**
 
 [text]
+$ code ../versions.env
 $ podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE"
-$ make deploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE"
-[/text]  
+[/text]     
