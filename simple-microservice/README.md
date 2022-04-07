@@ -25,9 +25,8 @@ $ open http://localhost:8081/hello
 ```
 $ git clone https://github.com/ibm/operator-sample-go.git
 $ cd simple-microservice
-$ export REGISTRY='docker.io'
-$ export ORG='nheidloff'
-$ export IMAGE_MICROSERVICE='simple-microservice:v1.0.9'
+$ code ../versions.env
+$ source ../versions.env
 $ podman build -t "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_MICROSERVICE"
 ```
