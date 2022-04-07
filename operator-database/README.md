@@ -53,6 +53,7 @@ $ make undeploy IMG="docker.io/nheidloff/database-operator:v1.0.5"
 
 [text]
 $ code ../versions.env
+$ source ../versions.env
 $ podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE"
 [/text]     
