@@ -7,7 +7,7 @@ Install cert-manager:
 [cert-manager](https://github.com/cert-manager/cert-manager) is needed for webhooks.
 
 ```
-$ kubectl apply -f https://github.com/jetstack/cert-manager/releases/latest/download/cert-manager.yaml
+$ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
 ```
 
 Deploy database operator:
