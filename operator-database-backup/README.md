@@ -1,6 +1,6 @@
 # Database Operator Backup
 
-To run this application, you need [IBM Cloud Object Storage](https://cloud.ibm.com/docs/cloud-object-storage) which is accessed via S3 APIs. After you have created the object storage instance, you need to get the API key, instance id and endpoint.
+To run this application, you need [IBM Cloud Object Storage](https://cloud.ibm.com/docs/cloud-object-storage) which is accessed via S3 APIs. After you have created the object storage instance, you need to get the HMAC access key id, secret access key API key, region and service endpoint. When you create the credentials, make sure you select 'Writer' and 'HMAC' (see [documentation](https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-uhc-hmac-credentials-main)).
 
 To run the Go backup application locally, run these commands:
 
@@ -23,7 +23,7 @@ To deploy the backup application as Kubernetes job, build and push the image and
 ```
 $ export REGISTRY='docker.io'
 $ export ORG='nheidloff'
-$ export IMAGE_DATABASE_BACKUP='operator-database-backup:v1.0.7'
+$ export IMAGE_DATABASE_BACKUP='operator-database-backup:v1.0.8'
 $ podman build -f Dockerfile -t operator-database-backup .
 $ podman tag operator-database-backup:latest "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
