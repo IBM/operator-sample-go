@@ -2,6 +2,12 @@
 
 Install [prerequistes](Prerequisites.md).
 
+Navigate to operator-application:
+
+```
+$ cd operator-application
+```
+
 Create database resource:
 
 ```
