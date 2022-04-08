@@ -54,10 +54,10 @@ func (reconciler *DatabaseClusterReconciler) defineStatefulSet(databasecluster *
 							}}},
 						},
 					}},
-					SecurityContext: &v1.PodSecurityContext{
+					/*SecurityContext: &v1.PodSecurityContext{
 						RunAsGroup: &variables.FsGroup,
-						//RunAsUser:  &variables.User,
-					},
+						RunAsUser:  &variables.User,
+					},*/
 				},
 			},
 			VolumeClaimTemplates: []v1.PersistentVolumeClaim{{
