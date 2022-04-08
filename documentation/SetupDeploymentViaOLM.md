@@ -37,7 +37,6 @@ Build and push the catalog image:
 
 ```
 $ ./bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
-$ podman tag localhost/$IMAGE_APPLICATION_OPERATOR_CATALOG "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
 $ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
 ```
 
