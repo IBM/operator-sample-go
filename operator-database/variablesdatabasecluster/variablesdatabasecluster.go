@@ -11,9 +11,9 @@ var ClusterRoleBindingName string
 var ContainerName string
 var DataDirectory string = "/data"
 
-var FsGroup int64 = 2000
+var FsGroup int64 = 100
+var User int64 = 1001
 
-//var User int64 = 1001
 var StorageResourceRequirement = "1Gi"
 var StorageClassName string = "ibmc-vpc-block-5iops-tier"
 
@@ -33,8 +33,8 @@ const RoleBindingServiceAccount = "default"
 
 func SetGlobalVariables(applicationName string) {
 	// Slight hack to make the resources of this CR match the names which are expected by the backup Job
-	applicationName = "database-cluster"
-	StatefulSetName = applicationName + "-statefulset"
+	applicationName = "database"
+	StatefulSetName = applicationName + "-cluster"
 	ServiceName = applicationName + "-service"
 	ClusterRoleName = applicationName + "-role"
 	ClusterRoleBindingName = applicationName + "-rolebinding"
