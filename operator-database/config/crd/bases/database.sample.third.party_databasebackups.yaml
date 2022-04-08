@@ -35,19 +35,19 @@ spec:
             properties:
               manualTrigger:
                 properties:
-                  enabled:
-                    type: boolean
                   repo:
                     type: string
                   time:
+                    description: Enabled bool   `json:"enabled,omitempty"`
                     type: string
                 type: object
               repos:
                 items:
                   properties:
-                    authEndpoint:
-                      type: string
                     bucketNamePrefix:
+                      type: string
+                    cosRegion:
+                      description: AuthEndpoint     string `json:"authEndpoint,omitempty"`
                       type: string
                     name:
                       type: string
@@ -61,11 +61,10 @@ spec:
                 type: array
               scheduledTrigger:
                 properties:
-                  enabled:
-                    type: boolean
                   repo:
                     type: string
                   schedule:
+                    description: Enabled  bool   `json:"enabled,omitempty"`
                     type: string
                 type: object
             required:

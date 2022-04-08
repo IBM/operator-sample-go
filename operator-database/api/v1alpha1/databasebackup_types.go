@@ -35,23 +35,24 @@ type DatabaseBackupList struct {
 }
 
 type ManualTrigger struct {
-	Enabled bool   `json:"enabled,omitempty"`
-	Time    string `json:"time,omitempty"`
-	Repo    string `json:"repo,omitempty"`
+	//Enabled bool   `json:"enabled,omitempty"`
+	Time string `json:"time,omitempty"`
+	Repo string `json:"repo,omitempty"`
 }
 
 type ScheduledTrigger struct {
-	Enabled  bool   `json:"enabled,omitempty"`
+	//Enabled  bool   `json:"enabled,omitempty"`
 	Schedule string `json:"schedule,omitempty"`
 	Repo     string `json:"repo,omitempty"`
 }
 
 type BackupRepo struct {
-	Name             string `json:"name,omitempty"`
-	Type             string `json:"type,omitempty"`
-	SecretName       string `json:"secretName,omitempty"`
-	ServiceEndpoint  string `json:"serviceEndpoint,omitempty"`
-	AuthEndpoint     string `json:"authEndpoint,omitempty"`
+	Name            string `json:"name,omitempty"`
+	Type            string `json:"type,omitempty"`
+	SecretName      string `json:"secretName,omitempty"`
+	ServiceEndpoint string `json:"serviceEndpoint,omitempty"`
+	//AuthEndpoint     string `json:"authEndpoint,omitempty"`
+	CosRegion        string `json:"cosRegion,omitempty"`
 	BucketNamePrefix string `json:"bucketNamePrefix,omitempty"`
 }
 

@@ -24,6 +24,13 @@ type DatabaseBackupReconciler struct {
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databasebackups/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databasebackups/finalizers,verbs=update
 
+//+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
+//+kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=clusterrolebindings,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=clusterroles,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=cronjobs,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=jobs,verbs=get;list;watch;create;update;patch;delete
+
 // Reconcile is part of the main kubernetes reconciliation loop which aims to
 // move the current state of the cluster closer to the desired state.
 // TODO(user): Modify the Reconcile function to compare the state specified by
@@ -43,16 +50,37 @@ func (reconciler *DatabaseBackupReconciler) Reconcile(ctx context.Context, req c
 	err := reconciler.Get(ctx, req.NamespacedName, databasebackup)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			log.Info("DatabaseCluster resource not found. Ignoring since object must be deleted.")
+			log.Info("DatabaseBackup resource not found. Ignoring since object must be deleted.")
 			return ctrl.Result{}, nil
 		}
-		log.Info("Failed to get DatabaseCluster resource. Re-running reconcile.")
+		log.Info("Failed to get DatabaseBackup resource. Re-running reconcile.")
 		return ctrl.Result{}, err
 	}
 
 	variables.SetGlobalVariables(databasebackup.Name)
 	variables.PrintVariables(databasebackup.Name, databasebackup.Namespace, databasebackup.Spec.Repos, databasebackup.Spec.ManualTrigger, databasebackup.Spec.ScheduledTrigger)
 
+	_, err = reconciler.reconcileClusterRole(ctx, databasebackup)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	_, err = reconciler.reconcileClusterRoleBinding(ctx, databasebackup)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	if databasebackup.Spec.ManualTrigger.Repo != "" {
+		// CR defined Manual backup.  Create Job
+
+	}
+	if databasebackup.Spec.ScheduledTrigger.Repo != "" {
+		// CR defined Scheduled backup.  Create CronJob
+		_, err = reconciler.reconcileCronJob(ctx, databasebackup)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
 	return ctrl.Result{}, nil
 }
 
