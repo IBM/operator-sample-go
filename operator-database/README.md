@@ -46,14 +46,14 @@ Delete all resources:
 
 ```
 $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
-$ make undeploy IMG="docker.io/nheidloff/database-operator:v1.0.5"
+$ make undeploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 ```
 
 ### Build new Image
 
-[text]
+```
 $ code ../versions.env
 $ source ../versions.env
 $ podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE"
-[/text]     
+```
