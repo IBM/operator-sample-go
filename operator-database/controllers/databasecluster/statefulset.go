@@ -56,6 +56,7 @@ func (reconciler *DatabaseClusterReconciler) defineStatefulSet(databasecluster *
 					}},
 					SecurityContext: &v1.PodSecurityContext{
 						RunAsGroup: &variables.FsGroup,
+						//RunAsUser:  &variables.User,
 					},
 				},
 			},
@@ -98,7 +99,7 @@ func (reconciler *DatabaseClusterReconciler) reconcileStatefulSet(ctx context.Co
 				return ctrl.Result{}, err
 			}
 		} else {
-			log.Info("Failed to get StatefulSet resource " + variables.ServiceName + ". Re-running reconcile.")
+			log.Info("Failed to get StatefulSet resource " + variables.StatefulSetName + ". Re-running reconcile.")
 			return ctrl.Result{}, err
 		}
 	} else {
