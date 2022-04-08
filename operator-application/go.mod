@@ -3,7 +3,7 @@ module github.com/ibm/operator-sample-go/operator-application
 go 1.17
 
 require (
-	github.com/ibm/operator-sample-go/operator-database v1.0.2
+	github.com/ibm/operator-sample-go/operator-database v1.0.6
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.17.0
 	golang.org/x/crypto v0.0.0-20210817164053-32db794688a5

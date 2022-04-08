@@ -7,32 +7,27 @@ Install cert-manager:
 [cert-manager](https://github.com/cert-manager/cert-manager) is needed for webhooks.
 
 ```
-$ kubectl apply -f https://github.com/jetstack/cert-manager/releases/latest/download/cert-manager.yaml
+$ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
 ```
 
 Deploy database operator:
 
-Before running the application operator, the database operator needs to be deployed since it is defined as dependency.
-
-```
-$ cd ../operator-database
-$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.2"
-$ cd ../operator-application
-```
+Before running the application operator, the database operator needs to be deployed since it is defined as dependency. Follow the [instructions](../operator-database/README.md#run-operator-on-kubernetes) in the documentation.
 
 Build and push the application operator image:
 
 ```
-$ make generate manifests
-$ podman login $REGISTRY
-$ podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE" .
-$ podman push "$REGISTRY/$ORG/$IMAGE"
+$ code ../versions.env
+$ source ../versions.env
+$ podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR" .
+$ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 ```
 
 Deploy the operator:
 
 ```
-$ make deploy IMG="$REGISTRY/$ORG/$IMAGE"
+$ source ../versions.env
+$ make deploy IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 ```
 
 Create an application resource: 
@@ -54,7 +49,7 @@ Delete all resources:
 
 ```
 $ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
-$ make undeploy IMG="$REGISTRY/$ORG/$IMAGE"
+$ make undeploy IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 ```
 
 Test the conversions between v1alpha1 and v1beta1:

@@ -12,10 +12,10 @@ $ kubectl get all -n olm
 Build and push the bundle image:
 
 ```
-$ make generate manifests
-$ make bundle IMG="$REGISTRY/$ORG/$IMAGE"
-$ podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$BUNDLE_IMAGE" .
-$ podman push "$REGISTRY/$ORG/$BUNDLE_IMAGE"
+$ source ../versions.env
+$ make bundle IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
+$ podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" .
+$ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
 ```
 
 **Deploy the operator**
@@ -28,7 +28,7 @@ There are two ways to deploy the operator:
 *1. Deploy via operator-sdk:*
 
 ```
-$ operator-sdk run bundle "$REGISTRY/$ORG/$BUNDLE_IMAGE" -n operators
+$ operator-sdk run bundle "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" -n operators
 ```
 
 *2. Deploy via kubectl:*
@@ -36,10 +36,11 @@ $ operator-sdk run bundle "$REGISTRY/$ORG/$BUNDLE_IMAGE" -n operators
 Build and push the catalog image:
 
 ```
-$ make catalog-build docker-push CATALOG_IMG="$REGISTRY/$ORG/$CATALOG_IMAGE" BUNDLE_IMGS="$REGISTRY/$ORG/$BUNDLE_IMAGE" IMG="$REGISTRY/$ORG/$CATALOG_IMAGE"
+$ ./bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
+$ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
 ```
 
-Define "$REGISTRY/$ORG/$CATALOG_IMAGE" in olm/catalogsource.yaml and invoke these commands.
+Define "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" in olm/catalogsource.yaml and invoke these commands.
 
 ```
 $ kubectl apply -f olm/catalogsource.yaml

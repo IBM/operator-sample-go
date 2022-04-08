@@ -4,7 +4,7 @@ See below for instructions how to set up and run the database operator either lo
 
 Install [prerequisites](../documentation/Prerequisites.md).
 
-**Run operator locally**
+### Run operator locally
 
 From a terminal run this command:
 
@@ -25,12 +25,15 @@ $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
 $ make uninstall
 ```
 
-**Run operator on Kubernetes**
+### Run operator on Kubernetes
 
 Deploy the operator:
 
 ```
-$ make deploy IMG="docker.io/nheidloff/database-operator:v1.0.3"
+$ source ../versions.env
+$ make deploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
+$ kubectl apply -f config/rbac/role_patch_.yaml 
+$ kubectl apply -f config/rbac/role_binding_patch.yaml 
 ```
 
 From a terminal run this command:
@@ -43,5 +46,14 @@ Delete all resources:
 
 ```
 $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
-$ make undeploy IMG="docker.io/nheidloff/database-operator:v1.0.3"
+$ make undeploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
+```
+
+### Build new Image
+
+```
+$ code ../versions.env
+$ source ../versions.env
+$ podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE" .
+$ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE"
 ```

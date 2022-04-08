@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: microservice
-        image: docker.io/nheidloff/simple-microservice
+        image: docker.io/nheidloff/simple-microservice:v1.0.10
         env:
         - name: GREETING_MESSAGE
           valueFrom:
