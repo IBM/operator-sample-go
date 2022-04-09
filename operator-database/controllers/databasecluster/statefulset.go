@@ -30,6 +30,7 @@ func (reconciler *DatabaseClusterReconciler) defineStatefulSet(databasecluster *
 			Selector: &metav1.LabelSelector{
 				MatchLabels: labels,
 			},
+			ServiceName: variables.ServiceName,
 			Template: v1.PodTemplateSpec{
 				ObjectMeta: metav1.ObjectMeta{
 					Labels: labels,
