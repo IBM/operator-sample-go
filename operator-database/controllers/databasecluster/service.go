@@ -21,7 +21,8 @@ func (reconciler *DatabaseClusterReconciler) defineService(databasecluster *data
 		TypeMeta:   metav1.TypeMeta{APIVersion: "v1", Kind: "Service"},
 		ObjectMeta: metav1.ObjectMeta{Name: variables.ServiceName, Namespace: databasecluster.Namespace, Labels: labels},
 		Spec: corev1.ServiceSpec{
-			Type: corev1.ServiceTypeClusterIP,
+			Type:      corev1.ServiceTypeClusterIP,
+			ClusterIP: "None",
 			Ports: []corev1.ServicePort{{
 				Port: variables.Port,
 			}},
