@@ -2,11 +2,7 @@ package variables
 
 import (
 	"fmt"
-
-	"k8s.io/client-go/rest"
 )
-
-var ManagerConfig *rest.Config
 
 const Finalizer = "database.sample.third.party/finalizer"
 

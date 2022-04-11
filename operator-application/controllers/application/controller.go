@@ -15,12 +15,21 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/metrics"
 
 	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
 	"github.com/ibm/operator-sample-go/operator-application/variables"
+	"github.com/prometheus/client_golang/prometheus"
 )
 
 var managerConfig *rest.Config
+
+var countReconcileLaunched = prometheus.NewCounter(
+	prometheus.CounterOpts{
+		Name: "reconcile_launched_total",
+		Help: "reconcile_launched_total",
+	},
+)
 
 type ApplicationReconciler struct {
 	client.Client
@@ -38,6 +47,7 @@ type ApplicationReconciler struct {
 func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	log.Info("Reconcile started")
+	countReconcileLaunched.Inc()
 
 	application := &applicationsamplev1beta1.Application{}
 	err := reconciler.Get(ctx, req.NamespacedName, application)
@@ -122,6 +132,7 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 
 func (reconciler *ApplicationReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	managerConfig = mgr.GetConfig()
+	metrics.Registry.MustRegister(countReconcileLaunched)
 
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&applicationsamplev1beta1.Application{}).
