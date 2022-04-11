@@ -14,6 +14,7 @@ There are three ways to develop and run the operator:
 
 ### Documentation
 
+* [Why you should build Kubernetes Operators](http://heidloff.net/article/why-you-should-build-kubernetes-operators/)
 * [The Kubernetes Operator Metamodel](http://heidloff.net/article/the-kubernetes-operator-metamodel/)
 * [Creating and updating Resources from Operators](http://heidloff.net/article/updating-resources-kubernetes-operators/)
 * [Deleting Resources in Operators](http://heidloff.net/article/deleting-resources-kubernetes-operators/)
