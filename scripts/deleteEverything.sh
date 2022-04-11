@@ -30,6 +30,10 @@ kubectl delete namespace database
 kubectl delete all --all -n operator-database-system
 kubectl delete namespace operator-database-system
 
+cd $ROOT_FOLDER
+kubectl delete -f prometheus/prometheus/
+kubectl delete -f prometheus/operator/
+
 operator-sdk olm uninstall
 
 kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
