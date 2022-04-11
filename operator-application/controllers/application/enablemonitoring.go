@@ -6,21 +6,21 @@ import (
 )
 
 var (
-	goobers = prometheus.NewCounter(
+	reconcile_counts = prometheus.NewCounter(
 		prometheus.CounterOpts{
-			Name: "goobers_total",
-			Help: "Number of goobers proccessed",
+			Name: "reconcile_counts",
+			Help: "Number of times reconcile proccessed",
 		},
 	)
-	gooberFailures = prometheus.NewCounter(
+	reconcile_counts_fails = prometheus.NewCounter(
 		prometheus.CounterOpts{
-			Name: "goober_failures_total",
-			Help: "Number of failed goobers",
+			Name: "reconcile_counts_fails",
+			Help: "Number of times reconcile call failed",
 		},
 	)
 )
 
-func init() {
+func prometheusinit() {
 	// Register custom metrics with the global prometheus registry
-	metrics.Registry.MustRegister(goobers, gooberFailures)
+	metrics.Registry.MustRegister(reconcile_counts, reconcile_counts_fails)
 }

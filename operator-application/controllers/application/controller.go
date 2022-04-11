@@ -41,8 +41,8 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 
 	/////////
 	// Add metrics information
-	goobers.Inc()
-	gooberFailures.Inc()
+	prometheusinit()
+	reconcile_counts.Inc()
 	// End of metrics
 
 	application := &applicationsamplev1beta1.Application{}

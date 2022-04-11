@@ -188,3 +188,11 @@ To
 # [PROMETHEUS] To enable prometheus monitor, uncomment all sections with 'PROMETHEUS'.
 - ../prometheus
 ```
+
+
+
+```shell
+$ make generate
+$ make manifests
+```
+
