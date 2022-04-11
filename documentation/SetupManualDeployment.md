@@ -89,7 +89,6 @@ Add operator-application to Prometheus:
 
 ```
 $ make deploy IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
-$ kubectl apply -f prometheus/
 ```
 
 Open Prometheus daschboard:
