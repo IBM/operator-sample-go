@@ -36,7 +36,6 @@ $ kubectl get all
 
 1. cert-manager
    * "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml"
-   * [cert-manager](https://github.com/cert-manager/cert-manager) is needed for webhooks
 2. OLM (Operator Lifecycle Manager)
    * "operator-sdk olm install --version v0.20.0"
 3. Prometheus
