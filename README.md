@@ -11,6 +11,7 @@ There are three ways to develop and run the operator:
 3) [Kubernetes Operator deployed via OLM](documentation/SetupDeploymentViaOLM.md)
     * via operator-sdk
     * via kubectl
+ 4) [Enable Prometheus metering](documentation/EnablePrometheusMetering.md)
 
 ### Documentation
 
