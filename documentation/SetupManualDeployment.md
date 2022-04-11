@@ -1,14 +1,6 @@
 # Setup and manual Deployment
 
-Install [prerequistes](Prerequisites.md).
-
-### Install cert-manager
-
-[cert-manager](https://github.com/cert-manager/cert-manager) is needed for webhooks.
-
-```
-$ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
-```
+First install [prerequistes](Prerequisites.md)!
 
 ### Deploy database operator
 
@@ -52,7 +44,7 @@ $ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
 $ make undeploy IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 ```
 
-### Optionally: Test the conversions between v1alpha1 and v1beta1
+### Test the conversions between v1alpha1 and v1beta1
 
 v1alpha1:
 
@@ -74,24 +66,11 @@ $ kubectl get applications.v1alpha1.application.sample.ibm.com/application -n ap
 $ kubectl get applications.v1beta1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/" 
 ```
 
-### Optionally: Metrics
-
-Install Prometheus:
+### Open Prometheus daschboard
 
 ```
-$ operator-sdk olm install latest 
-$ kubectl apply -f https://operatorhub.io/install/prometheus.yaml
-$ kubectl apply -f ../prometheus/
 $ kubectl port-forward service/prometheus-operated -n monitoring 9090
 ```
-
-Add operator-application to Prometheus:
-
-```
-$ make deploy IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
-```
-
-Open Prometheus daschboard:
 
 ```
 $ open http://localhost:9090

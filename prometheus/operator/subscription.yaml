@@ -1,0 +1,11 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: my-prometheus
+  namespace: operators
+spec:
+  channel: beta
+  installPlanApproval: Manual
+  name: prometheus
+  source: operatorhubio-catalog
+  sourceNamespace: olm
