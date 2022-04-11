@@ -39,6 +39,12 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 	log := log.FromContext(ctx)
 	log.Info("Reconcile started")
 
+	/////////
+	// Add metrics information
+	goobers.Inc()
+	gooberFailures.Inc()
+	// End of metrics
+
 	application := &applicationsamplev1beta1.Application{}
 	err := reconciler.Get(ctx, req.NamespacedName, application)
 	if err != nil {
