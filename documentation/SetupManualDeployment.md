@@ -6,6 +6,12 @@ First install [prerequistes](Prerequisites.md)!
 
 Before running the application operator, the database operator needs to be deployed since it is defined as dependency. Follow the [instructions](../operator-database/README.md#run-operator-on-kubernetes) in the documentation.
 
+### Navigate to operator-application
+
+```
+$ cd operator-application
+```
+
 ### Build and push the application operator image
 
 ```

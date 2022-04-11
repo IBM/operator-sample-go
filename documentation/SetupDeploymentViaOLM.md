@@ -2,6 +2,12 @@
 
 Follow the same steps described in [Setup and manual Deployment](SetupManualDeployment.md) up to the step 'Deploy Operator'.
 
+### Navigate to operator-application
+
+```
+$ cd operator-application
+```
+
 ### Build and push the bundle image
 
 ```
