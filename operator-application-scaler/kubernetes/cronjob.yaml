@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: application-scaler
+  namespace: operator-application-system
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: application-scale
+            image: docker.io/nheidloff/operator-application-scaler:v1.0.1
+            imagePullPolicy: IfNotPresent
+          restartPolicy: OnFailure

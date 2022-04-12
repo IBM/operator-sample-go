@@ -1,0 +1,44 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: application-scaler-role
+  namespace: operator-application-system
+rules:
+- apiGroups:
+  - "application.sample.ibm.com"
+  resources:
+  - applications
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - "application.sample.ibm.com"
+  resources:
+  - applications/status
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: application-scaler-rolebinding
+  namespace: operator-application-system
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: application-scaler-role
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: operator-application-system

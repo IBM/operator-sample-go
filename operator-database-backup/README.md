@@ -18,7 +18,7 @@ $ go run main.go
 
 To debug, add the API key and the instance id to launch.json.
 
-To deploy the backup application as Kubernetes job, build and push the image and change the reference in kubernetes/job.yaml:
+To deploy the backup application as Kubernetes job, build and push the image and change the reference in kubernetes/cronjob.yaml:
 
 ```
 $ cd operator-database-backup
