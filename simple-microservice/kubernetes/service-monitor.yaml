@@ -1,0 +1,13 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: myapplication
+  name: myapplication-metrics-monitor
+  namespace: application-beta
+spec:
+  endpoints:
+    - path: /q/metrics
+  selector:
+    matchLabels:
+      app: myapplication
