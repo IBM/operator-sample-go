@@ -5,7 +5,7 @@ metadata:
   namespace: operators
 spec:
   channel: beta
-  installPlanApproval: Manual
+  installPlanApproval: Automatic
   name: prometheus
   source: operatorhubio-catalog
   sourceNamespace: olm
