@@ -33,6 +33,7 @@ There are three ways to develop and run the operator:
 * [Building Databases on Kubernetes with Quarkus](http://heidloff.net/quarkus/building-databases-kubernetes-quarkus/)
 * [Automatically Archiving Data with Kubernetes Operators](http://heidloff.net/article/automatically-archiving-data-kubernetes-operators/)
 * [Accessing Kubernetes from Go Applications](http://heidloff.net/article/accessing-kubernetes-from-go-applications/)
+* [Exporting Metrics from Kubernetes Apps for Prometheus](http://heidloff.net/article/exporting-metrics-kubernetes-applications-prometheus/)
 
 To start developing operators, we recommend to get familiar with the [Kubernetes Operator Metamodel](http://heidloff.net/article/the-kubernetes-operator-metamodel/) first.
 
