@@ -1,4 +1,4 @@
-# Kubernetes Operator Samples using Go, the Operator SDK and OLM
+# Kubernetes Operator Patterns and Best Practises
 
 This project contains Kubernetes operator samples that demonstrate best practices how to develop operators with [Golang](https://go.dev/), [Operator SDK](https://sdk.operatorframework.io/) including [Kubebuilder](https://github.com/kubernetes-sigs/kubebuilder) and the [Operator Lifecycle Manager Framework](https://operatorframework.io/).
 
