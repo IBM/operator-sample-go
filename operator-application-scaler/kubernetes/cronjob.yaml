@@ -11,6 +11,11 @@ spec:
         spec:
           containers:
           - name: application-scale
-            image: docker.io/nheidloff/operator-application-scaler:v1.0.1
+            image: docker.io/nheidloff/operator-application-scaler:v1.0.2
             imagePullPolicy: IfNotPresent
+            env:
+            - name: APPLICATION_RESOURCE_NAME
+              value: "application"
+            - name: APPLICATION_RESOURCE_NAMESPACE
+              value: "application-beta"
           restartPolicy: OnFailure

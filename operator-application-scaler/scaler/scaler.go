@@ -6,12 +6,28 @@ import (
 	"os"
 	"time"
 
+	applicationoperatorv1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
 	"github.com/prometheus/client_golang/api"
 	v1 "github.com/prometheus/client_golang/api/prometheus/v1"
 	"github.com/prometheus/common/model"
+	"k8s.io/utils/env"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+)
+
+var (
+	// mandatory enviornment variables
+	applicationName      = env.GetString("APPLICATION_RESOURCE_NAME", "")
+	applicationNamespace = env.GetString("APPLICATION_RESOURCE_NAMESPACE", "")
+
+	// internal variables
+	applicationContext  context.Context
+	kubernetesClient    client.Client
+	applicationResource *applicationoperatorv1beta1.Application
 )
 
 func Run() {
+	applicationContext = context.Background()
+
 	prometheusAddress := "http://prometheus-operated.monitoring:9090"
 	queryAmountHelloEndpointInvocations := "application_net_heidloff_GreetingResource_countHelloEndpointInvoked_total"
 
@@ -45,11 +61,27 @@ func Run() {
 		if resultVector.Len() > 0 {
 			firstElement := resultVector[0]
 			if firstElement.Value > 5 {
-				// TODO: Needs to be scaled up
-				fmt.Println("Needs to be scaled up")
+				// Note: '5' is only used for demo purposes
+				scaleUp()
+				fmt.Println("Application " + applicationNamespace + "." + applicationName + " needs to be scaled up")
 			} else {
-				fmt.Println("Does not need to be scaled up")
+				fmt.Println("Application " + applicationNamespace + "." + applicationName + " does not need to be scaled up")
 			}
+		}
+	}
+}
+
+func scaleUp() {
+	err := getApplicationResource()
+	if err != nil {
+		fmt.Println("Application " + applicationNamespace + "." + applicationName + " could not be found")
+	} else {
+		applicationResource.Spec.AmountPods = 3
+		err = kubernetesClient.Update(applicationContext, applicationResource)
+		if err != nil {
+			fmt.Println("Failed to update application resource")
+		} else {
+			fmt.Println("Success. Application has been scaled up to three pods.")
 		}
 	}
 }
