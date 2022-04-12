@@ -15,11 +15,16 @@ import (
 )
 
 func (reconciler *ApplicationReconciler) defineService(application *applicationsamplev1beta1.Application) *corev1.Service {
-	labels := map[string]string{variables.LabelKey: variables.LabelValue}
+	labels := map[string]string{variables.LabelKey: variables.ContainerName}
 
 	service := &corev1.Service{
-		TypeMeta:   metav1.TypeMeta{APIVersion: "v1", Kind: "Service"},
-		ObjectMeta: metav1.ObjectMeta{Name: variables.ServiceName, Namespace: application.Namespace, Labels: labels},
+		TypeMeta: metav1.TypeMeta{
+			APIVersion: "v1",
+			Kind:       "Service"},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      variables.ServiceName,
+			Namespace: application.Namespace,
+			Labels:    labels},
 		Spec: corev1.ServiceSpec{
 			Type: corev1.ServiceTypeNodePort,
 			Ports: []corev1.ServicePort{{

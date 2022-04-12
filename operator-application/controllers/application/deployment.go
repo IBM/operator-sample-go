@@ -19,7 +19,7 @@ import (
 
 func (reconciler *ApplicationReconciler) defineDeployment(application *applicationsamplev1beta1.Application) *appsv1.Deployment {
 	replicas := application.Spec.AmountPods
-	labels := map[string]string{variables.LabelKey: variables.LabelValue}
+	labels := map[string]string{variables.LabelKey: variables.ContainerName}
 
 	deployment := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{

@@ -19,6 +19,7 @@ import (
 
 	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
 	"github.com/ibm/operator-sample-go/operator-application/variables"
+	monitoringv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -114,6 +115,11 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 		return ctrl.Result{}, err
 	}
 
+	_, err = reconciler.reconcileMonitor(ctx, application)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
 	// Note: Commented out for dev productivity only
 	/*
 		_, err = reconciler.addFinalizer(ctx, application)
@@ -139,6 +145,7 @@ func (reconciler *ApplicationReconciler) SetupWithManager(mgr ctrl.Manager) erro
 		Owns(&appsv1.Deployment{}).
 		Owns(&corev1.Service{}).
 		Owns(&corev1.Secret{}).
+		Owns(&monitoringv1.ServiceMonitor{}).
 		// Note: Possible, but not used in this scenario
 		//Owns(&databasesamplev1alpha1.Database{}).
 		Complete(reconciler)

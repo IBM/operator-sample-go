@@ -79,5 +79,7 @@ $ kubectl port-forward service/prometheus-operated -n monitoring 9090
 ```
 
 ```
-$ open http://localhost:9090
+$ open http://localhost:9090/graph
 ```
+
+Search for 'reconcile_launched_total' and 'application_net_heidloff_GreetingResource_countHelloEndpointInvoked_total'.
