@@ -10,7 +10,7 @@ $ cd simple-microservice
 $ export GREETING_MESSAGE=World
 $ mvn clean quarkus:dev
 $ open http://localhost:8081/hello
-$ open http://localhost:8081/q/metrics
+$ open http://localhost:8081/q/metrics/application
 ```
 
 ### Run as Container
