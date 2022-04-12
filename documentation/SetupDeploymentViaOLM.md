@@ -2,14 +2,13 @@
 
 Follow the same steps described in [Setup and manual Deployment](SetupManualDeployment.md) up to the step 'Deploy Operator'.
 
-Install the Operator Lifecycle Manager (OLM):
+### Navigate to operator-application
 
 ```
-$ operator-sdk olm install latest 
-$ kubectl get all -n olm
+$ cd operator-application
 ```
 
-Build and push the bundle image:
+### Build and push the bundle image
 
 ```
 $ source ../versions.env
@@ -18,20 +17,20 @@ $ podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERAT
 $ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
 ```
 
-**Deploy the operator**
+### Deploy the operator
 
 There are two ways to deploy the operator:
 
 1) operator-sdk
 2) kubectl
 
-*1. Deploy via operator-sdk:*
+**1. Deploy via operator-sdk:**
 
 ```
 $ operator-sdk run bundle "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" -n operators
 ```
 
-*2. Deploy via kubectl:*
+**2. Deploy via kubectl:**
 
 Build and push the catalog image:
 
@@ -54,7 +53,7 @@ If the install plan requires manual approval, use this command:
 $ kubectl -n operators patch installplan install-xxxxx -p '{"spec":{"approved":true}}' --type merge
 ```
 
-**Verify the setup**
+### Verify the setup
 
 In both cases the setup can be verified via these commands:
 
@@ -77,9 +76,9 @@ $ kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk 
 $ kubectl logs -n operators $(kubectl get pods -n operators | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager
 ```
 
-**Delete all resources**
+### Delete all resources
 
-*1. Delete all resources (operator-sdk):*
+**1. Delete all resources (operator-sdk):**
 
 ```
 $ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
@@ -88,7 +87,7 @@ $ kubectl apply -f ../operator-database/config/crd/bases/database.sample.third.p
 $ operator-sdk olm uninstall
 ```
 
-*2. Delete all resources (kubectl):*
+**2. Delete all resources (kubectl):**
 
 ```
 $ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml

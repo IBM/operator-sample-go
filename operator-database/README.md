@@ -32,7 +32,7 @@ Deploy the operator:
 ```
 $ source ../versions.env
 $ make deploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
-$ kubectl apply -f config/rbac/role_patch_.yaml 
+$ kubectl apply -f config/rbac/role_patch.yaml 
 $ kubectl apply -f config/rbac/role_binding_patch.yaml 
 ```
 

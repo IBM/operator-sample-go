@@ -2,11 +2,7 @@ package variables
 
 import (
 	"fmt"
-
-	"k8s.io/client-go/rest"
 )
-
-var ManagerConfig *rest.Config
 
 const Finalizer = "database.sample.third.party/finalizer"
 
@@ -18,7 +14,7 @@ var ContainerName string
 const ANNOTATION_TITLE = "applications.application.sample.ibm.com/title"
 const DEFAULT_ANNOTATION_TITLE = "My Title"
 
-const Image = "docker.io/nheidloff/simple-microservice:v1.0.10"
+const Image = "docker.io/nheidloff/simple-microservice:v1.0.11"
 const Port int32 = 8081
 const NodePort int32 = 30548
 const LabelKey = "app"

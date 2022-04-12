@@ -7,8 +7,10 @@ The microservice provides a hello world endpoint which prints out an input envir
 ```
 $ git clone https://github.com/ibm/operator-sample-go.git
 $ cd simple-microservice
+$ export GREETING_MESSAGE=World
 $ mvn clean quarkus:dev
 $ open http://localhost:8081/hello
+$ open http://localhost:8081/q/metrics/application
 ```
 
 ### Run as Container
