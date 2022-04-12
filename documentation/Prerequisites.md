@@ -39,8 +39,8 @@ $ kubectl get all
 2. OLM (Operator Lifecycle Manager)
    * "operator-sdk olm install --version v0.20.0"
 3. Prometheus
-   * "kubectl apply -f ../prometheus/operator/"
-   * "kubectl apply -f ../prometheus/prometheus/"
+   * "kubectl apply -f prometheus/operator/"
+   * "kubectl apply -f prometheus/prometheus/"
 
 ### 5. Image Registry
 
