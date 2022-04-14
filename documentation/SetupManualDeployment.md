@@ -72,7 +72,17 @@ $ kubectl get applications.v1alpha1.application.sample.ibm.com/application -n ap
 $ kubectl get applications.v1beta1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/" 
 ```
 
-### Open Prometheus daschboard
+### Prometheus Metrics
+
+For OpenShift only:
+
+```
+$ oc label namespace application-beta openshift.io/cluster-monitoring="true"
+$ kubectl apply -f prometheus
+TODO: same for operator-application
+```
+
+Open Prometheus daschboard:
 
 ```
 $ kubectl port-forward service/prometheus-operated -n monitoring 9090
