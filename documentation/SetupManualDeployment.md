@@ -76,6 +76,8 @@ $ kubectl get applications.v1beta1.application.sample.ibm.com/application -n app
 
 ```
 $ kubectl port-forward service/prometheus-operated -n monitoring 9090
+or for OpenShift:
+$ kubectl port-forward service/prometheus-operated -n openshift-monitoring 9090
 ```
 
 ```

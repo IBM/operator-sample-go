@@ -22,9 +22,9 @@ $ code .
 
 ### 3. Kubernetes Cluster
 
-The instructions assume that you use the managed Kubernetes service on the IBM Cloud. You can also use any other Kubernetes service or OpenShift.
+Any newer Kubernetes cluster should work. The Operator SDK version v1.18.1 has been [tested](https://github.com/kubernetes/client-go#versioning) with Kubernetes v1.23. You can also use OpenShift. We have mostly tested the two operators with IBM Cloud Kubernetes Service and IBM Red Hat OpenShift on IBM Cloud.
 
-You need to log in to Kubernetes, for example:
+Log in to Kubernetes or OpenShift, for example:
 
 ```
 $ ibmcloud login -a cloud.ibm.com -r eu-de -g resource-group-niklas-heidloff7 --sso
@@ -32,15 +32,30 @@ $ ibmcloud ks cluster config --cluster xxxxxxx
 $ kubectl get all
 ```
 
+```
+$ oc login --token=sha256~xxxxx --server=https://c106-e.us-south.containers.cloud.ibm.com:32335
+$ kubectl get all
+```
+
 ### 4. Required Kubernetes Components
 
-1. cert-manager
-   * "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml"
-2. OLM (Operator Lifecycle Manager)
-   * "operator-sdk olm install --version v0.20.0"
-3. Prometheus
-   * "kubectl apply -f prometheus/operator/"
-   * "kubectl apply -f prometheus/prometheus/"
+4.1. cert-manager
+   
+* Needed for [certificates](https://cert-manager.io/) on Kubernetes and OpenShift
+* "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml"
+* Or "https://operatorhub.io/operator/cert-manager"
+
+4.2. OLM (Operator Lifecycle Manager)
+
+* Not needed for OpenShift since it's already included
+* Operator SDK: "operator-sdk olm install --version v0.20.0"
+* Or via download: "curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.20.0/install.sh | bash -s v0.20.0"
+
+4.3. Prometheus
+
+* Not needed for OpenShift since it's already included   
+* Operator: "kubectl apply -f prometheus/operator/"
+* Prometheus: "kubectl apply -f prometheus/prometheus/"
 
 ### 5. Image Registry
 
