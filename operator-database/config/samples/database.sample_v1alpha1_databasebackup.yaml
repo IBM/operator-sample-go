@@ -8,11 +8,11 @@ spec:
   - name: ibmcos-repo
     type: ibmcos
     secretName: ibmcos-repo
-    serviceEndpoint: "https://s3.eu.cloud-object-storage.appdomain.cloud"
+    serviceEndpoint: s3.eu.cloud-object-storage.appdomain.cloud
     cosRegion: eu-geo
     bucketNamePrefix: "database-backup-"
   manualTrigger:
-    time: "2022-12-15T02:59:43.1Z"
+    time: "2022-04-20T02:59:43.1Z"
     repo: ibmcos-repo
   scheduledTrigger:
     schedule: "*/3 * * * *"

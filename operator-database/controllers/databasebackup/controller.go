@@ -72,6 +72,10 @@ func (reconciler *DatabaseBackupReconciler) Reconcile(ctx context.Context, req c
 
 	if databasebackup.Spec.ManualTrigger.Repo != "" {
 		// CR defined Manual backup.  Create Job
+		_, err = reconciler.reconcileJob(ctx, databasebackup)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
 
 	}
 	if databasebackup.Spec.ScheduledTrigger.Repo != "" {

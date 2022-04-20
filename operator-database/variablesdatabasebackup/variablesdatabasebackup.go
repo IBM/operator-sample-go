@@ -16,25 +16,29 @@ const Image = "docker.io/nheidloff/operator-database-backup:v1.0.7"
 const LabelKey = "app"
 const LabelValue = "database-backup"
 const EnvKeyBackupResourceName = "BACKUP_RESOURCE_NAME"
+
 const BackupResourceName = "databasebackup-manual"
+
+//const BackupResourceNameManual = "databasebackup-manual"
+//const BackupResourceNameScheduled = "databasebackup-scheduled"
 const EnvKeyNamespace = "NAMESPACE"
 const EnvKeyCosHmacAccessKeyId = "CLOUD_OBJECT_STORAGE_HMAC_ACCESS_KEY_ID"
 const EnvKeyCosHmacSecretAccessKey = "CLOUD_OBJECT_STORAGE_HMAC_SECRET_ACCESS_KEY"
 const EnvKeyCosRegion = "CLOUD_OBJECT_STORAGE_REGION"
 const EnvKeyCosSecretName = "ibmcos-repo"
-const EnvKeyCosSecretDataKeyHmacAccessKeyId = "apikey"
-const EnvKeyCosSecretDataKeyHmacSecretAccess = "serviceInstanceId"
 
-//const CosRegion = "eu-geo"
+//const EnvKeyCosSecretDataKeyHmacAccessKeyId = "apikey"
+const EnvKeyCosSecretDataKeyHmacAccessKeyId = "HmacAccessKeyId"
+
+//const EnvKeyCosSecretDataKeyHmacSecretAccess = "serviceInstanceId"
+const EnvKeyCosSecretDataKeyHmacSecretAccess = "HmacSecretAccessKey"
 const EnvKeyCosEndpoint = "CLOUD_OBJECT_STORAGE_SERVICE_ENDPOINT"
-
-//const cosEndpoint = "s3.eu.cloud-object-storage.appdomain.cloud"
 const RoleBindingServiceAccount = "default"
 
 func SetGlobalVariables(applicationName string) {
-	CronJobName = applicationName + "-cronjob-databasebackup"
-	JobName = applicationName + "-job-databasebackup"
-	ContainerName = applicationName + "--databasebackup"
+	CronJobName = applicationName + "-cronjob"
+	JobName = applicationName + "-job"
+	ContainerName = applicationName + "-databasebackup"
 	BackupRoleName = applicationName + "-role-databasebackup"
 	BackupRoleBindingName = applicationName + "-rolebinding-databasebackup"
 }
