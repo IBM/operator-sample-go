@@ -7,7 +7,6 @@ import (
 
 	variables "github.com/ibm/operator-sample-go/operator-database/variablesdatabasebackup"
 	batchv1 "k8s.io/api/batch/v1"
-	"k8s.io/api/batch/v1beta1"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -80,13 +79,14 @@ func (reconciler *DatabaseBackupReconciler) defineCronJob(databasebackup *databa
 
 func (reconciler *DatabaseBackupReconciler) reconcileCronJob(ctx context.Context, databasebackup *databasesamplev1alpha1.DatabaseBackup) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	var cronJob *v1beta1.CronJob
+	var cronJob *batchv1.CronJob
 	var cronJobDefinition *batchv1.CronJob
 
 	for i, _ := range databasebackup.Spec.Repos {
 
 		cronJobDefinition = reconciler.defineCronJob(databasebackup, i)
-		cronJob = &v1beta1.CronJob{}
+		cronJob = &batchv1.CronJob{}
+
 		err := reconciler.Get(ctx, types.NamespacedName{Name: variables.CronJobName, Namespace: databasebackup.Namespace}, cronJob)
 		if err != nil {
 			if errors.IsNotFound(err) {
