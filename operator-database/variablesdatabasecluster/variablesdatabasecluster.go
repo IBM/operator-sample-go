@@ -11,9 +11,6 @@ var ClusterRoleBindingName string
 var ContainerName string
 var DataDirectory string = "/data"
 
-var FsGroup int64 = 100
-var User int64 = 1001
-
 var StorageResourceRequirement = "1Gi"
 var StorageClassName string = "ibmc-vpc-block-5iops-tier"
 
@@ -21,7 +18,9 @@ const ANNOTATION_TITLE = "applications.application.sample.ibm.com/title"
 const DEFAULT_ANNOTATION_TITLE = "My Title"
 const LabelKey = "app"
 const LabelValue = "database-cluster"
+
 const Image = "docker.io/nheidloff/database-service:v1.0.23"
+
 const Port int32 = 8089
 const VolumeMountName = "data-volume"
 
