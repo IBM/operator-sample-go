@@ -1,6 +1,6 @@
 # Database Operator - Setup and local Usage
 
-First install [prerequistes](Prerequisites.md)!
+First install the [prerequistes](Prerequisites.md)!
 
 ### Navigate to operator-database
 

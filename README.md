@@ -2,39 +2,13 @@
 
 This project contains Kubernetes operator samples that demonstrate best practices how to develop operators with [Golang](https://go.dev/), [Operator SDK](https://sdk.operatorframework.io/) including [Kubebuilder](https://github.com/kubernetes-sigs/kubebuilder) and the [Operator Lifecycle Manager Framework](https://operatorframework.io/).
 
-### Setup
+### Getting started
 
 The repo contains two operators:
 1) Application operator: Deploys and manages a simple microservice application.
 2) Database operator: Deploys and manages a simple database. Used by the application.
 
 The easiest way to get started is to [run the application operator locally](documentation/AppSetupLocal.md) which uses prebuilt images of the database controller, the microservice and all other required components.
-
-Run the application operator:
-
-1) [Local operator](documentation/AppSetupLocal.md) 
-2) Operator manually deployed
-  * [Kubernetes](documentation/AppSetupManual.md)
-  * [OpenShift](documentation/AppSetupManualOpenShift.md)
-4) Operator deployed via OLM and kubectl
-  * [Kubernetes](documentation/SetupDeploymentViaOLM.md)
-  * OpenShift
-5) Operator deployed via OLM and operator-sdk
-  * [Kubernetes](documentation/SetupDeploymentViaOLM.md)
-  * OpenShift
-
-Run the database operator:
-
-1) [Local operator](documentation/DbSetupLocal.md) 
-2) Operator manually deployed
-    * [Kubernetes](documentation/DbSetupManual.md)
-    * [OpenShift](documentation/DbSetupManualOpenShift.md)
-4) Operator deployed via OLM via kubectl
-    * Kubernetes
-    * OpenShift
-5) Operator deployed via OLM via operator-sdk
-    * Kubernetes
-    * OpenShift
 
 ### Documentation
 
@@ -74,11 +48,37 @@ Run the database operator:
 * [Accessing third Party Custom Resources in Go Operators](http://heidloff.net/article/accessing-third-party-custom-resources-go-operators/)
 * [Using object-oriented Concepts in Golang based Operators](http://heidloff.net/article/object-oriented-concepts-golang/)
 
-
-
 To start developing operators, we recommend to get familiar with the [Kubernetes Operator Metamodel](http://heidloff.net/article/the-kubernetes-operator-metamodel/) first.
 
 <img src="documentation/OperatorMetamodel.png" />
+
+### Setup
+
+Run the application operator:
+
+1) [Local operator](documentation/AppSetupLocal.md) 
+2) Operator manually deployed
+  * [Kubernetes](documentation/AppSetupManual.md)
+  * [OpenShift](documentation/AppSetupManualOpenShift.md)
+4) Operator deployed via OLM and kubectl
+  * [Kubernetes](documentation/AppSetupOLMKubectl.md)
+  * [OpenShift](documentation/AppSetupOLMKubectlOpenShift.md)
+5) Operator deployed via OLM and operator-sdk
+  * [Kubernetes](documentation/AppSetupOLMSDK.md)
+  * [OpenShift](documentation/AppSetupOLMSDKOpenShift.md)
+
+Run the database operator:
+
+1) [Local operator](documentation/DbSetupLocal.md) 
+2) Operator manually deployed
+    * [Kubernetes](documentation/DbSetupManual.md)
+    * [OpenShift](documentation/DbSetupManualOpenShift.md)
+4) Operator deployed via OLM and kubectl
+    * Kubernetes
+    * OpenShift
+5) Operator deployed via OLM and operator-sdk
+    * Kubernetes
+    * OpenShift
 
 ### Resources
 
