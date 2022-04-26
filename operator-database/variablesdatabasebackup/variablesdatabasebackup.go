@@ -12,7 +12,7 @@ var ContainerName string
 var BackupRoleName string
 var BackupRoleBindingName string
 
-const Image = "docker.io/nheidloff/operator-database-backup:v1.0.7"
+const Image = "docker.io/nheidloff/operator-database-backup:v1.0.9"
 const LabelKey = "app"
 const LabelValue = "database-backup"
 const EnvKeyBackupResourceName = "BACKUP_RESOURCE_NAME"
