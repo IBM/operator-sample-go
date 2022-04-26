@@ -2,15 +2,10 @@
 
 First install the [prerequistes](Prerequisites.md)!
 
-### Navigate to operator-application
-
-```
-$ cd operator-application
-```
-
 ### Run the bundle
 
 ```
+$ cd operator-application
 $ operator-sdk run bundle "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" -n operators
 ```
 

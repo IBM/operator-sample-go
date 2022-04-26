@@ -2,15 +2,10 @@
 
 First install the [prerequistes](Prerequisites.md)!
 
-### Navigate to operator-application
-
-```
-$ cd operator-application
-```
-
 ### Deploy catalog source and subscription
 
 ```
+$ cd operator-application
 $ kubectl apply -f olm/catalogsource.yaml
 $ kubectl apply -f olm/subscription.yaml 
 $ kubectl get installplans -n operators

@@ -2,17 +2,12 @@
 
 First install the [prerequistes](Prerequisites.md)!
 
-### Navigate to operator-database
-
-```
-$ cd operator-database
-```
-
 ### Run operator locally
 
 From a terminal run this command:
 
 ```
+$ cd operator-database
 $ make install run
 ```
 

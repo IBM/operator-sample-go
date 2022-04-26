@@ -2,15 +2,10 @@
 
 First install the [prerequistes](Prerequisites.md)!
 
-### Navigate to operator-application
-
-```
-$ cd operator-application
-```
-
 ### Create database resource
 
 ```
+$ cd operator-application
 $ kubectl create namespace database
 $ kubectl apply -f ../operator-database/config/crd/bases/database.sample.third.party_databases.yaml
 ```
@@ -20,6 +15,7 @@ $ kubectl apply -f ../operator-database/config/crd/bases/database.sample.third.p
 From a terminal run this command:
 
 ```
+$ cd operator-application
 $ make install run ENABLE_WEBHOOKS=false
 ```
 

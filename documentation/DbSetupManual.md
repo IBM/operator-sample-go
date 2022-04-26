@@ -2,15 +2,10 @@
 
 First install the [prerequistes](Prerequisites.md)!
 
-### Navigate to operator-database
-
-```
-$ cd operator-database
-```
-
 ### Deploy database operator
 
 ```
+$ cd operator-database
 $ source ../versions.env
 $ make deploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 $ kubectl apply -f config/rbac/role_patch.yaml 

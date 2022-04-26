@@ -6,15 +6,10 @@ First install the [prerequistes](Prerequisites.md)!
 
 Before running the application operator, the database operator needs to be deployed since it is defined as dependency. Follow the [instructions](DbSetupManual.md) in the documentation.
 
-### Navigate to operator-application
-
-```
-$ cd operator-application
-```
-
 ### Deploy the operator
 
 ```
+$ cd operator-application
 $ source ../versions.env
 $ make deploy IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 ```
