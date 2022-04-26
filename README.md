@@ -8,27 +8,27 @@ The repo contains two operators:
 1) Application operator: Deploys and manages a simple microservice application.
 2) Database operator: Deploys and manages a simple database. Used by the application.
 
-The easiest way to get started is to run the application operator which uses prebuilt images of the database controller, the microservice and all other required components.
+The easiest way to get started is to [run the application operator locally](documentation/AppSetupLocal.md) which uses prebuilt images of the database controller, the microservice and all other required components.
 
 Run the application operator:
 
-1) [Local operator](documentation/SetupLocal.md) 
+1) [Local operator](documentation/AppSetupLocal.md) 
 2) Operator manually deployed
-  * [Kubernetes](documentation/SetupManualDeployment.md)
-  * OpenShift
-4) Operator deployed via OLM via kubectl
+  * [Kubernetes](documentation/AppSetupManual.md)
+  * [OpenShift](documentation/AppSetupManualOpenShift.md)
+4) Operator deployed via OLM and kubectl
   * [Kubernetes](documentation/SetupDeploymentViaOLM.md)
   * OpenShift
-5) Operator deployed via OLM via operator-sdk
+5) Operator deployed via OLM and operator-sdk
   * [Kubernetes](documentation/SetupDeploymentViaOLM.md)
   * OpenShift
 
 Run the database operator:
 
-1) Local operator
-2) [Operator manually deployed](https://github.com/IBM/operator-sample-go/tree/main/operator-database#readme)
-    * Kubernetes
-    * OpenShift
+1) [Local operator](documentation/DbSetupLocal.md) 
+2) Operator manually deployed
+    * [Kubernetes](documentation/DbSetupManual.md)
+    * [OpenShift](documentation/DbSetupManualOpenShift.md)
 4) Operator deployed via OLM via kubectl
     * Kubernetes
     * OpenShift

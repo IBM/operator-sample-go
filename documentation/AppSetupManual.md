@@ -1,24 +1,15 @@
-# Setup and manual Deployment
+# Application Operator - Setup and manual Deployment
 
-First install [prerequistes](Prerequisites.md)!
+First install the [prerequistes](Prerequisites.md)!
 
 ### Deploy database operator
 
-Before running the application operator, the database operator needs to be deployed since it is defined as dependency. Follow the [instructions](../operator-database/README.md#run-operator-on-kubernetes) in the documentation.
+Before running the application operator, the database operator needs to be deployed since it is defined as dependency. Follow the [instructions](DbSetupManual.md) in the documentation.
 
 ### Navigate to operator-application
 
 ```
 $ cd operator-application
-```
-
-### Build and push the application operator image
-
-```
-$ code ../versions.env
-$ source ../versions.env
-$ podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR" .
-$ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 ```
 
 ### Deploy the operator
@@ -50,6 +41,17 @@ $ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
 $ make undeploy IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 ```
 
+### Build and push new image
+
+Change 'REGISTRY', 'ORG' and image version in versions.env.
+
+```
+$ code ../versions.env
+$ source ../versions.env
+$ podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR" .
+$ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
+```
+
 ### Test the conversions between v1alpha1 and v1beta1
 
 v1alpha1:
@@ -73,14 +75,6 @@ $ kubectl get applications.v1beta1.application.sample.ibm.com/application -n app
 ```
 
 ### Prometheus Metrics
-
-For OpenShift only:
-
-```
-$ oc label namespace application-beta openshift.io/cluster-monitoring="true"
-$ kubectl apply -f prometheus
-TODO: same for operator-application
-```
 
 Open Prometheus daschboard:
 

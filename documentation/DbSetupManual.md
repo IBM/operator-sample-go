@@ -1,33 +1,14 @@
-# Database Operator
+# Database Operator - Setup and manual Deployment
 
-See below for instructions how to set up and run the database operator either locally or on Kubernetes.
+First install the [prerequistes](Prerequisites.md)!
 
-Install [prerequisites](../documentation/Prerequisites.md).
-
-### Run operator locally
-
-From a terminal run this command:
+### Navigate to operator-database
 
 ```
-$ make install run
+$ cd operator-database
 ```
 
-From a second terminal run this command:
-
-```
-$ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
-```
-
-Delete all resources:
-
-```
-$ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
-$ make uninstall
-```
-
-### Run operator on Kubernetes
-
-Deploy the operator:
+### Deploy database operator
 
 ```
 $ source ../versions.env
@@ -42,14 +23,16 @@ From a terminal run this command:
 $ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
 ```
 
-Delete all resources:
+### Delete all resources
 
 ```
 $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
 $ make undeploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 ```
 
-### Build new Image
+### Build and push new image
+
+Change 'REGISTRY', 'ORG' and image version in versions.env.
 
 ```
 $ code ../versions.env
