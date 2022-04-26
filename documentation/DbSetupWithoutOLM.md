@@ -1,4 +1,4 @@
-# Database Operator - Setup and manual Deployment
+# Database Operator - Operator deployed without OLM
 
 First install the [prerequistes](Prerequisites.md)!
 

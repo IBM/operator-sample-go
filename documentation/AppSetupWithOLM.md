@@ -1,4 +1,4 @@
-# Application Operator - Setup and Deployment via Operator Lifecycle Manager and kubectl
+# Application Operator - Operator deployed with OLM
 
 First install the [prerequistes](Prerequisites.md)!
 
@@ -6,31 +6,48 @@ First install the [prerequistes](Prerequisites.md)!
 
 ```
 $ cd operator-application
+```
+
+For Kubernetes:
+
+```
 $ kubectl apply -f olm/catalogsource.yaml
 $ kubectl apply -f olm/subscription.yaml 
-$ kubectl get installplans -n operators
 ```
 
-If the install plan requires manual approval, use this command:
+For OpenShift:
 
 ```
-$ kubectl -n operators patch installplan install-xxxxx -p '{"spec":{"approved":true}}' --type merge
+$ kubectl apply -f olm/catalogsource-openshift.yaml
+$ kubectl apply -f olm/subscription-openshift.yaml 
 ```
 
 ### Verify the setup
 
+For Kubernetes:
+
 ```
-$ kubectl get all -n operators
-$ kubectl get catalogsource operator-application-catalog -n operators -oyaml
-$ kubectl get subscriptions operator-application-v0-0-1-sub -n operators -oyaml
-$ kubectl get csv operator-application.v0.0.1 -n operators -oyaml
-$ kubectl get installplans -n operators
-$ kubectl get installplans install-xxxxx -n operators -oyaml
-$ kubectl get operators operator-application.operators -n operators -oyaml
+$ export NAMESPACE=operators
+```
+
+For OpenShift:
+
+```
+$ export NAMESPACE=openshift-operators
+```
+
+```
+$ kubectl get all -n $NAMESPACE
+$ kubectl get catalogsource operator-application-catalog -n $NAMESPACE -oyaml
+$ kubectl get subscriptions operator-application-v0-0-1-sub -n $NAMESPACE -oyaml
+$ kubectl get csv operator-application.v0.0.1 -n $NAMESPACE -oyaml
+$ kubectl get installplans -n $NAMESPACE
+$ kubectl get installplans install-xxxxx -n $NAMESPACE -oyaml
+$ kubectl get $NAMESPACE operator-application.$NAMESPACE -n $NAMESPACE -oyaml
 $ kubectl apply -f config/samples/application.sample_v1beta1_application.yaml
 $ kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
 $ kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
-$ kubectl logs -n operators $(kubectl get pods -n operators | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager
+$ kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager
 ```
 
 ### Delete all resources
@@ -39,6 +56,8 @@ $ kubectl logs -n operators $(kubectl get pods -n operators | awk '/operator-app
 $ kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
 $ kubectl delete -f olm/subscription.yaml
 $ kubectl delete -f olm/catalogsource.yaml
+$ kubectl delete -f olm/subscription-openshift.yaml
+$ kubectl delete -f olm/catalogsource-openshift.yaml
 $ operator-sdk olm uninstall
 ```
 
@@ -62,10 +81,4 @@ $ ./bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$I
 $ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
 ```
 
-Define "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" in olm/catalogsource.yaml and invoke these commands.
-
-```
-$ kubectl apply -f olm/catalogsource.yaml
-$ kubectl apply -f olm/subscription.yaml 
-$ kubectl get installplans -n operators
-```
+Define "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" in olm/catalogsource.yaml and/or olm/catalogsource-openshift.yaml and invoke the commands above to apply catalog source and subscription.

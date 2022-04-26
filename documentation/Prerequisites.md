@@ -41,29 +41,30 @@ $ kubectl get all
 
 4.1. cert-manager
    
-* Needed for [certificates](https://cert-manager.io/) on Kubernetes and OpenShift
+* Needed for Kubernetes AND OpenShift
 * "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml"
 * Or "https://operatorhub.io/operator/cert-manager"
 
 4.2. OLM (Operator Lifecycle Manager)
 
-* Not needed for OpenShift since it's already included
+* Only needed for Kubernetes (included in OpenShift)
 * Operator SDK: "operator-sdk olm install --version v0.20.0"
 * Or via download: "curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.20.0/install.sh | bash -s v0.20.0"
 
 4.3. Prometheus
 
-* Not needed for OpenShift since it's already included   
+* Only needed for Kubernetes (included in OpenShift)  
 * Operator: "kubectl apply -f prometheus/operator/"
 * Prometheus: "kubectl apply -f prometheus/prometheus/"
 
 ### 5. Image Registry
 
-Replace REGISTRY and ORG with your registry account. When creating new image versions later, change the versions in versions.env. 
+If you want to run the samples without modifications, nothing needs to be changed.
+
+If you want to change them, replace REGISTRY and ORG with your registry account and change the version numbers in versions.env. 
 
 ```
-$ export REGISTRY='docker.io'
-$ export ORG='nheidloff'
+$ code versions.env
 $ podman login $REGISTRY
 $ source versions.env
 ```

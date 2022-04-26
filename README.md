@@ -57,28 +57,14 @@ To start developing operators, we recommend to get familiar with the [Kubernetes
 Run the application operator:
 
 1) [Local operator](documentation/AppSetupLocal.md) 
-2) Operator manually deployed
-  * [Kubernetes](documentation/AppSetupManual.md)
-  * [OpenShift](documentation/AppSetupManualOpenShift.md)
-4) Operator deployed via OLM and kubectl
-  * [Kubernetes](documentation/AppSetupOLMKubectl.md)
-  * [OpenShift](documentation/AppSetupOLMKubectlOpenShift.md)
-5) Operator deployed via OLM and operator-sdk
-  * [Kubernetes](documentation/AppSetupOLMSDK.md)
-  * [OpenShift](documentation/AppSetupOLMSDKOpenShift.md)
+2) [Operator deployed without OLM](documentation/AppSetupWithoutOLM.md)
+3) [Operator deployed with OLM](documentation/AppSetupWithOLM.md)
 
 Run the database operator:
 
 1) [Local operator](documentation/DbSetupLocal.md) 
-2) Operator manually deployed
-    * [Kubernetes](documentation/DbSetupManual.md)
-    * [OpenShift](documentation/DbSetupManualOpenShift.md)
-4) Operator deployed via OLM and kubectl
-    * Kubernetes
-    * OpenShift
-5) Operator deployed via OLM and operator-sdk
-    * Kubernetes
-    * OpenShift
+2) [Operator deployed without OLM](documentation/DbSetupWithoutOLM.md)
+3) [Operator deployed with OLM](documentation/DbSetupWithOLM.md)
 
 ### Resources
 

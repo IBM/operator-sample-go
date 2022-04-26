@@ -1,4 +1,4 @@
-# Application Operator - Setup and manual Deployment
+# Application Operator - Operator deployed without OLM
 
 First install the [prerequistes](Prerequisites.md)!
 
@@ -70,6 +70,14 @@ $ kubectl get applications.v1beta1.application.sample.ibm.com/application -n app
 ```
 
 ### Prometheus Metrics
+
+Only needed for OpenShift:
+
+```
+$ oc label namespace application-beta openshift.io/cluster-monitoring="true"
+$ kubectl apply -f prometheus
+TODO: same for operator-application
+```
 
 Open Prometheus daschboard:
 
