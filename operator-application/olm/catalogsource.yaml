@@ -2,9 +2,9 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
   name: operator-application-catalog
-  namespace: operators
+  namespace: openshift-marketplace
 spec:
   displayName: operator-application-catalog
   publisher: Niklas Heidloff
   sourceType: grpc
-  image: docker.io/nheidloff/application-operator-catalog:v1.0.4
+  image: docker.io/deleeuw/application-operator-catalog:v1.0.4

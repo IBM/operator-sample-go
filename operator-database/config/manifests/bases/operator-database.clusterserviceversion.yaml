@@ -10,6 +10,15 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
+    - displayName: Database Backup
+      kind: DatabaseBackup
+      name: databasebackups.database.sample.third.party
+      version: v1alpha1
+    - description: DatabaseCluster is the Schema for the databaseclusters API
+      displayName: Database Cluster
+      kind: DatabaseCluster
+      name: databaseclusters.database.sample.third.party
+      version: v1alpha1
     - displayName: Database
       kind: Database
       name: databases.database.sample.third.party
