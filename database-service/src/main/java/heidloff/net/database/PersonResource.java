@@ -36,7 +36,6 @@ public class PersonResource {
     DataSynchronization dataSynchronization;
 
     public PersonResource() {
-        System.out.println("start");
     }
 
     final String FILENAME_DATA = "data.json";
@@ -66,7 +65,9 @@ public class PersonResource {
         try {
             Files.readAllBytes(Paths.get(pathAndFileName));  
             fileExists = true;  
-        } catch (Exception e) {            
+        } catch (Exception e) { 
+            System.out.println("PersonResource.java initializeData(): exception when reading from " + pathAndFileName);
+            e.printStackTrace();           
         }
         if (fileExists == false) {
             try {
@@ -88,6 +89,7 @@ public class PersonResource {
                 e.printStackTrace();
             }
         }
+        readData();
     }
 
     void readData() {

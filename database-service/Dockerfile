@@ -17,6 +17,8 @@ COPY --from=BUILD --chown=1001 /usr/src/app/target/quarkus-app/app/ /deployments
 COPY --from=BUILD --chown=1001 /usr/src/app/target/quarkus-app/quarkus/ /deployments/quarkus/
 COPY --chown=1001 data.json /deployments/
 COPY --chown=1001 podstate.json /deployments/
+COPY --chown=1001 data.json .
+COPY --chown=1001 podstate.json .
 COPY --chown=1001 data.json /data/
 COPY --chown=1001 podstate.json /data/
 
