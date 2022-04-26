@@ -70,15 +70,21 @@ public class PersonResource {
         if (fileExists == false) {
             try {
                 if (leaderUtils.isLeader()) {
+                    System.out.println("PersonResource.java initializeData(): is leader");
+                    System.out.println("PersonResource.java initializeData(): FILENAME_DATA: " + FILENAME_DATA);
+                    System.out.println("PersonResource.java initializeData(): pathAndFileName: " + pathAndFileName);
                     String content = new String (Files.readAllBytes(Paths.get(FILENAME_DATA)));
                     java.nio.file.Path path = Paths.get(pathAndFileName);
                     byte[] stringToBytes = content.getBytes();
                     Files.write(path, stringToBytes);
                     readData();
                 } else {
+                    System.out.println("PersonResource.java initializeData(): is not leader");
                     DataSynchronization.synchronizeDataFromLeader(leaderUtils, this);
                 }
             } catch (Exception e) {
+                System.out.println("PersonResource.java initializeData(): exception");
+                e.printStackTrace();
             }
         }
     }

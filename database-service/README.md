@@ -83,7 +83,7 @@ $ unset DATA_DIRECTORY
 $ cd database-service
 $ code ../versions.env
 $ source ../versions.env
-$ podman build -f src/main/docker/Dockerfile.jvm -t "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE" .
+$ podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
 ```
 
