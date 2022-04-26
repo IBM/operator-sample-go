@@ -36,6 +36,7 @@ public class PersonResource {
     DataSynchronization dataSynchronization;
 
     public PersonResource() {
+        System.out.println("start");
     }
 
     final String FILENAME_DATA = "data.json";
