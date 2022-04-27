@@ -10,6 +10,18 @@ The repo contains two operators:
 
 The easiest way to get started is to [run the application operator locally](documentation/AppSetupLocal.md) which uses prebuilt images of the database controller, the microservice and all other required components.
 
+Run the application operator:
+
+1) [Local operator](documentation/AppSetupLocal.md) 
+2) [Operator deployed without OLM](documentation/AppSetupWithoutOLM.md)
+3) [Operator deployed with OLM](documentation/AppSetupWithOLM.md)
+
+Run the database operator:
+
+1) [Local operator](documentation/DbSetupLocal.md) 
+2) [Operator deployed without OLM](documentation/DbSetupWithoutOLM.md)
+3) [Operator deployed with OLM](documentation/DbSetupWithOLM.md)
+
 ### Documentation
 
 *Overview and Scenarios*
@@ -51,20 +63,6 @@ The easiest way to get started is to [run the application operator locally](docu
 To start developing operators, we recommend to get familiar with the [Kubernetes Operator Metamodel](http://heidloff.net/article/the-kubernetes-operator-metamodel/) first.
 
 <img src="documentation/OperatorMetamodel.png" />
-
-### Setup
-
-Run the application operator:
-
-1) [Local operator](documentation/AppSetupLocal.md) 
-2) [Operator deployed without OLM](documentation/AppSetupWithoutOLM.md)
-3) [Operator deployed with OLM](documentation/AppSetupWithOLM.md)
-
-Run the database operator:
-
-1) [Local operator](documentation/DbSetupLocal.md) 
-2) [Operator deployed without OLM](documentation/DbSetupWithoutOLM.md)
-3) [Operator deployed with OLM](documentation/DbSetupWithOLM.md)
 
 ### Resources
 
