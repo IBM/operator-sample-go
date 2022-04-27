@@ -1,6 +1,6 @@
 # Application Operator - Operator deployed without OLM
 
-First install the [prerequistes](Prerequisites.md)!
+🔴 IMPORTANT: First install the [prerequistes](Prerequisites.md)! If you don't do it, it won't work :)
 
 ### Deploy database operator
 
