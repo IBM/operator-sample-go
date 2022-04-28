@@ -19,6 +19,8 @@ import org.eclipse.microprofile.rest.client.RestClientBuilder;
 @ApplicationScoped
 public class GreetingResource {
 
+    public GreetingResource() {}
+      
     @ConfigProperty(name = "greeting.message")
     String message;
 
@@ -26,7 +28,7 @@ public class GreetingResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Counted(name = "countHelloEndpointInvoked", description = "How often /hello has been invoked")
     public String hello() {
-        String name = readFromDatabase();
+        String name = this.readFromDatabase();
         return "Hello " + message + ". Name from database: " + name;
     }
 
