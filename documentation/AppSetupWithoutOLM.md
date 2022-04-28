@@ -4,7 +4,7 @@
 
 ### Deploy database operator
 
-Before running the application operator, the database operator needs to be deployed since it is defined as dependency. Follow the [instructions](DbSetupManual.md) in the documentation.
+Before running the application operator, the database operator needs to be deployed since it is defined as dependency. Follow the [instructions](DbSetupWithoutOLM.md) in the documentation.
 
 ### Deploy the operator
 
