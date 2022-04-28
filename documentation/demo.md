@@ -17,12 +17,24 @@ Use this section as a guide to give a live demo of the operator-sample-go asset 
 **Note that after following the install setps, you will need to reverse some of the deployment steps as they are intended to be performed live in the demo script below.**
 
 * Uninstall both operators (but leave Catalog sources)
-* Delete application and database namespaces
 * Delete all CR instances (Application, Database, Databasecluster, Databasebackup)
+
+## Introduction to our sample operators
+
+We have created a repo containing two operators, you can find it on github.com.  
+
+<img src="images/demo0.png" />
+
+I'm going to use these samples to give a 15-20 minute demo which gives you an idea of:
+
+* The Day 1 and Day 2 capabilities that the operators provide
+* How to package, version and distribute an operator so that it appears in the OpenShift UI of your customers, making it easy for their administrators to discover and install the operator, to manage your solution’s workload
+* Show the user experience of installing and managing software with operators vs. a standard approach using only standard Kuberenetes resources
+
+The main capabilities of our sample operators are to deploy a web application server and a database.  In addition, the operators also monitor specific metrics to automate sclaing of the pods, and automate the task of performing a database backup to cloud object storage.  As you will see, the operator really abstracts all these tasks for the administrator - all these things can be achieved by creating just three short custom resources (defined in simple yaml files).  The operators actually deploy and mananage many standard kubernetes resources to meet the day 1 and day 2 goals I described.  I estimate at least 20 resources are created (deployments, statefulsets, pods, services, pvcs, cronjobs etc), just for our simple samples.  If your solution has many components, is stateful or requires various day 2 activities to keep it running, using an operator could be the difference between success or failure for your customers.
 
 ## OpenShift OperatorHub and OLM
 
-Once you’ve created an operator for your Kubernetes solution, you’ll need a way to version, package and distribute the operator to your customers, making it easy for their administrators to discover and install the operator, to manage your solution’s workload.
 
 Kubernetes includes an Operator Lifecycle Manager component which is used extensively by OpenShift to manage its own operators, and you can use it to manage your custom operator(s).  In the OpenShift UI console, you’ll find the OperatorHub.
 
@@ -98,23 +110,9 @@ The application operator supports one API:
 
 * The Application API/CRD creates a frontend web application by creating Kubernetes resources like secrets and deployments, and in addition, it uses the custom resources I just spoke about to create a ‘database schema’ (NB. It doesn't actually do this but this was the intention for this CR.  For now, the database is currently hardcoded with its data).  It’s even smart enough to know if that custom Database API/CRD has been installed to the cluster and will keep retrying until this dependency is satisfied.
 
-Let’s try it.  To make the operators spring into life, we need to create some resources with a ‘kind’ that correlates to the CRD definitions the operators have already installed to the cluster.  These resources can be created manually via the operator’s UI, or you can create from a yaml file as most Kubernetes administrators would do.  Let’s apply the following yamls:
+Let’s try it.  In this first part of the demo we'll focus on the database.
 
-* A namespace for the database cluster & the web application:
-
-```
-cat <<EOF | oc apply -f -
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: database
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: application-beta
-EOF
-```
+To make the operator spring into life, we need to create some resources with a ‘kind’ that correlates to the CRD definitions the operators have already installed to the cluster.  These resources can be created manually via the operator’s UI, or you can create from a yaml file as most Kubernetes administrators would do.  Let’s apply the following yamls:
 
 * The database cluster itself.  Note the kind is a custom resource, defined by our Database operator, and the fields are specific to our database application.  We don’t need to create lots of kuberenetes resources ourselves, the DatabaseCluster kind provides an abstraction.  We only need to give the database cluster a name, and define how many pods we want (1 leader, 2 followers in this case):
 
@@ -130,25 +128,7 @@ spec:
 EOF
 ```
 
-* Finally, we can use the custom resource to create the frontend application.  Again, it provides an abstraction, and it will take care of creating Kuberenetes resources to deploy a web app pod (providing a single API endpoint), and even use the database CR to create some data in our database cluster.
-
-```
-cat <<EOF | oc apply -f -
-apiVersion: application.sample.ibm.com/v1beta1
-kind: Application
-metadata:
-  name: application
-  namespace: application-beta
-spec:
-  version: "1.0.0"
-  amountPods: 1
-  databaseName: database
-  databaseNamespace: database
-  title: people
-EOF
-```
-
-Now we have a database cluster, a database, and a front end microservice.  Let’s test the database by calling its endpoint to return the data (from within the container's terminal as the endpoint is not externally exposed):
+Now we have a database cluster which has populated itself with some default data, so we can test it right away.  Let’s test the database by calling its endpoint to return the data (from within the container's terminal as the endpoint is not externally exposed):
 
 ```
 curl -s http://localhost:8089/persons
@@ -204,5 +184,27 @@ The data can be downloaded.
 
 ## Auto scalability and Metrics
 
-Work in progress
+## Work in progress
+
+To test auto scalabilities, let's first install and test our frontend application:
+
+As with the database, it's CR provides an abstraction, and it will take care of creating Kuberenetes resources to deploy a web app pod (providing a single API endpoint), and even use the database CR to create some data in our database cluster.
+
+```
+cat <<EOF | oc apply -f -
+apiVersion: application.sample.ibm.com/v1beta1
+kind: Application
+metadata:
+  name: application
+  namespace: application-beta
+spec:
+  version: "1.0.0"
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  title: people
+EOF
+```
+
+
 
