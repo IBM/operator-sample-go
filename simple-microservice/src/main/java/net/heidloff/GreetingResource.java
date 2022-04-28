@@ -3,6 +3,7 @@ package net.heidloff;
 import java.net.URL;
 import java.util.Set;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -15,6 +16,7 @@ import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 
 @Path("/hello")
+@ApplicationScoped
 public class GreetingResource {
 
     @ConfigProperty(name = "greeting.message")
