@@ -15,7 +15,7 @@
 ### 2. Repo
 
 ```
-$ git clone https://github.com/nheidloff/operator-sample-go.git
+$ git clone https://github.com/ibm/operator-sample-go.git
 $ cd operator-sample-go
 $ code .
 ```
