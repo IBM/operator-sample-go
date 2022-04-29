@@ -2,6 +2,12 @@
 
 ### Basic overview of the Application Operator
 
+> The `Application Operator` has a depencency on the `Database Operator`.
+
+That means the `simple microservice` application instance will only be created (example yaml [here](./config/samples/application.sample_v1beta1_application.yaml)), when you deploy the `Custom Resource Definion` of the `Database Operator` (example yaml [here](../operator-database/config/crd/bases/database.sample.third.party_databases.yaml) and you deploy `custom resource` of the `Database Operator`(example `yaml` [here](../operator-database/config/samples/database.sample_v1alpha1_database.yaml).
+
+Because, the `Application Operator` validates if there is a `Custom Resource Definion` and a `custom resource` in a namespace called `database`.
+
 The current `Application Operator` implementation includes following features:
 (the links pointing to relevant blog posts)
 
@@ -11,8 +17,6 @@ The current `Application Operator` implementation includes following features:
 * [Deploys the simple microservice](http://heidloff.net/article/updating-resources-kubernetes-operators/) application with related Kubernetes objects
 * [Delete the simple microservice](http://heidloff.net/article/deleting-resources-kubernetes-operators/) application with related Kubernetes objects
 * [Verifies if the `custom resource definition` and a `custom resource` of the](http://heidloff.net/article/defining-dependencies-kubernetes-operators/) [Database Operator](../operator-database/README.md) exists
-
-> REMARK: The `simple microservice` application instance will only becreated, if you deploy a `custom resource` of the `Application Operator` (you find an example `yaml` [here](./config/samples/application.sample_v1beta1_application.yaml)) and you need to deploy the `Custom Resource Definion` of the `Database Operator` (you find an example `yaml` [here](../operator-database/config/crd/bases/database.sample.third.party_databases.yaml). You also need to deploy `custom resource` (you find an example `yaml` [here](../operator-database/config/samples/database.sample_v1alpha1_database.yaml) Because, the `Application Operator` validates if there is a `Custom Resource Definion` and a `custom resource` in a namespace called `database`.
 
 ### Current configurations options of the `Application Operator`
 
