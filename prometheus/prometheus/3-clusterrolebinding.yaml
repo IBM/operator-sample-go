@@ -1,17 +1,13 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: monitoring
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: prometheus
+  name: prometheus-instance
+  namespace: monitoring
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: prometheus
+  name: prometheus-instance
 subjects:
 - kind: ServiceAccount
-  name: prometheus
+  name: prometheus-instance
   namespace: monitoring
