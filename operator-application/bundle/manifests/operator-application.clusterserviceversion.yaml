@@ -58,9 +58,11 @@ spec:
 
     ## Introduction
 
-    The IBM Build Labs operator provides Day 1 and Day 2 capabilities for a sample two tier 
-    application.  This operator relates to the front end microservice which provides a 
-    simple web UI.  The web server provides a single HTTP enpoint:
+    The IBM Build Labs operators provide Day 1 and Day 2 capabilities for a sample two tier 
+    application.  
+    
+    This application operator relates to the front end microservice which provides a simple 
+    web UI.  The web server provides a single HTTP enpoint:
     
     >**/hello** - Renders a Hello greeting to the names persisted in the corresponding database.
     
