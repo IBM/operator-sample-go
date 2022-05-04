@@ -10,14 +10,19 @@ Use this section as a guide to give a live demo of the operator-sample-go asset 
 
 ## Setup
 
+
 * First install the [prerequistes](Prerequisites.md)
-* Follow the instructions for [installing the application operator with OLM]()
-* Follow the instructions for [installing the database operator with OLM]()
+* Install Application Operator and create Application custom resource [installing the application operator with OLM](AppSetupWithOLM.md)
+* Install Database Operator and create DatabaseCluster custom resource [installing the database operator with OLM](DbSetupWithOLM.md)
+* Install / Configure Prometheus instance for OpenShift, and create required resources to monitor the application microservice [link TODO]()
+* Create a Cloud Object Storage bucket for testing database backup [Setup Cloud Object Storage - link TODO]()
+* Create a secret with credentials for Cloud Object Storage (not included in the repo) [Setup COS Secret - link TODO]()
+
 
 **Note that after following the install setps, you will need to reverse some of the deployment steps as they are intended to be performed live in the demo script below.**
 
 * Uninstall both operators (but leave Catalog sources)
-* Delete all CR instances (Application, Database, Databasecluster, Databasebackup)
+* Delete all CR instances: Application, Database, Databasecluster, Databasebackup (if present))
 
 ## Introduction to our sample operators
 
