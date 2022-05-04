@@ -44,21 +44,19 @@ $ kubectl get csv operator-database.v0.0.1 -n $NAMESPACE -oyaml
 $ kubectl get installplans -n $NAMESPACE
 $ kubectl get installplans install-xxxxx -n $NAMESPACE -oyaml
 $ kubectl get operators operator-database.$NAMESPACE -n $NAMESPACE -oyaml
+$ kubectl create ns database   
 $ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
-$ kubectl get databases.database.sample.ibm.com/database -n database-beta -oyaml
-$ kubectl exec -n database-beta $(kubectl get pods -n database-beta | awk '/database-deployment-microservice/ {print $1;exit}') --container database-microservice -- curl http://localhost:8081/hello
-$ kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-database-controller-manager/ {print $1;exit}') -c manager
+$ kubectl get databases.database.sample.third.party/database -n database -oyaml
 ```
 
 ### Delete all resources
 
 ```
-$ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
+$ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
 $ kubectl delete -f olm/subscription.yaml
 $ kubectl delete -f olm/catalogsource.yaml
 $ kubectl delete -f olm/subscription-openshift.yaml
 $ kubectl delete -f olm/catalogsource-openshift.yaml
-$ operator-sdk olm uninstall
 ```
 
 ### Build and push new bundle image

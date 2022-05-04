@@ -62,7 +62,6 @@ $ kubectl delete -f olm/subscription.yaml
 $ kubectl delete -f olm/catalogsource.yaml
 $ kubectl delete -f olm/subscription-openshift.yaml
 $ kubectl delete -f olm/catalogsource-openshift.yaml
-$ operator-sdk olm uninstall
 ```
 
 ### Build and push new bundle image
