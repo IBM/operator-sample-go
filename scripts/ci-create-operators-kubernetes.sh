@@ -17,6 +17,7 @@ echo "-----------------------------"
 # **************** Global variables
 
 ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
+NAMESPACE=operators
 export CI_CONFIG=$1
 export VERSIONS_FILE=""
 
@@ -166,6 +167,34 @@ function buildDatabaseOperatorBundle () {
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
 }
 
+function buildDatabaseOperatorCatalog () {
+    cd $ROOT_FOLDER/operator-database
+    make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
+    podman login $REGISTRY
+    podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
+}
+
+function createOLMDatabaseOperatorYAMLs () {
+    CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
+    sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $ROOT_FOLDER/scripts/kubernetes-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
+}
+
+function deployDatabaseOperatorOLM () {
+    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
+    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml
+
+    kubectl get all -n $NAMESPACE
+    kubectl get catalogsource operator-database-catalog -n $NAMESPACE -oyaml
+    kubectl get subscriptions operator-database-v0-0-1-sub -n $NAMESPACE -oyaml
+    kubectl get installplans -n $NAMESPACE
+}
+
+function createDatabaseInstance () {
+    kubectl create ns database   
+    kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml
+    kubectl get databases.database.sample.third.party/database -n database -oyaml
+}
+
 # **********************************************************************************
 # Execution
 # **********************************************************************************
@@ -191,3 +220,24 @@ echo " Build 'database operator bundle'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
 echo "************************************"
 buildDatabaseOperatorBundle
+
+echo "************************************"
+echo " Build 'database operator catalog'"
+echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
+echo "************************************"
+buildDatabaseOperatorCatalog
+
+echo "************************************"
+echo " Create OLM yamls"
+echo "************************************"
+createOLMDatabaseOperatorYAMLs
+
+echo "************************************"
+echo " Deploy Database Operator OLM"
+echo "************************************"
+deployDatabaseOperatorOLM
+
+echo "************************************"
+echo " Create Database Instance"
+echo "************************************"
+createDatabaseInstance

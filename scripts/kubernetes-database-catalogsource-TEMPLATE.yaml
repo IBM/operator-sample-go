@@ -1,0 +1,10 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: operator-database-catalog
+  namespace: operators
+spec:
+  displayName: operator-database-catalog
+  publisher: IBM Build Labs
+  sourceType: grpc
+  image: DATABASE_CATALOG_IMAGE
