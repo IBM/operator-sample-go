@@ -3,6 +3,7 @@
 # **************** Global variables
 
 ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
+source $ROOT_FOLDER/versions.env
 
 # **********************************************************************************
 # Functions
@@ -109,6 +110,23 @@ function verifyPreReqs () {
     done 
 }
 
+function deployDatabaseOperator () {
+    kubectl apply -f $ROOT_FOLDER/operator-database/olm/catalogsource.yaml
+    kubectl apply -f $ROOT_FOLDER/operator-database/olm/subscription.yaml
+}
+
+function deployApplicationOperator () {
+    kubectl apply -f $ROOT_FOLDER/operator-application/olm/catalogsource.yaml
+    kubectl apply -f $ROOT_FOLDER/operator-application/olm/subscription.yaml
+}
+
+function createApplicationAndDatabaseInstance () {
+
+    kubectl apply -f  $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
+    kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
+    kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
+}
+
 # **********************************************************************************
 # Execution
 # **********************************************************************************
@@ -117,3 +135,18 @@ echo "************************************"
 echo " Verify prerequisites"
 echo "************************************"
 verifyPreReqs
+
+echo "************************************"
+echo " Deploy Database Operator"
+echo "************************************"
+deployDatabaseOperator
+
+echo "************************************"
+echo " Deploy Application Operator"
+echo "************************************"
+deployApplicationOperator
+
+echo "************************************"
+echo " Create Application and Database instance"
+echo "************************************"
+createApplicationAndDatabaseInstance
