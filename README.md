@@ -8,13 +8,13 @@ The repo contains two operators:
 1) Application operator: Deploys and manages a simple microservice application.
 2) Database operator: Deploys and manages a simple database. Used by the application.
 
+🔴 IMPORTANT: The easiest way to get started is to run the application operator locally which uses prebuilt images of the database controller, the microservice and all other required components. Follow the [getting started](documentation/AppSetupLocal.md) instructions.
+
 Additionally the repo contains four more components:
 1) [Simple micorservice](simple-microservice/README.md) managed by the application operator
 2) [Database service](database-service/README.md) managed by the database operator
 3) [Database controller extension](operator-database-backup/README.md) to automatically backups of data
 4) [Application controller extension](operator-application-scaler/README.md) to automatically scale up the microservice
-
-The easiest way to get started is to [run the application operator locally](documentation/AppSetupLocal.md) which uses prebuilt images of the database controller, the microservice and all other required components.
 
 Run the application operator:
 
