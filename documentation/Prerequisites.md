@@ -81,8 +81,6 @@ $ sh scripts/install-required-kubernetes-components.sh
 
 ```
 $ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
-$ kubectl apply -f prometheus/operator/
-$ kubectl apply -f prometheus/prometheus/
 ```
 
 ### 5. Image Registry
