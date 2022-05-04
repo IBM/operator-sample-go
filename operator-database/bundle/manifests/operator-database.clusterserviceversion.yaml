@@ -8,7 +8,8 @@ metadata:
           "apiVersion": "database.sample.third.party/v1alpha1",
           "kind": "Database",
           "metadata": {
-            "name": "database"
+            "name": "database",
+            "namespace": "database"
           },
           "spec": {
             "certificate": "certificate",
@@ -16,10 +17,49 @@ metadata:
             "url": "url",
             "user": "name"
           }
+        },
+        {
+          "apiVersion": "database.sample.third.party/v1alpha1",
+          "kind": "DatabaseBackup",
+          "metadata": {
+            "name": "databasebackup-manual",
+            "namespace": "database"
+          },
+          "spec": {
+            "manualTrigger": {
+              "repo": "ibmcos-repo",
+              "time": "2022-04-20T02:59:43.1Z"
+            },
+            "repos": [
+              {
+                "bucketNamePrefix": "database-backup-",
+                "cosRegion": "eu-geo",
+                "name": "ibmcos-repo",
+                "secretName": "ibmcos-repo",
+                "serviceEndpoint": "s3.eu.cloud-object-storage.appdomain.cloud",
+                "type": "ibmcos"
+              }
+            ],
+            "scheduledTrigger": {
+              "repo": "ibmcos-repo",
+              "schedule": "*/3 * * * *"
+            }
+          }
+        },
+        {
+          "apiVersion": "database.sample.third.party/v1alpha1",
+          "kind": "DatabaseCluster",
+          "metadata": {
+            "name": "databasecluster-sample",
+            "namespace": "database"
+          },
+          "spec": {
+            "amountPods": 2
+          }
         }
       ]
     capabilities: Basic Install
-    operators.operatorframework.io/builder: operator-sdk-v1.18.0
+    operators.operatorframework.io/builder: operator-sdk-v1.19.0+git
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
   name: operator-database.v0.0.1
   namespace: placeholder
@@ -27,6 +67,15 @@ spec:
   apiservicedefinitions: {}
   customresourcedefinitions:
     owned:
+    - displayName: Database Backup
+      kind: DatabaseBackup
+      name: databasebackups.database.sample.third.party
+      version: v1alpha1
+    - description: DatabaseCluster is the Schema for the databaseclusters API
+      displayName: Database Cluster
+      kind: DatabaseCluster
+      name: databaseclusters.database.sample.third.party
+      version: v1alpha1
     - displayName: Database
       kind: Database
       name: databases.database.sample.third.party
@@ -41,9 +90,101 @@ spec:
       clusterPermissions:
       - rules:
         - apiGroups:
+          - ""
+          resources:
+          - clusterrolebindings
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - clusterroles
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - cronjobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - jobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - services
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
           - database.sample.third.party
           resources:
-          - databases
+          - databasebackups
           verbs:
           - create
           - delete
@@ -55,13 +196,39 @@ spec:
         - apiGroups:
           - database.sample.third.party
           resources:
-          - databases/finalizers
+          - databasebackups/finalizers
           verbs:
           - update
         - apiGroups:
           - database.sample.third.party
           resources:
-          - databases/status
+          - databasebackups/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databaseclusters
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databaseclusters/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databaseclusters/status
           verbs:
           - get
           - patch
@@ -80,7 +247,9 @@ spec:
           - create
         serviceAccountName: operator-database-controller-manager
       deployments:
-      - name: operator-database-controller-manager
+      - label:
+          control-plane: controller-manager
+        name: operator-database-controller-manager
         spec:
           replicas: 1
           selector:
@@ -119,7 +288,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/ibm/database-operator:v1.0.0
+                image: docker.io/nheidloff/database-operator:v1.0.5
                 livenessProbe:
                   httpGet:
                     path: /healthz
