@@ -43,12 +43,17 @@ $ code .
 
 ### 3. Kubernetes Cluster
 
-Any newer Kubernetes cluster should work. The Operator SDK version v1.18.1 has been [tested](https://github.com/kubernetes/client-go#versioning) with Kubernetes v1.23. You can also use OpenShift. We have mostly tested the two operators with IBM Cloud Kubernetes Service and IBM Red Hat OpenShift on IBM Cloud.
+Any newer Kubernetes cluster should work. You can also use OpenShift. The Operator SDK version v1.19.1 has been [tested](https://github.com/kubernetes/client-go#versioning) with Kubernetes v1.23. 
+
+We have tested the two operators with ...
+
+* IBM Cloud Kubernetes Service 1.23.6
+* IBM Red Hat OpenShift on IBM Cloud 4.9.28
 
 Log in to Kubernetes or OpenShift, for example:
 
 ```
-$ ibmcloud login -a cloud.ibm.com -r eu-de -g resource-group-niklas-heidloff7 --sso
+$ ibmcloud login -a cloud.ibm.com -r eu-de -g resource-group-niklas-heidloff --sso
 $ ibmcloud ks cluster config --cluster xxxxxxx
 $ kubectl get all
 ```
@@ -60,23 +65,25 @@ $ kubectl get all
 
 ### 4. Required Kubernetes Components
 
-4.1. cert-manager
-   
-* Needed for Kubernetes AND OpenShift
-* "kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml"
-* Or "https://operatorhub.io/operator/cert-manager"
+OpenShift comes with certain components preinstalled which is why there are two scripts to install the additional components:
 
-4.2. OLM (Operator Lifecycle Manager)
+* cert-manager
+* OLM (Operator Lifecycle Manager)
+* Prometheus
 
-* Only needed for Kubernetes (included in OpenShift)
-* Operator SDK: "operator-sdk olm install --version v0.20.0"
-* Or via download: "curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.20.0/install.sh | bash -s v0.20.0"
+**Kubernetes**
 
-4.3. Prometheus
+```
+$ sh scripts/install-required-kubernetes-components.sh
+```
 
-* Only needed for Kubernetes (included in OpenShift)  
-* Operator: "kubectl apply -f prometheus/operator/"
-* Prometheus: "kubectl apply -f prometheus/prometheus/"
+**OpenShift**
+
+```
+$ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
+$ kubectl apply -f prometheus/operator/
+$ kubectl apply -f prometheus/prometheus/
+```
 
 ### 5. Image Registry
 

@@ -39,7 +39,7 @@ function installCertManager () {
 }
 
 function installOLM () {
-  operator-sdk olm install --version v0.20.0
+  curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.20.0/install.sh | bash -s v0.20.0
   kubectl get pods -n operators
   kubectl get pods -n olm
 
