@@ -47,7 +47,7 @@ $ kubectl get subscriptions operator-application-v0-0-1-sub -n $NAMESPACE -oyaml
 $ kubectl get csv operator-application.v0.0.1 -n $NAMESPACE -oyaml
 $ kubectl get installplans -n $NAMESPACE
 $ kubectl get installplans install-xxxxx -n $NAMESPACE -oyaml
-$ kubectl get $NAMESPACE operator-application.$NAMESPACE -n $NAMESPACE -oyaml
+$ kubectl get operators operator-application.$NAMESPACE -n $NAMESPACE -oyaml
 $ kubectl apply -f config/samples/application.sample_v1beta1_application.yaml
 $ kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
 $ kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello

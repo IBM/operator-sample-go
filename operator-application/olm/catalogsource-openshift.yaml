@@ -5,6 +5,6 @@ metadata:
   namespace: openshift-operators
 spec:
   displayName: operator-application-catalog
-  publisher: Niklas Heidloff
+  publisher: IBM Build Labs
   sourceType: grpc
   image: docker.io/nheidloff/application-operator-catalog:v1.0.4
