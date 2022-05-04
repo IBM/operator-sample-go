@@ -10,7 +10,28 @@
 
 ### 1.1. Operator SDK
 
-🔴 IMPORTANT: The repo has been tested with operator-sdk v1.18.1. Note that there is an issue with this version. It doesn't download the tools in the 'bin' directory. You need to use the older version v1.18.0 first, init a new temporary new project and copy the downloaded four files from the 'bin' directoy into the 'bin' subdirectories of both operators. After this update to v1.18.1.
+🔴 IMPORTANT: There are issues with different combinations of operator-sdk and go. This repo has been tested with **operator-sdk 1.19.1** and **go 1.17.6**. If you don't use this combination, binaries will be missing. Brew doesn't work either.
+
+```
+$ CURRENT_USER=$(id -un)
+$ sudo go clean -cache
+$ brew uninstall operator-sdk
+$ brew uninstall go
+$ sudo rm -rf /usr/local/Cellar/go
+$ sudo rm -rf /usr/local/go
+$ sudo rm -rf /Users/$CURRENT_USER/go
+$ mkdir operator-sdk-install
+$ cd operator-sdk-install
+$ export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
+$ export OS=$(uname | awk '{print tolower($0)}')
+$ export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/download/v1.19.1
+$ curl -LO ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
+$ chmod +x operator-sdk_${OS}_${ARCH} && sudo mv operator-sdk_${OS}_${ARCH} /usr/local/bin/operator-sdk
+$ curl -LO https://go.dev/dl/go1.17.6.darwin-amd64.pkg
+$ sudo installer -pkg go1.17.6.darwin-amd64.pkg -target /
+$ operator-sdk version
+$ go version
+```
 
 ### 2. Repo
 
