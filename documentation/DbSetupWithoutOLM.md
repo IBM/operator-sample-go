@@ -15,7 +15,9 @@ $ kubectl apply -f config/rbac/role_binding_patch.yaml
 From a terminal run this command:
 
 ```
+$ kubectl create namespace database
 $ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
+$ kubectl get databases/database -n database -oyaml
 ```
 
 ### Delete all resources
@@ -32,6 +34,6 @@ Change 'REGISTRY', 'ORG' and image version in versions.env.
 ```
 $ code ../versions.env
 $ source ../versions.env
-$ podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE" .
-$ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE"
+$ podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR" .
+$ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 ```
