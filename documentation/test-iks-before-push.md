@@ -9,6 +9,8 @@ kubectl apply -f operator-application/config/samples/application.sample_v1beta1_
 kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
 kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
 kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/" 
+kubectl port-forward service/prometheus-instance -n monitoring 9090
+open http://localhost:9090/graph
 ```
 
 Expected output:
@@ -37,11 +39,13 @@ status:
     status: "True"
     type: Succeeded
   schemaCreated: false
-niklasheidloff@Niklass-MacBook-Pro operator-sample-go % kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
+...
+kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
 100    11  100    11    0     0     64      0 --:--:-- --:--:-- --:--:--    64Hello World
-niklasheidloff@Niklass-MacBook-Pro operator-sample-go % kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/"
+...
+kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/"
 apiVersion: application.sample.ibm.com/v1alpha1
 kind: Application
 metadata:
