@@ -16,6 +16,11 @@ function deleteMicroserviceApplicationInstance () {
     cd $ROOT_FOLDER/operator-application
     kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
     kubectl delete -f config/samples/application.sample_v1alpha1_application.yaml
+
+    kubectl delete customresourcedefinition applications.application.sample.ibm.com
+    kubectl delete deployment operator-application-controller-manager -n operators
+    kubectl delete clusterserviceversion operator-application.v0.0.1
+ 
     #echo "Press any key to move on"
     #read input
 }
@@ -55,7 +60,17 @@ function deleteDatabaseInstance () {
 
 function deleteDatabaseOperator () {
     make undeploy IMG="$REGISTRY/$ORG/$IMAGE_DATBASE_OPERATOR"
-    operator-sdk cleanup operator-database -n operators --delete-all
+    operator-sdk cleanup operator-database -n operators --delete-all   
+    
+    kubectl delete -f $ROOT_FOLDER/operator-database/olm/subscription.yaml
+    kubectl delete -f $ROOT_FOLDER/operator-database/olm/catalogsource.yaml
+
+    kubectl delete customresourcedefinition databasebackups.database.sample.third.party
+    kubectl delete customresourcedefinition databases.database.sample.third.party
+    kubectl delete customresourcedefinition databaseclusters.database.sample.third.party
+
+    kubectl delete deployment operator-database-controller-manager -n operators
+    kubectl delete clusterserviceversion operator-database.v0.0.1 
     #echo "Press any key to move on"
     #read input
 }

@@ -13,6 +13,9 @@ function deleteDatabaseOperator () {
     kubectl delete -f $ROOT_FOLDER/operator-database/olm/subscription.yaml
     kubectl delete -f $ROOT_FOLDER/operator-database/olm/catalogsource.yaml
 
+    kubectl delete -f $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
+    kubectl delete -f $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml
+
     kubectl delete customresourcedefinition databasebackups.database.sample.third.party
     kubectl delete customresourcedefinition databases.database.sample.third.party
     kubectl delete customresourcedefinition databaseclusters.database.sample.third.party
