@@ -16,7 +16,7 @@ open http://localhost:9090/graph
 Expected output:
 
 ```
-kubectl apply -f operator-application/config/samples/application.sample_v1beta1_application.yaml
+kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
 ...
 status:
   conditions:
