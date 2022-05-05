@@ -196,6 +196,7 @@ function deployDatabaseOperatorOLM () {
 function createDatabaseInstance () {
     kubectl create ns database   
     kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml
+    kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
     kubectl get databases.database.sample.third.party/database -n database -oyaml
 }
 
