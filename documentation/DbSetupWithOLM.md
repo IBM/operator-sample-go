@@ -2,6 +2,8 @@
 
 🔴 IMPORTANT: First install the [prerequistes](Prerequisites.md)! If you don't do it, it won't work :)
 
+🔴 IMPORTANT: Webhooks and Prometheus doesn't work in this configuration yet.
+
 ### Deploy catalog source and subscription
 
 ```
