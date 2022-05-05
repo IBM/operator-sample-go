@@ -30,11 +30,6 @@ function deleteApplicationAndDatabaseInstance () {
 # **********************************************************************************
 
 echo "************************************"
-echo " Verify prerequisites"
-echo "************************************"
-verifyPreReqs
-
-echo "************************************"
 echo " Delete Database and Application instance"
 echo "************************************"
 deleteApplicationAndDatabaseInstance
@@ -42,9 +37,14 @@ deleteApplicationAndDatabaseInstance
 echo "************************************"
 echo " Delete Database Operator"
 echo "************************************"
-deployDatabaseOperator
+deleteDatabaseOperator
 
 echo "************************************"
 echo " Delete Application Operator"
 echo "************************************"
-deployApplicationOperator
+deleteApplicationOperator
+
+echo "************************************"
+echo " Delete Application and Database instance"
+echo "************************************"
+deleteApplicationAndDatabaseInstance
