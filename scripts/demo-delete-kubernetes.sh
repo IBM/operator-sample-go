@@ -12,11 +12,24 @@ source $ROOT_FOLDER/versions.env
 function deleteDatabaseOperator () {  
     kubectl delete -f $ROOT_FOLDER/operator-database/olm/subscription.yaml
     kubectl delete -f $ROOT_FOLDER/operator-database/olm/catalogsource.yaml
+
+    kubectl delete customresourcedefinition databasebackups.database.sample.third.party
+    kubectl delete customresourcedefinition databases.database.sample.third.party
+    kubectl delete customresourcedefinition databaseclusters.database.sample.third.party
+
+    kubectl delete deployment operator-database-controller-manager -n operators
+
+    kubectl get pods -n operators | grep operator-database
 }
 
 function deleteApplicationOperator () {
+
     kubectl delete -f $ROOT_FOLDER/operator-application/olm/subscription.yaml
     kubectl delete -f $ROOT_FOLDER/operator-application/olm/catalogsource.yaml
+
+    kubectl delete customresourcedefinition applications.application.sample.ibm.com
+    kubectl delete deployment operator-application-controller-manager -n operators
+    kubectl get pods -n operators | grep operator-application
 }
 
 function deleteApplicationAndDatabaseInstance () {
