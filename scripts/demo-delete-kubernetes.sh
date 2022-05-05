@@ -30,6 +30,7 @@ function deleteApplicationOperator () {
     kubectl delete customresourcedefinition applications.application.sample.ibm.com
     kubectl delete deployment operator-application-controller-manager -n operators
     kubectl delete clusterserviceversion operator-application.v0.0.1
+    
     kubectl get pods -n operators | grep operator-application
 }
 

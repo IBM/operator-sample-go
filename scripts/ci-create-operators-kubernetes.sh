@@ -162,9 +162,9 @@ function buildDatabaseOperatorBundle () {
     # Build bundle
     make bundle IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
     # Replace CSV and RBAC generate files with customized versions
-    cp $ROOT_FOLDER/scripts/operator-database.clusterserviceversion-TEMPLATE.yaml $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
-    cp $ROOT_FOLDER/scripts/operator-database-role_binding_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
-    cp $ROOT_FOLDER/scripts/operator-database-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role.yaml
+    cp -uv $ROOT_FOLDER/scripts/operator-database.clusterserviceversion-TEMPLATE.yaml $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
+    cp -uv $ROOT_FOLDER/scripts/operator-database-role_binding_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
+    cp -uv $ROOT_FOLDER/scripts/operator-database-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role.yaml
     make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
     # Push container
     podman login $REGISTRY
