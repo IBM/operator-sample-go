@@ -90,6 +90,56 @@ spec:
       clusterPermissions:
       - rules:
         - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterroles
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterrolebindings
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databases
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databases/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databases/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
           - ""
           resources:
           - clusterrolebindings
@@ -105,30 +155,6 @@ spec:
           - ""
           resources:
           - clusterroles
-          verbs:
-          - create
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - ""
-          resources:
-          - cronjobs
-          verbs:
-          - create
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - ""
-          resources:
-          - jobs
           verbs:
           - create
           - delete
@@ -207,6 +233,56 @@ spec:
           - get
           - patch
           - update
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databaseclusters
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databaseclusters/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databaseclusters/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - ""
+          resources:
+          - cronjobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - jobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
         - apiGroups:
           - database.sample.third.party
           resources:
