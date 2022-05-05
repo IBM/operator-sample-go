@@ -13,4 +13,4 @@ kind: Kustomization
 images:
 - name: controller
   newName: docker.io/nheidloff/database-operator
-  newTag: v1.0.21
+  newTag: v1.0.34

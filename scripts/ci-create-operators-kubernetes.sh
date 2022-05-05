@@ -32,8 +32,8 @@ function setEnvironmentVariables () {
         source $ROOT_FOLDER/versions_local.env
         break
     elif [[ $CI_CONFIG == "ci" ]]; then
-        echo "*** Set versions.env file a input"
-        VERSIONS_FILE=versions_local.env
+        echo "*** Set versions.env file a input"        
+        source $ROOT_FOLDER/versions.env
         break
     else 
         echo "*** Please select a valid option to run!"
