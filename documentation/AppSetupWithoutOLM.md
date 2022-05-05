@@ -82,7 +82,7 @@ TODO: same for operator-application
 Open Prometheus daschboard:
 
 ```
-$ kubectl port-forward service/prometheus-operated -n monitoring 9090
+$ kubectl port-forward service/prometheus-instance -n monitoring 9090
 or for OpenShift:
 $ kubectl port-forward service/prometheus-operated -n openshift-monitoring 9090
 ```
