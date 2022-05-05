@@ -175,3 +175,53 @@ rules:
   - get
   - patch
   - update
+- apiGroups:
+  - ""
+  resources:
+  - cronjobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - database.sample.third.party
+  resources:
+  - databaseclusters
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - database.sample.third.party
+  resources:
+  - databaseclusters/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - database.sample.third.party
+  resources:
+  - databaseclusters/status
+  verbs:
+  - get
+  - patch
+  - update
