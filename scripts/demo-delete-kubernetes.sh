@@ -18,7 +18,7 @@ function deleteDatabaseOperator () {
     kubectl delete customresourcedefinition databaseclusters.database.sample.third.party
 
     kubectl delete deployment operator-database-controller-manager -n operators
-
+    kubectl delete clusterserviceversion operator-database.v0.0.1 
     kubectl get pods -n operators | grep operator-database
 }
 
@@ -29,6 +29,7 @@ function deleteApplicationOperator () {
 
     kubectl delete customresourcedefinition applications.application.sample.ibm.com
     kubectl delete deployment operator-application-controller-manager -n operators
+    kubectl delete clusterserviceversion operator-application.v0.0.1
     kubectl get pods -n operators | grep operator-application
 }
 
@@ -56,8 +57,3 @@ echo "************************************"
 echo " Delete Application Operator"
 echo "************************************"
 deleteApplicationOperator
-
-echo "************************************"
-echo " Delete Application and Database instance"
-echo "************************************"
-deleteApplicationAndDatabaseInstance
