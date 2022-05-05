@@ -1,8 +1,8 @@
 ```
 sh scripts/install-required-kubernetes-components.sh
-kubectl create ns database 
 kubectl apply -f operator-database/olm/catalogsource.yaml
 kubectl apply -f operator-database/olm/subscription.yaml 
+kubectl apply -f operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml 
 kubectl apply -f operator-application/olm/catalogsource.yaml
 kubectl apply -f operator-application/olm/subscription.yaml 
 kubectl apply -f operator-application/config/samples/application.sample_v1beta1_application.yaml
