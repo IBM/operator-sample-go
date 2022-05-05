@@ -112,7 +112,10 @@ function verifyPreReqs () {
 
 function deployDatabaseOperator () {
     kubectl apply -f $ROOT_FOLDER/operator-database/olm/catalogsource.yaml
+    kubectl get catalogsource -n operators
     kubectl apply -f $ROOT_FOLDER/operator-database/olm/subscription.yaml
+    kubectl get subscription -n operators
+    kubectl get installplans -n operators
 
     array=("operator-database-catalog" "operator-database-controller-manager" )
     namespace=operators
