@@ -17,6 +17,7 @@ type ApplicationSpec struct {
 	// +kubebuilder:default:="https://raw.githubusercontent.com/IBM/multi-tenancy/main/installapp/postgres-config/create-populate-tenant-a.sql"
 	SchemaUrl string `json:"schemaUrl,omitempty"`
 	Title     string `json:"title,omitempty"`
+	Image     string `json:"image,omitempty"`
 }
 
 type ApplicationStatus struct {
