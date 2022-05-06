@@ -225,6 +225,7 @@ function deployDatabaseOperatorOLM () {
 
     array=("operator-database.v0.0.1")
     namespace=operators
+    search=installplans
     export STATUS_SUCCESS="true"
     for i in "${array[@]}"
         do 
@@ -234,15 +235,15 @@ function deployDatabaseOperatorOLM () {
             while :
             do
                 FIND=$i
-                STATUS_CHECK=$(kubectl get installplans -n $namespace | grep "$FIND" | awk '{print $4;}' | sed 's/"//g' | sed 's/,//g')
+                STATUS_CHECK=$(kubectl get $search -n $namespace | grep "$FIND" | awk '{print $4;}' | sed 's/"//g' | sed 's/,//g')
                 echo "Status: $STATUS_CHECK"
                 STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
                 if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
-                    echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
+                    echo "$(date +'%F %H:%M:%S') Status: $search($STATUS_CHECK)"
                     echo "------------------------------------------------------------------------"
                     break
                 else
-                    echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
+                    echo "$(date +'%F %H:%M:%S') Status: $search($STATUS_CHECK)"
                     echo "------------------------------------------------------------------------"
                 fi
                 sleep 3
