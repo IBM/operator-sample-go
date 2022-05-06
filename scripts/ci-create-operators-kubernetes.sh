@@ -12,6 +12,7 @@ echo "Parameter count : $@"
 echo "Parameter zero 'name of the script': $0"
 echo "---------------------------------"
 echo "CI Configuration         : $1"
+echo "Reset                    : $2"
 echo "-----------------------------"
 
 # **************** Global variables
@@ -19,7 +20,9 @@ echo "-----------------------------"
 ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 NAMESPACE=operators
 export CI_CONFIG=$1
+export RESET=$2
 export VERSIONS_FILE=""
+export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/database-operator-templates
 
 # **********************************************************************************
 # Functions
@@ -42,6 +45,20 @@ function setEnvironmentVariables () {
         echo "*** Example:"
         echo "*** sh ci-operators-kubernetes.sh local"
         exit 1
+    fi
+}
+
+function resetAll () {
+
+    if [[ $RESET == "reset" ]]; then
+        echo "*** RESET Kubernetes environment!"
+        echo "*** DELETE all Kubernetes compoments!"
+        cd $ROOT_FOLDER/scripts
+        bash ./delete-everything-kubernetes.sh
+
+        echo "*** Install required Kubernetes compoments!"
+        cd $ROOT_FOLDER/scripts
+        bash ./install-required-kubernetes-components.sh
     fi
 }
 
@@ -163,9 +180,9 @@ function buildDatabaseOperatorBundle () {
     # Build bundle
     make bundle IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
     # Replace CSV and RBAC generate files with customized versions
-    cp -nf $ROOT_FOLDER/scripts/operator-database.clusterserviceversion-TEMPLATE.yaml $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
-    cp -nf $ROOT_FOLDER/scripts/operator-database-role_binding_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
-    cp -nf $ROOT_FOLDER/scripts/operator-database-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role.yaml
+    cp -nf $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion-TEMPLATE.yaml $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
+    cp -nf $DATABASE_TEMPLATE_FOLDER/operator-database-role_binding_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
+    cp -nf $DATABASE_TEMPLATE_FOLDER/scripts/operator-database-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role.yaml
     # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
     podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" .
     
@@ -184,7 +201,7 @@ function buildDatabaseOperatorCatalog () {
 
 function createOLMDatabaseOperatorYAMLs () {
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
-    sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $ROOT_FOLDER/scripts/kubernetes-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
+    sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/kubernetes-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
 }
 
 function deployDatabaseOperatorOLM () {
@@ -280,9 +297,9 @@ function deployDatabaseOperatorOLM () {
 function createDatabaseInstance () {
     kubectl create ns database   
     kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml
-    kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
+    kubectl get pods -n database
+    kubectl get databases/database -n database -oyaml
     kubectl get databases.database.sample.third.party/database -n database -oyaml
-    kubectl get databaseclusters.database.sample.third.party/databasecluster-sample -n database -oyaml
 }
 
 function verifyDatabase() {
@@ -299,6 +316,8 @@ echo "************************************"
 echo " Set context"
 echo "************************************"
 setEnvironmentVariables
+
+resetAll
 
 echo "************************************"
 echo " Verify prerequisites"

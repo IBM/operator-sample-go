@@ -20,6 +20,8 @@ ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 NAMESPACE=operators
 export CI_CONFIG=$1
 export VERSIONS_FILE=""
+export APPLICATION_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/application-operator-templates
+
 
 # **********************************************************************************
 # Functions
@@ -158,14 +160,14 @@ function buildApplicationOperator () {
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 }
 
-function buildDatabaseOperatorBundle () {
+function buildApplicationOperatorBundle () {
     cd $ROOT_FOLDER/operator-application
     # Build bundle
     make bundle IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
     # Replace CSV and RBAC generate files with customized versions
-    cp -nf $ROOT_FOLDER/scripts/operator-application.clusterserviceversion-TEMPLATE.yaml $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
-    cp -nf $ROOT_FOLDER/scripts/operator-application-role_binding_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role_binding.yaml
-    cp -nf $ROOT_FOLDER/scripts/operator-application-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role.yaml
+    cp -nf $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion-TEMPLATE.yaml $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
+    # cp -nf $ROOT_FOLDER/scripts/operator-application-role_binding_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role_binding.yaml
+    # cp -nf $ROOT_FOLDER/scripts/operator-application-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role.yaml
     # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
     podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" .
     
@@ -174,7 +176,7 @@ function buildDatabaseOperatorBundle () {
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
 }
 
-function buildDatabaseOperatorCatalog () {
+function buildApplicationOperatorCatalog () {
     cd $ROOT_FOLDER/operator-application
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
     $ROOT_FOLDER/operator-application/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
@@ -184,20 +186,20 @@ function buildDatabaseOperatorCatalog () {
 
 function createOLMApplicationOperatorYAMLs () {
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
-    sed "s+APPLICATION_CATALOG_IMAGE+$CATALOG_NAME+g" $ROOT_FOLDER/scripts/kubernetes-application-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
+    sed "s+APPLICATION_CATALOG_IMAGE+$CATALOG_NAME+g" $APPLICATION_TEMPLATE_FOLDER/kubernetes-application-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/kubernetes-application-catalogsource.yaml
 }
 
-function deployDatabaseOperatorOLM () {
-    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
-    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml
+function deployApplicationOperatorOLM () {
+    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-application-catalogsource.yaml
+    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-application-subscription.yaml
 
-    kubectl get catalogsource operator-database-catalog -n $NAMESPACE -oyaml
-    kubectl get subscriptions operator-database-v0-0-1-sub -n $NAMESPACE -oyaml
+    kubectl get catalogsource operator-application-catalog -n $NAMESPACE -oyaml
+    kubectl get subscriptions operator-application-v0-0-1-sub -n $NAMESPACE -oyaml
     kubectl get installplans -n $NAMESPACE
     kubectl get pods -n $NAMESPACE
     kubectl get all -n $NAMESPACE
 
-    array=("operator-database-catalog")
+    array=("operator-application-catalog")
     namespace=operators
     export STATUS_SUCCESS="Running"
     for i in "${array[@]}"
@@ -223,7 +225,7 @@ function deployDatabaseOperatorOLM () {
             done
         done
 
-    array=("operator-database.v0.0.1")
+    array=("operator-application.v0.0.1")
     namespace=operators
     search=installplans
     export STATUS_SUCCESS="true"
@@ -250,7 +252,7 @@ function deployDatabaseOperatorOLM () {
             done
         done
 
-    array=("operator-database-controller-manager" )
+    array=("operator-application-controller-manager" )
     namespace=operators
     export STATUS_SUCCESS="Running"
     for i in "${array[@]}"
@@ -277,12 +279,8 @@ function deployDatabaseOperatorOLM () {
         done
 }
 
-function createDatabaseInstance () {
-    kubectl create ns database   
-    kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml
-    kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
-    kubectl get databases.database.sample.third.party/database -n database -oyaml
-    kubectl get databaseclusters.database.sample.third.party/databasecluster-sample -n database -oyaml
+function createApplicationInstance () {
+    kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
 }
 
 function verifyDatabase() {
@@ -306,16 +304,16 @@ echo "************************************"
 verifyPreReqs
 
 echo "************************************"
-echo " Build 'database operator'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
+echo " Build 'application operator'"
+echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 echo "************************************"
-buildDatabaseOperator
+buildApplicationOperator
 
 echo "************************************"
-echo " Build 'database operator bundle'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
+echo " Build 'application operator bundle'"
+echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
 echo "************************************"
-buildDatabaseOperatorBundle
+buildApplicationOperatorBundle
 
 echo "************************************"
 echo " Build 'application operator catalog'"
