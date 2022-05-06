@@ -1,16 +1,26 @@
+## Flow of ci-create-operators-kubernetes.sh
+
 ```
-sh scripts/install-required-kubernetes-components.sh
+sh scripts/install-required-kubernetes-components.sh 
+
+Build database operator images
 kubectl apply -f operator-database/olm/catalogsource.yaml
 kubectl apply -f operator-database/olm/subscription.yaml 
 kubectl apply -f operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml 
+kubectl get databasecluster/databasecluster-sample -oyaml
+kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
+kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
+Auto backup: Manually scheduled backup
+
+Build application operator images
 kubectl apply -f operator-application/olm/catalogsource.yaml
 kubectl apply -f operator-application/olm/subscription.yaml 
 kubectl apply -f operator-application/config/samples/application.sample_v1beta1_application.yaml
+kubectl get databases/database -n database -oyaml
 kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
 kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl -s http://localhost:8081/hello
 kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/" 
-kubectl port-forward service/prometheus-instance -n monitoring 9090
-open http://localhost:9090/graph
+Auto scalability
 ```
 
 Expected output:
@@ -45,7 +55,7 @@ status:
 
 ```
 kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl -s http://localhost:8081/hello
-Hello World%
+Hello World and hello Adam%
 ```
 
 ```
@@ -65,5 +75,3 @@ spec:
   schemaUrl: https://raw.githubusercontent.com/IBM/multi-tenancy/main/installapp/postgres-config/create-populate-tenant-a.sql
   version: 1.0.0
 ```
-
-To be done: Build images
