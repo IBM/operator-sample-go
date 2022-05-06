@@ -139,7 +139,7 @@ function createPrometheusInstance () {
 
 function verifyPrometheusInstance () {
    kubectl get service -n monitoring
-   kubectl port-forward service/prometheus-instance -n monitoring 9090
+   #kubectl port-forward service/prometheus-instance -n monitoring 9090
 }
 
 # **********************************************************************************

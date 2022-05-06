@@ -174,12 +174,28 @@ spec:
           - update
           - watch
         - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - pods
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
           - ""
           resources:
           - pods
           verbs:
+          - create
+          - delete
           - get
           - list
+          - patch
+          - update
           - watch
         - apiGroups:
           - database.sample.third.party
