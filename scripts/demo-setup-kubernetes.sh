@@ -245,15 +245,23 @@ function deployApplicationOperator () {
         done 
 }
 
-function createApplicationAndDatabaseInstance () {
+function createDatabaseInstance () {
     #Database
     kubectl create namespace database
     kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml
     kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
-    
+
+
+    kubectl get pods -n database
+    kubectl get databases.database.sample.third.party/database -n database -oyaml
+    kubectl get databaseclusters.database.sample.third.party/databasecluster-sample -n database -oyaml
+
+}
+
+function createApplicationInstance () {   
     #Application
     kubectl apply -f  $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
-    kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml  
+    kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
 }
 
 function verifyApplicationBeta () {
@@ -267,17 +275,22 @@ function verifyApplicationBeta () {
 echo "************************************"
 echo " Verify prerequisites"
 echo "************************************"
-verifyPreReqs
+#verifyPreReqs
 
 echo "************************************"
 echo " Create OLM database operator YAMLs"
 echo "************************************"
-createOLMDatabaseOperatorYAMLs
+#createOLMDatabaseOperatorYAMLs
 
 echo "************************************"
 echo " Deploy Database Operator"
 echo "************************************"
-deployDatabaseOperator
+#deployDatabaseOperator
+
+echo "************************************"
+echo " Create Database Instance"
+echo "************************************"
+createDatabaseInstance
 
 echo "************************************"
 echo " Deploy Application Operator"
