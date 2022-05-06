@@ -71,6 +71,8 @@ function deleteDatabaseOperator () {
 
     kubectl delete deployment operator-database-controller-manager -n operators
     kubectl delete clusterserviceversion operator-database.v0.0.1 
+    kubectl delete clusterrole operator-database-metrics-reader
+    
     #echo "Press any key to move on"
     #read input
 }

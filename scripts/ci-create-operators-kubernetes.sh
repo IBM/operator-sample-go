@@ -191,12 +191,65 @@ function deployDatabaseOperatorOLM () {
     kubectl create -f $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
     kubectl create -f $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml
 
-    kubectl get all -n $NAMESPACE
     kubectl get catalogsource operator-database-catalog -n $NAMESPACE -oyaml
     kubectl get subscriptions operator-database-v0-0-1-sub -n $NAMESPACE -oyaml
     kubectl get installplans -n $NAMESPACE
+    kubectl get pods -n $NAMESPACE
+    kubectl get all -n $NAMESPACE
 
-    array=("operator-database-catalog" "operator-database-controller-manager" )
+    array=("operator-database-catalog")
+    namespace=operators
+    export STATUS_SUCCESS="Running"
+    for i in "${array[@]}"
+        do 
+            echo ""
+            echo "------------------------------------------------------------------------"
+            echo "Check $i"
+            while :
+            do
+                FIND=$i
+                STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
+                echo "Status: $STATUS_CHECK"
+                STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
+                if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
+                    echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
+                    echo "------------------------------------------------------------------------"
+                    break
+                else
+                    echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
+                    echo "------------------------------------------------------------------------"
+                fi
+                sleep 3
+            done
+        done
+
+    array=("operator-database.v0.0.1")
+    namespace=operators
+    export STATUS_SUCCESS="true"
+    for i in "${array[@]}"
+        do 
+            echo ""
+            echo "------------------------------------------------------------------------"
+            echo "Check $i"
+            while :
+            do
+                FIND=$i
+                STATUS_CHECK=$(kubectl get installplans -n $namespace | grep "$FIND" | awk '{print $4;}' | sed 's/"//g' | sed 's/,//g')
+                echo "Status: $STATUS_CHECK"
+                STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
+                if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
+                    echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
+                    echo "------------------------------------------------------------------------"
+                    break
+                else
+                    echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
+                    echo "------------------------------------------------------------------------"
+                fi
+                sleep 3
+            done
+        done
+
+    array=("operator-database-controller-manager" )
     namespace=operators
     export STATUS_SUCCESS="Running"
     for i in "${array[@]}"
