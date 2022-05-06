@@ -42,3 +42,4 @@ nb-configuration.xml
 database-service/kubernetes/cronjob.yaml
 database-service/kubernetes/secret.yaml
 operator-database/config/rbac/role.yaml
+versions_local.env
