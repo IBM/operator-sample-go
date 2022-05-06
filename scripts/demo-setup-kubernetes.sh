@@ -390,9 +390,9 @@ echo "************************************"
 deployApplicationOperator
 
 echo "************************************"
-echo " Create Application and Database instance"
+echo " Create Application Instance"
 echo "************************************"
-createApplicationAndDatabaseInstance
+createApplicationInstance
 
 echo "************************************"
 echo " Verify Application Beta"
