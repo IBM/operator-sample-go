@@ -231,6 +231,12 @@ function createDatabaseInstance () {
     kubectl get databaseclusters.database.sample.third.party/databasecluster-sample -n database -oyaml
 }
 
+function verifyDatabase() {
+     kubectl get databasecluster/databasecluster-sample -oyaml
+     kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
+     kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
+}
+
 # **********************************************************************************
 # Execution
 # **********************************************************************************
@@ -277,3 +283,8 @@ echo "************************************"
 echo " Create Database Instance"
 echo "************************************"
 createDatabaseInstance
+
+echo "************************************"
+echo " Verify Database Instance"
+echo "************************************"
+verifyDatabase
