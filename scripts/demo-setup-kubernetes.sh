@@ -356,6 +356,11 @@ function verifyApplicationBeta () {
     kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager
 }
 
+function verifyPrometheusInstance () {
+   kubectl get service -n monitoring
+   kubectl port-forward service/prometheus-instance -n monitoring 9090
+}
+
 # **********************************************************************************
 # Execution
 # **********************************************************************************
@@ -398,3 +403,8 @@ echo "************************************"
 echo " Verify Application Beta"
 echo "************************************"
 verifyApplicationBeta
+
+echo "************************************"
+echo " Verify prometheus instance"
+echo "************************************"
+verifyPrometheusInstance
