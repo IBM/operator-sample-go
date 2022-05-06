@@ -57,7 +57,7 @@ func (reconciler *DatabaseBackupReconciler) Reconcile(ctx context.Context, req c
 		return ctrl.Result{}, err
 	}
 
-	variables.SetGlobalVariables(databasebackup.Name)
+	variables.SetGlobalVariables(databasebackup.Name, databasebackup.Spec.Image)
 	variables.PrintVariables(databasebackup.Name, databasebackup.Namespace, databasebackup.Spec.Repos, databasebackup.Spec.ManualTrigger, databasebackup.Spec.ScheduledTrigger)
 
 	_, err = reconciler.reconcileClusterRole(ctx, databasebackup)

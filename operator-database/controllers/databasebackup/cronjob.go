@@ -38,7 +38,7 @@ func (reconciler *DatabaseBackupReconciler) defineCronJob(databasebackup *databa
 						Spec: v1.PodSpec{
 							RestartPolicy: v1.RestartPolicyNever,
 							Containers: []v1.Container{{
-								Image: variables.Image,
+								Image: variables.ImageName,
 								Name:  variables.ContainerName,
 								Env: []v1.EnvVar{
 									{Name: variables.EnvKeyBackupResourceName, Value: variables.BackupResourceName},

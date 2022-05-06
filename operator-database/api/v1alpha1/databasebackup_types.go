@@ -8,6 +8,7 @@ type DatabaseBackupSpec struct {
 	Repos            []BackupRepo     `json:"repos"`
 	ManualTrigger    ManualTrigger    `json:"manualTrigger"`
 	ScheduledTrigger ScheduledTrigger `json:"scheduledTrigger"`
+	Image            string           `json:"image"`
 }
 
 type DatabaseBackupStatus struct {

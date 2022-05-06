@@ -37,7 +37,7 @@ func (reconciler *DatabaseClusterReconciler) defineStatefulSet(databasecluster *
 				},
 				Spec: v1.PodSpec{
 					Containers: []v1.Container{{
-						Image:        variables.Image,
+						Image:        variables.ImageName,
 						Name:         variables.ContainerName,
 						VolumeMounts: []v1.VolumeMount{{Name: variables.VolumeMountName, MountPath: variables.DataDirectory}},
 						Ports: []v1.ContainerPort{{
