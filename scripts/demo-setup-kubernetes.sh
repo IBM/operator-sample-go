@@ -367,8 +367,6 @@ function verifyPrometheusInstance () {
 
 resetAll
 
-verifyPreReqs
-
 echo "************************************"
 echo " Verify prerequisites"
 echo "************************************"
