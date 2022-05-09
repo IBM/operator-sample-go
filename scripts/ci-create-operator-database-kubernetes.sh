@@ -47,20 +47,24 @@ function setEnvironmentVariables () {
     echo " Check if podman is running"
     echo "************************************"
     podman images &> $ROOT_FOLDER/scripts/check_podman.log
+
     CHECK=$(cat $ROOT_FOLDER/scripts/check_podman.log | grep 'Cannot connect to Podman' | awk '{print $1;}')
+    echo "*** Podman check: $CHECK"
+    
     if [[ $CHECK == "Cannot" ]]; then
-       echo "Podman is not running! The script ends here."
-       rm -f ./scripts/check_podman.log
+       echo "*** Podman is not running! The script ends here."
+       rm -f $ROOT_FOLDER/scripts/check_podman.log
        exit 1
     fi
-    rm -f ./scripts/check_podman.log
 
     if [[ $CI_CONFIG == "local" ]]; then
         echo "*** Set versions_local.env file a input"
         source $ROOT_FOLDER/versions_local.env
+        rm -f $ROOT_FOLDER/scripts/check_podman.log
     elif [[ $CI_CONFIG == "ci" ]]; then
         echo "*** Set versions.env file a input"        
         source $ROOT_FOLDER/versions.env
+        rm -f $ROOT_FOLDER/scripts/check_podman.log
     else 
         echo "*** Please select a valid option to run!"
         echo "*** Use 'local' for your local test."

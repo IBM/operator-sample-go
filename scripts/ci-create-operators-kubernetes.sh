@@ -34,6 +34,11 @@ export start=$(date +%s)
 
 function setupDatabase () {
     bash "$ROOT_FOLDER/scripts/ci-create-operator-database-kubernetes.sh" $CI_CONFIG $RESET $RESET_PODMAN
+    if [ $? == "1" ]; then
+        echo "*** The setup of the database-operator failed !"
+        echo "*** The script 'ce-create-operators-kubernetes.sh' ends here!"
+        exit 1
+    fi
 }
 
 function setupApplication () {
