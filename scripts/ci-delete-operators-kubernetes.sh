@@ -13,6 +13,10 @@ function deleteDatabaseOperatorOLM () {
     kubectl delete -f $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml
 
     kubectl delete customresourcedefinition applications.application.sample.ibm.com
+    kubectl delete customresourcedefinition databasebackups.database.sample.third.party
+    kubectl delete customresourcedefinition databases.database.sample.third.party
+    kubectl delete customresourcedefinition databaseclusters.database.sample.third.party
+
     kubectl delete deployment operator-application-controller-manager -n operators
     kubectl delete clusterserviceversion operator-application.v0.0.1
     kubectl get pods -n operators | grep operator-application

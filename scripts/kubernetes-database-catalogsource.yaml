@@ -7,4 +7,4 @@ spec:
   displayName: operator-database-catalog
   publisher: IBM Build Labs
   sourceType: grpc
-  image: docker.io/nheidloff/database-operator-catalog:v1.0.35
+  image: quay.io/tsuedbroecker/database-operator-catalog:v1.0.35

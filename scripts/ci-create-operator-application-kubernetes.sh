@@ -32,11 +32,9 @@ function setEnvironmentVariables () {
     if [[ $CI_CONFIG == "local" ]]; then
         echo "*** Set versions_local.env file a input"
         source $ROOT_FOLDER/versions_local.env
-        break
     elif [[ $CI_CONFIG == "ci" ]]; then
         echo "*** Set versions.env file a input"        
         source $ROOT_FOLDER/versions.env
-        break
     else 
         echo "*** Please select a valid option to run!"
         echo "*** Use 'local' for your local test."
@@ -51,8 +49,8 @@ function verifyPreReqs () {
   
   max_retrys=2
   j=0
-  array=("cert-manager-cainjector" "cert-manager-webhook")
-  namespace=cert-manager
+  array=("database-cluster-0" "database-cluster-1")
+  namespace=database
   export STATUS_SUCCESS="Running"
   for i in "${array[@]}"
     do 
@@ -82,70 +80,26 @@ function verifyPreReqs () {
             sleep 3
         done
     done 
+}
 
-  array=("catalog-operator" "olm-operator" "operatorhubio-catalog" )
-  namespace=olm
-  export STATUS_SUCCESS="Running"
-  for i in "${array[@]}"
-    do 
-        echo ""
-        echo "------------------------------------------------------------------------"
-        echo "Check $i"
-        while :
-        do
-            FIND=$i
-            ((j++))
-            STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
-            echo "Status: $STATUS_CHECK"
-            STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
-            if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
-                echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
-                echo "------------------------------------------------------------------------"
-                break
-            elif [[ $j -eq $max_retrys ]]; then
-                echo "$(date +'%F %H:%M:%S') Please run `install-required-kubernetes-components.sh`first!"
-                echo "$(date +'%F %H:%M:%S') Prereqs aren't ready!"
-                echo "------------------------------------------------------------------------"
-                break               
-            else
-                echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
-                echo "------------------------------------------------------------------------"
-            fi
-            sleep 3
-        done
-    done 
+function buildSimpleMicroservice () {
+    cd $ROOT_FOLDER/simple-microservice
+    podman build -t "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" .
+    podman login $REGISTRY
+    podman push "$REGISTRY/$ORG/$IMAGE_MICROSERVICE"
+}
 
-  array=("prometheus-operator" )
-  namespace=monitoring
-  export STATUS_SUCCESS="Running"
-   for i in "${array[@]}"
-    do 
-        echo ""
-        echo "------------------------------------------------------------------------"
-        echo "Check $i"
-        while :
-        do
-            FIND=$i
-            ((j++))
-            STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
-            echo "Status: $STATUS_CHECK"
-            STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
-            if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
-                echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
-                echo "------------------------------------------------------------------------"
-                break
-            elif [[ $j -eq $max_retrys ]]; then
-                echo "$(date +'%F %H:%M:%S') Please run `install-required-kubernetes-components.sh`first!"
-                echo "$(date +'%F %H:%M:%S') Prereqs aren't ready!"
-                echo "------------------------------------------------------------------------"
-                break               
-            else
-                echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
-                echo "------------------------------------------------------------------------"
-            fi
-            sleep 3
-        done
-    done 
+function buildApplicationScaler () {
+    cd $ROOT_FOLDER/operator-application-scaler
+    podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER" .
+    podman login $REGISTRY
+    podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER"
+}
+
+function configureCR_SimpleMicroservice () {
+    IMAGE_NAME="$REGISTRY/$ORG/$IMAGE_MICROSERVICE"
+    sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
+    sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
 }
 
 function buildApplicationOperator () {
@@ -162,12 +116,15 @@ function buildApplicationOperator () {
 
 function buildApplicationOperatorBundle () {
     cd $ROOT_FOLDER/operator-application
+    
     # Build bundle
     make bundle IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
     # Replace CSV and RBAC generate files with customized versions
     cp -nf $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion-TEMPLATE.yaml $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
-    # cp -nf $ROOT_FOLDER/scripts/operator-application-role_binding_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role_binding.yaml
-    # cp -nf $ROOT_FOLDER/scripts/operator-application-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role.yaml
+    OPERATOR_NAMESPACE=operators
+    sed "s+OPERATOR_NAMESPACE+$OPERATOR_NAMESPACE+g" $APPLICATION_TEMPLATE_FOLDER/operator-database-role_binding_patch_TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
+    cp -nf $APPLICATION_TEMPLATE_FOLDER/operator-application-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role.yaml
+    
     # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
     podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" .
     
@@ -280,13 +237,18 @@ function deployApplicationOperatorOLM () {
 }
 
 function createApplicationInstance () {
-    kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
+    kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
 }
 
-function verifyDatabase() {
-     kubectl get databasecluster/databasecluster-sample -oyaml
-     kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
-     kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
+function verifyApplication() {
+    echo "*** verify database"
+    kubectl get databasecluster/databasecluster-sample -oyaml
+    kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
+    kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
+
+    echo "*** verify application"
+    kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
+    kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager
 }
 
 # **********************************************************************************
@@ -302,6 +264,18 @@ echo "************************************"
 echo " Verify prerequisites"
 echo "************************************"
 verifyPreReqs
+
+echo "************************************"
+echo " Build 'simple microserice'"
+echo " Push image to $REGISTRY/$ORG/$IMAGE_MICROSERVICE"
+echo "************************************"
+buildSimpleMicroservice 
+
+echo "************************************"
+echo " Build 'application scaler'"
+echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER"
+echo "************************************"
+buildApplicationScaler
 
 echo "************************************"
 echo " Build 'application operator'"
@@ -330,6 +304,11 @@ echo "************************************"
 echo " Deploy Application Operator OLM"
 echo "************************************"
 deployApplicationOperatorOLM
+
+echo "************************************"
+echo " Configure configure CR for Application Operator"
+echo "************************************"
+configureCR_SimpleMicroservice
 
 echo "************************************"
 echo " Create Application Instance"

@@ -9,4 +9,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: operator-database-controller-manager
-  namespace: operator-database-system
+  namespace: OPERATOR_NAMESPACE

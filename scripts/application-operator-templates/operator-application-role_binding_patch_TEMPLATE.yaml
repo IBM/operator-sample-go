@@ -8,5 +8,5 @@ roleRef:
   name: manager-role
 subjects:
 - kind: ServiceAccount
-  name: operator-application-controller-manager
-  namespace: operator-application-system
+  name: controller-manager
+  namespace: OPERATOR_NAMESPACE

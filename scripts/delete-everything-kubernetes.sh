@@ -12,6 +12,10 @@ function setEnvironmentVariables () {
     source $ROOT_FOLDER/versions.env
 }
 
+function setEnvironmentVariablesLocal () {
+    source $ROOT_FOLDER/versions_local.env
+}
+
 function deleteMicroserviceApplicationInstance () { 
     cd $ROOT_FOLDER/operator-application
     kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
@@ -63,11 +67,14 @@ function deleteDatabaseOperator () {
     operator-sdk cleanup operator-database -n operators --delete-all   
     
     kubectl delete -f $ROOT_FOLDER/operator-database/olm/subscription.yaml
-    kubectl delete -f $ROOT_FOLDER/operator-database/olm/catalogsource.yaml
+    kubectl delete -f $ROOT_FOLDER/scripts/subscription.yaml
 
-    kubectl delete customresourcedefinition databasebackups.database.sample.third.party
-    kubectl delete customresourcedefinition databases.database.sample.third.party
-    kubectl delete customresourcedefinition databaseclusters.database.sample.third.party
+    kubectl delete -f $ROOT_FOLDER/operator-database/olm/catalogsource.yaml 
+    kubectl delete -f $ROOT_FOLDER/scripts/catalogsource.yaml
+
+    kubectl delete customresourcedefinition databasebackups.database.sample.third.party -n operators
+    kubectl delete customresourcedefinition databases.database.sample.third.party -n operators
+    kubectl delete customresourcedefinition databaseclusters.database.sample.third.party -n operators
 
     kubectl delete deployment operator-database-controller-manager -n operators
     kubectl delete clusterserviceversion operator-database.v0.0.1 
@@ -139,9 +146,19 @@ echo "************************************"
 deleteApplicationOperator
 
 echo "************************************"
+echo " Delete database operator"
+echo "************************************"
+deleteDatabaseOperator 
+
+echo "************************************"
 echo " Delete application operator OLM deployment"
 echo "************************************"
 deleteOLMdeployment
+
+echo "************************************"
+echo " Delete database instance"
+echo "************************************"
+deleteDatabaseInstance
 
 echo "************************************"
 echo " Delete namespaces related to application operator"
@@ -149,13 +166,19 @@ echo "************************************"
 deleteNamespacesRelatedToApplicationOperator
 
 echo "************************************"
-echo " Delete database application and operator"
-echo "************************************"
-deleteDatabaseInstance
-
-echo "************************************"
 echo " Delete database application"
 echo "************************************"
+deleteNamespacesRelatedToDatabaseOperator
+
+echo "************************************"
+echo " Delete for local configuration"
+echo "************************************"
+setEnvironmentVariablesLocal
+deleteMicroserviceApplicationInstance
+deleteApplicationOperator
+deleteNamespacesRelatedToApplicationOperator
+deleteDatabaseInstance
+deleteDatabaseOperator
 deleteNamespacesRelatedToDatabaseOperator
 
 echo "************************************"
