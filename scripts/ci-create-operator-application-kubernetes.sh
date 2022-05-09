@@ -250,6 +250,8 @@ function verifyApplication() {
     echo $LOG > $ROOT_FOLDER/scripts/script-automation.log
     LOG="******************"
     echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
+    LOG=""
+    echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
     LOG=$(kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons)
     echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
     kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
@@ -260,6 +262,8 @@ function verifyApplication() {
     LOG="Application operator:"
     echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
     LOG="******************"
+    echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
+    LOG=""
     echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
     kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
     LOG=$(kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello)
