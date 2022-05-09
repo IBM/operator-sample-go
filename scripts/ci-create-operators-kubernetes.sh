@@ -25,6 +25,7 @@ export RUN=$1
 export CI_CONFIG=$2
 export RESET=$3
 export RESET_PODMAN=$4
+export SCRIPT_DURATION=""
 export start=$(date +%s)
 
 # **********************************************************************************
@@ -62,6 +63,7 @@ function run () {
         exit 1
     fi
 }
+
 function duration() {
 
     end=$(date +%s)
@@ -69,8 +71,27 @@ function duration() {
     echo "*** End: $end"
     seconds=$(echo "$end - $start" | bc)
     echo $seconds' sec'
-    echo 'Formatted:'
-    awk -v t=$seconds 'BEGIN{t=int(t*1000); printf "%d:%02d:%02d\n", t/3600000, t/60000%60, t/1000%60}'
+    SCRIPT_DURATION=$(awk -v t=$seconds 'BEGIN{t=int(t*1000); printf "%d:%02d:%02d\n", t/3600000, t/60000%60, t/1000%60}')
+    echo "Formatted: $SCRIPT_DURATION"
+    
+}
+
+function tag () {
+    export commit_id=$(git rev-parse --short HEAD)
+    echo "Commint ID: $commit_id"
+    export tag_new="verify_scripts_$commit_id"
+
+    git tag -l | grep "verify_scripts_$commit_id"
+    CHECK_TAG=$(git tag -l | grep "verify_scripts_$commit_id")
+    if [[ $tag_new == $CHECK_TAG ]]; then
+        echo "*** The tag $tag_new exists."
+        echo "*** No tag will be added"
+    else 
+       echo "*** Create tag: $tag_new "
+       loginfo=$(cat $ROOT_FOLDER/scripts/script-automation.log)
+       git tag -a $tag_new $commit_id -m "Script configuration: [$RUN] [$CI_CONFIG] [$RESET] [$RESET_PODMAN] Script duration time: [$SCRIPT_DURATION] $loginfo"
+       git push origin $tag_new
+    fi
 }
 
 # **********************************************************************************
@@ -83,5 +104,5 @@ echo " Run setup for $RUN"
 echo "************************************"
 run
 duration
-
+tag
 

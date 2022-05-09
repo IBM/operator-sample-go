@@ -242,13 +242,31 @@ function createApplicationInstance () {
 
 function verifyApplication() {
     echo "*** verify database"
+
     kubectl get databasecluster/databasecluster-sample -oyaml
+    
     kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
+    LOG="Database operator:"
+    echo $LOG > $ROOT_FOLDER/scripts/script-automation.log
+    LOG="******************"
+    echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
+    LOG=$(kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons)
+    echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
     kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
+    LOG=$(kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader)
+    echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
 
     echo "*** verify application"
+    LOG="Application operator:"
+    echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
+    LOG="******************"
+    echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
     kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
+    LOG=$(kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello)
+    echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
     kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager
+    LOG=$(kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager)
+    echo $LOG >> $ROOT_FOLDER/scripts/script-automation.log
 }
 
 # **********************************************************************************
