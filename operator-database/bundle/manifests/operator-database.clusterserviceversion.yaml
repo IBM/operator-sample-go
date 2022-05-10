@@ -324,20 +324,20 @@ spec:
         serviceAccountName: operator-database-controller-manager
       deployments:
       - label:
-          control-plane: controller-manager
+          control-plane: operator-database-controller-manager
         name: operator-database-controller-manager
         spec:
           replicas: 1
           selector:
             matchLabels:
-              control-plane: controller-manager
+              control-plane: operator-database-controller-manager
           strategy: {}
           template:
             metadata:
               annotations:
                 kubectl.kubernetes.io/default-container: manager
               labels:
-                control-plane: controller-manager
+                control-plane: operator-database-controller-manager
             spec:
               containers:
               - args:
@@ -364,7 +364,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/nheidloff/database-operator:v1.0.21
+                image: docker.io/deleeuw/database-operator:v1.0.36
                 livenessProbe:
                   httpGet:
                     path: /healthz

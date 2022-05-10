@@ -2,7 +2,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: application-scaler-role
-  namespace: operator-application-system
+  namespace: application-beta
 rules:
 - apiGroups:
   - "application.sample.ibm.com"
@@ -33,7 +33,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: application-scaler-rolebinding
-  namespace: operator-application-system
+  namespace: application-beta
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -41,4 +41,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: operator-application-system
+  namespace: application-beta

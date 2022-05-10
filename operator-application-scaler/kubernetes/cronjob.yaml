@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: application-scaler
-  namespace: operator-application-system
+  namespace: application-beta
 spec:
   schedule: "0 * * * *"
   jobTemplate:
@@ -10,12 +10,29 @@ spec:
       template:
         spec:
           containers:
-          - name: application-scale
-            image: docker.io/nheidloff/operator-application-scaler:v1.0.2
-            imagePullPolicy: IfNotPresent
-            env:
-            - name: APPLICATION_RESOURCE_NAME
-              value: "application"
-            - name: APPLICATION_RESOURCE_NAMESPACE
-              value: "application-beta"
-          restartPolicy: OnFailure
+            - name: application-scale
+              image: docker.io/deleeuw/operator-application-scaler:v1.0.22
+              imagePullPolicy: IfNotPresent
+              env:
+              - name: APPLICATION_RESOURCE_NAME
+                value: "application"
+              - name: APPLICATION_RESOURCE_NAMESPACE
+                value: "application-beta"
+              volumeMounts:
+                - name: certdata
+                  mountPath: "/etc/prometheus-k8s-cert"
+                  readOnly: true
+                - name: tokendata
+                  mountPath: "/etc/prometheus-k8s-token"
+                  readOnly: true              
+          # Only used for OpenShift, hence optional for IKS
+          volumes:
+            - name: certdata
+              secret:
+                secretName: prometheus-cert-secret
+                optional: true
+            - name: tokendata
+              secret:
+                secretName: prometheus-token-secret
+                optional: true
+          restartPolicy: OnFailure 
