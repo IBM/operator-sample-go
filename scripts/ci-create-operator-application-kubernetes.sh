@@ -119,8 +119,10 @@ function buildApplicationOperatorBundle () {
     
     # Build bundle
     make bundle IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
-    # Replace CSV and RBAC generate files with customized versions
-    cp -nf $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion-TEMPLATE.yaml $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
+    # Replace CSV and RBAC generate files with customized versions APPLICATION_OPERATOR_IMAGE 
+    APPLICATION_OPERATOR_IMAGE="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
+    sed "s+APPLICATION_OPERATOR_IMAGE+$APPLICATION_OPERATOR_IMAGE+g" $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
+
     OPERATOR_NAMESPACE=operators
     sed "s+OPERATOR_NAMESPACE+$OPERATOR_NAMESPACE+g" $APPLICATION_TEMPLATE_FOLDER/operator-database-role_binding_patch_TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
     cp -nf $APPLICATION_TEMPLATE_FOLDER/operator-application-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role.yaml
