@@ -73,7 +73,7 @@ Creates all operators or specific operators of the project in Kubernetes or Open
 
 Here a list of the ci scripts
 
-| Name | Kubernetes | OpenShift **(not implemented yet)** | Database Operator | Application Operator|
+| Name | Kubernetes | OpenShift **(not implemented yet)** | Creates Database Operator | Creates Application Operator|
 | --- |  --- |  --- |  --- |  --- |
 | **ci**-create-operator-database-kubernetes.sh | Yes | No  | Yes  | No  |
 | **ci**-create-operator-application-kubernetes.sh | Yes |  No | No  | Yes  |
@@ -94,7 +94,7 @@ That scripts creates the operators in Kubernetes and has following parameter opt
 
 * Kubernetes
 
-| Parameter combination | versions.env  |  versions_local.env | delete all and setup prerequisites | `operator database` | `operator application` | reset podman |
+| Parameter combination | versions.env  |  versions_local.env | delete all and setup prerequisites | creates `operator database` | creates `operator application` | reset podman |
 | --- |  --- | --- | --- |  --- | --- | --- |
 | `database` `local` |  no | yes | no | yes | no | no |
 | `database` `local` `reset` |  no | yes |yes | yes | no | no |
