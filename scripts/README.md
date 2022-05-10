@@ -50,24 +50,24 @@ That scripts creates the operators in Kubernetes and has following parameter opt
 | `database` `local` |  no | yes | no | yes | no |
 
 
-* First parameter:
+* First parameter: ('database' or 'app')
 
     * Use 'database' for setup the database operator only
     * Use 'app' for setup the database and application operator.
 
-* Second parameter:
+* Second parameter: ('local' or 'ci')
 
     * Use 'local' for using the `versions_local.env` file as input for the container tags.
 
     * Use 'ci' for using the `versions.env` file as input for the container tags. **ONLY FOR GOLDEN SOURCE!**
 
-* Third parameter:
+* Third parameter: ('reset')
 
     * Use 'reset' to deinstall the operators and prereq.
 
-* Fourth parameter:
+* Fourth parameter: ('podman_reset')
 
-    * Use 'podman-reset' to delete podman vm, create a new podman vm with size of 15, and start podman.
+    * Use 'podman_reset' to delete podman vm, create a new podman vm with size of 15, and start podman.
 
 
 Example:
