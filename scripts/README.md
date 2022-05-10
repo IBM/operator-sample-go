@@ -31,15 +31,17 @@ Setup or delete based on the **golden source versions** (version.env).
 
 Creates all operators or specific operators of the project in Kubernetes or OpenShift.
 
+The nam
+
+* `www == create or delete`
+* `xxx == operator or operators`
+* `zzz == Kubernetes or OpenShift`
+
 | Name | Kubernetes | OpenShift **(not implemented yet)** | Database Operator | Application Operator|
 | --- |  --- |  --- |  --- |  --- |
 | **ci**-create-operator-database-kubernetes.sh | Yes | No  | Yes  | No  |
 | **ci**-create-operator-application-kubernetes.sh | Yes |  No | No  | Yes  |
 | **ci**-create-operators-kubernetes.sh | Yes |  No | Yes  | Yes  |
-
-* `www == create or delete`
-* `xxx == operator or operators`
-* `zzz == Kubernetes or OpenShift`
 
 #### d.   **delete-everything**-xxx
 
