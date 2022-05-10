@@ -191,9 +191,9 @@ The data can be downloaded.
 
 ## Work in progress
 
-To test auto scalabilities, let's first install and test our frontend application:
+To test the auto scaler capabilities, let's first install and test our frontend application.
 
-As with the database, it's CR provides an abstraction, and it will take care of creating Kuberenetes resources to deploy a web app pod (providing a single API endpoint), and even use the database CR to create some data in our database cluster.
+As with the database, its CR provides an abstraction, and it will take care of creating Kuberenetes resources to deploy a web app pod (providing a single API endpoint), and even use the database CR to create some data in our database cluster.
 
 ```
 cat <<EOF | oc apply -f -
@@ -210,6 +210,51 @@ spec:
   title: people
 EOF
 ```
+
+After a few minutes you will see the application operator has created several components:
+
+* A deployment consisting of a single pod (a web application written in Java).  The pod connects to our simple database, and renders a Hello World response to each name in the database
+* A service to expose the web app (and for this demo, I also created an OpenShift Route so the web application is available externally)
+
+<img src="images/demo17.png" />
+<img src="images/demo18.png" />
+
+Let's take a look at the web app now by clicking the route and invoking the web app's only endpoint, /hello
+
+<img src="images/demo19.png" />
+
+The web application also publishes metrics which are collected by Prometheus, which is installed by default on OpenShift.  In particular, our web application publishes how many times the /hello endpoint has been invoked, and the operator uses this to determine if the web application deployment should be scaled up.  This is quite a simple scenario, and to be honest you could achieve the same results with existing k8s capabilities like Horizontal Pod Autoscaler using custom metrics.  However, in our demo we don't use HPA, instead our application operator has created a Cronjob resource which launches a pod to query metrics collected by Prometheus.  If the number of invocations are more than five, our application scaler pod modifies our applications custom resource to define additional replicas, which our operator reconciles.
+
+So let's see it in action.  If we look at the default Prometheus dashboard, we can query the metric exposed by our web application.  Right now it's one, so let's call the /hello endpoint to increase the metric to at least six.
+
+<img src="images/demo20.png" />
+
+Our application operator has already created the Cronjob to launch a pod which makes the scaling decisions on a schedule.
+
+<img src="images/demo21.png" />
+
+Before we look at the application scaler pod, let's verify how many pods are specified in the web application deployment.  Looking at the Application CR, you can see just one was specified, and that's exactly what the operator has reconciled when creating the k8s deployment.
+
+<img src="images/demo22.png" />
+<img src="images/demo23.png" />
+
+We can now either wait for the application scaler pof to trigger automatically on schedule, or better still, force it to trigger now.  
+
+```
+kubectl create job --from=cronjob/application-scaler manuallytriggered -n application-beta
+```
+
+If we look into the logs of the application scaler pod, we can see it has queried Prometheus and because the /hello metric is greater than six, the pod has used k8s API to modify the custom resource for our application.
+
+<img src="images/demo24.png" />
+
+As you would expect, the application operator has responded to the change in the CR and we can verify this now.
+
+<img src="images/demo26.png" />
+<img src="images/demo27.png" />
+<img src="images/demo28.png" />
+
+By having our own application scaler pod, the logic to control scaling is entirely flexible.  It is not bound to the metrics of just a single pod, it could query requests per mintue on the web app, assess queue depth from a messaging pod and consider the number of active connections to the database.
 
 
 

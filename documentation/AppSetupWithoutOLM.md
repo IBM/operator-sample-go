@@ -73,13 +73,22 @@ $ kubectl get applications.v1beta1.application.sample.ibm.com/application -n app
 
 Only needed for OpenShift:
 
+These steps allow the default Prometheus instance on OpenShift to monitor the resources deployed by the application operator.  In addition, because this instance is used to monitor other k8s resources, it requires authentication and can only be accessed via https.  Therefore additional secrets must be created providing a certificate and bearer token which are used by the [application scaler](../operator-application-scaler/README.md) job to access the Prometheus API.  Additional RBAC permissions are also required.
+
 ```
 $ oc label namespace application-beta openshift.io/cluster-monitoring="true"
 $ kubectl apply -f prometheus
-TODO: same for operator-application
+$ oc get secrets -n openshift-ingress
+```
+Locate the default TLS secret with type 'kubernetes.io/tls', e.g. 'deleeuw-ocp-cluster-162e406f043e20da9b0ef0731954a894-0000'
+```
+oc extract secret/<default TLS secret for your cluster> --to=/tmp -n openshift-ingress
+kubectl create secret generic prometheus-cert-secret --from-file=/tmp/tls.crt -n application-beta
+oc sa get-token -n openshift-monitoring prometheus-k8s > /tmp/token.txt
+kubectl create secret generic prometheus-token-secret --from-file=/tmp/token.txt -n openshift-operators
 ```
 
-Open Prometheus daschboard:
+For both OpenShift and Kubernetes, open the Prometheus dashboard:
 
 ```
 $ kubectl port-forward service/prometheus-operated -n monitoring 9090

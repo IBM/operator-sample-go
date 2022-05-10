@@ -31,19 +31,26 @@ func getApplicationResource() error {
 	var GroupVersion = schema.GroupVersion{Group: "applications.application.sample.ibm.com", Version: "v1beta1"}
 	var SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
 	var databaseOperatorScheme *runtime.Scheme
+
+	fmt.Println("Attempting SchemeBuilder.Build")
 	databaseOperatorScheme, err = SchemeBuilder.Build()
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("Attempting AddToScheme")
 	err = applicationoperatorv1beta1.AddToScheme(databaseOperatorScheme)
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("Attempting client.New")
 	kubernetesClient, err = client.New(config, client.Options{Scheme: databaseOperatorScheme})
 	if err != nil {
 		return err
 	}
 
+	fmt.Println("Attempting kubernetesClient.Get")
 	applicationResource = &applicationoperatorv1beta1.Application{}
 	err = kubernetesClient.Get(applicationContext, types.NamespacedName{Name: applicationName, Namespace: applicationNamespace}, applicationResource)
 	if err != nil {
