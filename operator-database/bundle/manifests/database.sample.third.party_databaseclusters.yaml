@@ -39,8 +39,11 @@ spec:
                 format: int32
                 minimum: 0
                 type: integer
+              image:
+                type: string
             required:
             - amountPods
+            - image
             type: object
           status:
             description: DatabaseClusterStatus defines the observed state of DatabaseCluster

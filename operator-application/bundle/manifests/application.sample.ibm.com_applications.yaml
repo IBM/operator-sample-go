@@ -55,6 +55,8 @@ spec:
               databaseNamespace:
                 default: databaseNamespace
                 type: string
+              image:
+                type: string
               schemaUrl:
                 default: https://raw.githubusercontent.com/IBM/multi-tenancy/main/installapp/postgres-config/create-populate-tenant-a.sql
                 type: string
@@ -176,6 +178,8 @@ spec:
                 type: string
               databaseNamespace:
                 default: databaseNamespace
+                type: string
+              image:
                 type: string
               schemaUrl:
                 default: https://raw.githubusercontent.com/IBM/multi-tenancy/main/installapp/postgres-config/create-populate-tenant-a.sql
