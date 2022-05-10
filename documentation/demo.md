@@ -256,5 +256,7 @@ As you would expect, the application operator has responded to the change in the
 
 By having our own application scaler pod, the logic to control scaling is entirely flexible.  It is not bound to the metrics of just a single pod, it could query requests per mintue on the web app, assess queue depth from a messaging pod and consider the number of active connections to the database.
 
+THE END
+
 
 
