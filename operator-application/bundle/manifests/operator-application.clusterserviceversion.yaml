@@ -246,7 +246,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/deleeuw/application-operator:v1.0.52
+                image: docker.io/nheidloff/application-operator:v1.0.46
                 livenessProbe:
                   httpGet:
                     path: /healthz
