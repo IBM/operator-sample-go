@@ -1,5 +1,28 @@
 # Automation with scripts
 
+The script automation does following.
+
+* Resets the cluster environment
+    * OLM installation
+    * Cert manager installation
+    * Prometheus installation
+    * Clean the installed operators and application to that example
+* Creates following containers:
+    * Database operator related
+        * `Database-service` (_quakus application_), a custom database which provides stateful sets
+        * `operator-database` (operator), this operator creates an instance of the `Database-service`
+        * `operator-database-backup`(_quarkus application_), this is an application which will be instantiated later from the  `operator-database` to create a backup on an object storage database
+        * `operator-database-bundle`, that is a container image which will be created by the operator-sdk and will be used later inside the `operator-database-catalog` wihich is relevant for the `OLM` usage.
+        * `operator-database-catalog`, that container image contains a reference to the `operator-database-bundle` and will be used in the context of `OLM`
+    * Application operator related
+        * `simple-microservice` (_quarkus application_), a simple microservice to display messages and runs as a stateless application
+        * `operator-application-autoscaler`(_go application_), that application implements a cron job to manage the scaling for the instances of the `simple-microservice` which were created by `operator-application` operator.
+        * `operator-application` (operator), this operator creates an instance of the `simple-microservice`
+        * `operator-application-bundle`, that is a container image which will be created by the operator-sdk and will be used later inside the `operator-application-catalog` wihich is relevant for the `OLM` usage.
+        * `operator-application-catalog`, that container image contains a reference to the `operator-application-bundle` and will be used in the context of `OLM`
+* Ensure based on templates that the manual configuration for the `operator-application` and `operator-database` are configured right to be ready for OLM usage
+* Reset the podman vm if needed 
+
 ### 1. Types of scripts
 
 #### a.  **install-required**-xxx-components.sh
@@ -19,13 +42,13 @@ Installs the required components for Kubernetes or OpenShift.
 
 Setup or delete based on the **golden source versions** (version.env).
 
+`yyy == Kubernetes or OpenShift`
+`xxx == delete or setup`
+
 | Name | Kubernetes | OpenShift **(not implemented yet)** |
 | --- |  --- |  --- |
 | **demo**-setup-kubernetes.sh | Yes | No  |
 | **demo**-delete-kubernetes.sh | Yes |  No |
-
-`yyy == Kubernetes or OpenShift`
-`xxx == delete or setup`
 
 #### c.  **ci**-www-xxx-yyy-zzz.sh
 
