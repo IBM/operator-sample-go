@@ -2,7 +2,12 @@
 
 The script automation does following.
 
-* It ensure that with two `versions.env` file that the tagging is in an consitant way
+* It ensures that with two `versions.env` files that the tagging for the container images is in an consitant way.
+  
+  *  `versions.env` for golden sources
+  *  `versions_local.env` for custom local configurations
+
+* It creates a temp `github tag`  related to the commit when the automation was started
 
 * Resets the cluster environment
 
