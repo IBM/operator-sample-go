@@ -73,7 +73,7 @@ That scripts creates the operators in Kubernetes and has following parameter opt
 Example:
 
 ```sh
-sh scripts/ci-create-operators-kubernetes.sh database local reset podman-reset
+sh scripts/ci-create-operators-kubernetes.sh database local reset podman_reset
 ```
 
 
