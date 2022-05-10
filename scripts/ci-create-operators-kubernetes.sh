@@ -43,6 +43,11 @@ function setupDatabase () {
 
 function setupApplication () {
     bash "$ROOT_FOLDER/scripts/ci-create-operator-application-kubernetes.sh" $CI_CONFIG $RESET $RESET_PODMAN
+        if [ $? == "1" ]; then
+        echo "*** The setup of the applicatiob-operator failed !"
+        echo "*** The script 'ce-create-operators-kubernetes.sh' ends here!"
+        exit 1
+    fi
 }
 
 function run () {
@@ -84,10 +89,10 @@ function duration() {
 function tag () {
     export commit_id=$(git rev-parse --short HEAD)
     echo "Commint ID: $commit_id"
-    export tag_new="verify_scripts_$commit_id"
+    export tag_new="verify_scripts_automation_$commit_id"
 
-    git tag -l | grep "verify_scripts_$commit_id"
-    CHECK_TAG=$(git tag -l | grep "verify_scripts_$commit_id")
+    git tag -l | grep "verify_scripts_automation_automation_$commit_id"
+    CHECK_TAG=$(git tag -l | grep "verify_scripts_automation_$commit_id")
     if [[ $tag_new == $CHECK_TAG ]]; then
         echo "*** The tag $tag_new exists."
         echo "*** No tag will be added"

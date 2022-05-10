@@ -36,10 +36,11 @@ function setEnvironmentVariables () {
        echo "************************************"
        echo " Reset podman"
        echo "************************************"
+       podman version
        podman machine stop
        podman machine list
        podman machine rm -f podman-machine-default
-       podman machine init
+       podman machine init --disk-size 15
        podman machine start
     fi
 
@@ -81,11 +82,11 @@ function resetAll () {
         echo "*** RESET Kubernetes environment!"
         echo "*** DELETE all Kubernetes compoments!"
         cd $ROOT_FOLDER/scripts
-        bash ./delete-everything-kubernetes.sh
+        bash $ROOT_FOLDER/scripts/delete-everything-kubernetes.sh
         
         echo "*** Install required Kubernetes compoments!"
         cd $ROOT_FOLDER/scripts
-        bash ./install-required-kubernetes-components.sh
+        bash $ROOT_FOLDER/scripts/install-required-kubernetes-components.sh
     fi
 }
 
