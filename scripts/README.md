@@ -17,21 +17,31 @@ Installs the required components for Kubernetes or OpenShift.
 
 #### b. **demo**-xxx-yyyy.sh
 
-Setup or delete based on the golden source versions.
+Setup or delete based on the **golden source versions** (version.env).
+
+| Name | Kubernetes | OpenShift **(not implemented yet)** |
+| --- |  --- |  --- |
+| **demo**-setup-kubernetes.sh | Yes | No  |
+| **demo**-delete-kubernetes.sh | Yes |  No |
 
 `yyy == Kubernetes or OpenShift`
-
 `xxx == delete or setup`
 
 #### c.  **ci**-www-xxx-yyy-zzz.sh
 
 Creates all operators or specific operators of the project in Kubernetes or OpenShift.
 
+| Name | Kubernetes | OpenShift **(not implemented yet)** | Database Operator | Application Operator|
+| --- |  --- |  --- |  --- |  --- |
+| **ci**-create-operator-database-kubernetes.sh | Yes | No  | Yes  | No  |
+| **ci**-create-operator-application-kubernetes.sh | Yes |  No | No  | Yes  |
+| **ci**-create-operators-kubernetes.sh | Yes |  No | Yes  | Yes  |
+
 * `www == create or delete`
 * `xxx == operator or operators`
 * `zzz == Kubernetes or OpenShift`
 
-#### d.   **delete-everything**xxx
+#### d.   **delete-everything**-xxx
 
 Deletes all depending on the Platfrom such as the operators, OLM, Prometheus or Cert-Manager.
 
