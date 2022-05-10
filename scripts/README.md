@@ -77,3 +77,4 @@ sh scripts/ci-create-operators-kubernetes.sh database local reset podman-reset
 ```
 
 
+ç
