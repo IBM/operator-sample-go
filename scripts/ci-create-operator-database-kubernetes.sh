@@ -40,7 +40,7 @@ function setEnvironmentVariables () {
        podman machine stop
        podman machine list
        podman machine rm -f podman-machine-default
-       podman machine init
+       podman machine init --disk-size 15
        podman machine start
     fi
 
