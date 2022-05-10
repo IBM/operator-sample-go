@@ -19,6 +19,7 @@ function verifyDeletion () {
         echo ""
         echo "------------------------------------------------------------------------"
         echo "Check $i"
+        j=0
         export FIND=$i
         while :
         do       
