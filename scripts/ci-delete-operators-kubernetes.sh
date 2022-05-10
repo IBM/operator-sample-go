@@ -11,6 +11,15 @@ ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 function deleteDatabaseOperatorOLM () {
     kubectl delete -f $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
     kubectl delete -f $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml
+
+    kubectl delete customresourcedefinition applications.application.sample.ibm.com
+    kubectl delete customresourcedefinition databasebackups.database.sample.third.party
+    kubectl delete customresourcedefinition databases.database.sample.third.party
+    kubectl delete customresourcedefinition databaseclusters.database.sample.third.party
+
+    kubectl delete deployment operator-application-controller-manager -n operators
+    kubectl delete clusterserviceversion operator-application.v0.0.1
+    kubectl get pods -n operators | grep operator-application
 }
 
 function deleteDatabaseInstance () {
@@ -21,13 +30,13 @@ function deleteDatabaseInstance () {
 # Execution
 # **********************************************************************************
 
+echo "************************************"
+echo " Delete Database Instance"
+echo "************************************"
+deleteDatabaseInstance
 
 echo "************************************"
 echo " Delete Database Operator (OLM)"
 echo "************************************"
 deleteDatabaseOperatorOLM
 
-echo "************************************"
-echo " Delete Database Instance"
-echo "************************************"
-deleteDatabaseInstance

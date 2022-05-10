@@ -2,6 +2,8 @@
 
 🔴 IMPORTANT: First install the [prerequistes](Prerequisites.md)! If you don't do it, it won't work :)
 
+🔴 IMPORTANT: Webhooks and Prometheus doesn't work in this configuration yet.
+
 ### Deploy catalog source and subscription
 
 ```
@@ -46,6 +48,7 @@ $ kubectl get installplans install-xxxxx -n $NAMESPACE -oyaml
 $ kubectl get operators operator-database.$NAMESPACE -n $NAMESPACE -oyaml
 $ kubectl create ns database   
 $ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
+$ kubectl get databases/database -n database -oyaml
 $ kubectl get databases.database.sample.third.party/database -n database -oyaml
 ```
 
@@ -57,6 +60,17 @@ $ kubectl delete -f olm/subscription.yaml
 $ kubectl delete -f olm/catalogsource.yaml
 $ kubectl delete -f olm/subscription-openshift.yaml
 $ kubectl delete -f olm/catalogsource-openshift.yaml
+```
+
+### Build and push new operator image
+
+Change 'REGISTRY', 'ORG' and image version in versions.env.
+
+```
+$ code ../versions.env
+$ source ../versions.env
+$ podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR" .
+$ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 ```
 
 ### Build and push new bundle image

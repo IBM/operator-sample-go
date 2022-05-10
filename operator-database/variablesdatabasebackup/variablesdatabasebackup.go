@@ -8,15 +8,14 @@ import (
 
 var CronJobName string
 var JobName string
+var ImageName string
 var ContainerName string
 var BackupRoleName string
 var BackupRoleBindingName string
 
-const Image = "docker.io/nheidloff/operator-database-backup:v1.0.9"
 const LabelKey = "app"
 const LabelValue = "database-backup"
 const EnvKeyBackupResourceName = "BACKUP_RESOURCE_NAME"
-
 const BackupResourceName = "databasebackup-manual"
 
 //const BackupResourceNameManual = "databasebackup-manual"
@@ -35,18 +34,20 @@ const EnvKeyCosSecretDataKeyHmacSecretAccess = "HmacSecretAccessKey"
 const EnvKeyCosEndpoint = "CLOUD_OBJECT_STORAGE_SERVICE_ENDPOINT"
 const RoleBindingServiceAccount = "default"
 
-func SetGlobalVariables(applicationName string) {
+func SetGlobalVariables(applicationName string, image string) {
 	CronJobName = applicationName + "-cronjob"
 	JobName = applicationName + "-job"
 	ContainerName = applicationName + "-databasebackup"
 	BackupRoleName = applicationName + "-role-databasebackup"
 	BackupRoleBindingName = applicationName + "-rolebinding-databasebackup"
+	ImageName = image
 }
 
 func PrintVariables(databaseName string, databaseNamespace string, repos []databasesamplev1alpha1.BackupRepo, manualTrigger databasesamplev1alpha1.ManualTrigger, scheduledTrigger databasesamplev1alpha1.ScheduledTrigger) {
 	fmt.Println("Custom Resource Values:")
 	fmt.Printf("- Name: %s\n", databaseName)
 	fmt.Printf("- Namespace: %s\n", databaseNamespace)
+	fmt.Printf("- Image: %s\n", ImageName)
 
 	for i, r := range repos {
 		fmt.Printf("- Repo.Name[%d]: %s\n", i, r.Name)

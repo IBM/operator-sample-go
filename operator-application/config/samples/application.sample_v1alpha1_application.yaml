@@ -13,3 +13,4 @@ spec:
   amountPods: 1
   databaseName: database
   databaseNamespace: database
+  image: docker.io/nheidloff/simple-microservice:v1.0.39

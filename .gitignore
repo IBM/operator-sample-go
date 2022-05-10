@@ -43,3 +43,4 @@ database-service/kubernetes/cronjob.yaml
 database-service/kubernetes/secret.yaml
 operator-database/config/rbac/role.yaml
 operator-application-scaler/README-DELEEUW.md
+versions_local.env

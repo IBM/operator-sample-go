@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: application-beta
+---
+apiVersion: application.sample.ibm.com/v1beta1
+kind: Application
+metadata:
+  name: application
+  namespace: application-beta
+spec:
+  version: "1.0.0"
+  amountPods: 1
+  databaseName: database
+  databaseNamespace: database
+  title: movies
+  image: SIMPLE_APPLICATION_IMAGE

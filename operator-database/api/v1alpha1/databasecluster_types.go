@@ -30,7 +30,8 @@ type DatabaseClusterSpec struct {
 
 	//+kubebuilder:validation:Minimum=0
 	//+kubebuilder:default:=1
-	AmountPods int32 `json:"amountPods"`
+	AmountPods int32  `json:"amountPods"`
+	Image      string `json:"image"`
 }
 
 // DatabaseClusterStatus defines the observed state of DatabaseCluster

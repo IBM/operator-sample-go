@@ -59,7 +59,7 @@ func (reconciler *DatabaseClusterReconciler) Reconcile(ctx context.Context, req 
 		return ctrl.Result{}, err
 	}
 
-	variables.SetGlobalVariables(databasecluster.Name)
+	variables.SetGlobalVariables(databasecluster.Name, databasecluster.Spec.Image)
 	variables.PrintVariables(databasecluster.Name, databasecluster.Namespace, databasecluster.Spec.AmountPods)
 
 	_, err = reconciler.reconcileService(ctx, databasecluster)

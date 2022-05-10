@@ -91,7 +91,7 @@ kubectl create secret generic prometheus-token-secret --from-file=/tmp/token.txt
 For both OpenShift and Kubernetes, open the Prometheus dashboard:
 
 ```
-$ kubectl port-forward service/prometheus-operated -n monitoring 9090
+$ kubectl port-forward service/prometheus-instance -n monitoring 9090
 or for OpenShift:
 $ kubectl port-forward service/prometheus-operated -n openshift-monitoring 9090
 ```

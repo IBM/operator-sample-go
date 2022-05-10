@@ -6,6 +6,7 @@ import (
 
 var StatefulSetName string
 var ServiceName string
+var ImageName string
 var ClusterRoleName string
 var ClusterRoleBindingName string
 var ContainerName string
@@ -18,9 +19,6 @@ const ANNOTATION_TITLE = "applications.application.sample.ibm.com/title"
 const DEFAULT_ANNOTATION_TITLE = "My Title"
 const LabelKey = "app"
 const LabelValue = "database-cluster"
-
-const Image = "docker.io/nheidloff/database-service:v1.0.25"
-
 const Port int32 = 8089
 const VolumeMountName = "data-volume"
 
@@ -30,14 +28,14 @@ const EnvKeyNamespace = "NAMESPACE"
 
 const RoleBindingServiceAccount = "default"
 
-func SetGlobalVariables(applicationName string) {
-	// Slight hack to make the resources of this CR match the names which are expected by the backup Job
+func SetGlobalVariables(applicationName string, image string) {
 	applicationName = "database"
 	StatefulSetName = applicationName + "-cluster"
 	ServiceName = applicationName + "-service"
 	ClusterRoleName = applicationName + "-role"
 	ClusterRoleBindingName = applicationName + "-rolebinding"
 	ContainerName = applicationName + "-app"
+	ImageName = image
 }
 
 func PrintVariables(databaseName string, databaseNamespace string, amountPods int32) {
@@ -45,4 +43,5 @@ func PrintVariables(databaseName string, databaseNamespace string, amountPods in
 	fmt.Printf("- Name: %s\n", databaseName)
 	fmt.Printf("- Namespace: %s\n", databaseNamespace)
 	fmt.Printf("- AmountPods: %d\n", amountPods)
+	fmt.Printf("- Image: %s\n", ImageName)
 }

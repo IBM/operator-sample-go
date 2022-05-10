@@ -37,7 +37,7 @@ func (reconciler *ApplicationReconciler) defineDeployment(application *applicati
 				},
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{{
-						Image: variables.Image,
+						Image: variables.ImageName,
 						Name:  variables.ContainerName,
 						Ports: []corev1.ContainerPort{{
 							ContainerPort: variables.Port,

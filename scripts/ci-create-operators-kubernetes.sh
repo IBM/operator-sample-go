@@ -11,233 +11,108 @@ echo ""
 echo "Parameter count : $@"
 echo "Parameter zero 'name of the script': $0"
 echo "---------------------------------"
-echo "CI Configuration         : $1"
+echo "Run configuration        : $1"
+echo "CI Configuration         : $2"
+echo "Reset                    : $3"
+echo "Reset Podman             : $4"
 echo "-----------------------------"
 
 # **************** Global variables
 
 ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 NAMESPACE=operators
-export CI_CONFIG=$1
-export VERSIONS_FILE=""
+export RUN=$1
+export CI_CONFIG=$2
+export RESET=$3
+export RESET_PODMAN=$4
+export SCRIPT_DURATION=""
+export start=$(date +%s)
 
 # **********************************************************************************
 # Functions
 # **********************************************************************************
 
-function setEnvironmentVariables () {
-
-    if [[ $CI_CONFIG == "local" ]]; then
-        echo "*** Set versions_local.env file a input"
-        source $ROOT_FOLDER/versions_local.env
-        break
-    elif [[ $CI_CONFIG == "ci" ]]; then
-        echo "*** Set versions.env file a input"
-        VERSIONS_FILE=versions_local.env
-        break
-    else 
-        echo "*** Please select a valid option to run!"
-        echo "*** Use 'local' for your local test."
-        echo "*** Use 'ci' for your the ci test."
-        echo "*** Example:"
-        echo "*** sh ci-operators-kubernetes.sh local"
+function setupDatabase () {
+    bash "$ROOT_FOLDER/scripts/ci-create-operator-database-kubernetes.sh" $CI_CONFIG $RESET $RESET_PODMAN
+    if [ $? == "1" ]; then
+        echo "*** The setup of the database-operator failed !"
+        echo "*** The script 'ce-create-operators-kubernetes.sh' ends here!"
         exit 1
     fi
 }
 
-function verifyPreReqs () {
-  
-  max_retrys=2
-  j=0
-  array=("cert-manager-cainjector" "cert-manager-webhook")
-  namespace=cert-manager
-  export STATUS_SUCCESS="Running"
-  for i in "${array[@]}"
-    do 
-        echo ""
-        echo "------------------------------------------------------------------------"
-        echo "Check $i"
-        while :
-        do
-            FIND=$i
-            ((j++))
-            STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
-            echo "Status: $STATUS_CHECK"
-            STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
-            if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
-                echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
-                echo "------------------------------------------------------------------------"
-                break
-            elif [[ $j -eq $max_retrys ]]; then
-                echo "$(date +'%F %H:%M:%S') Please run `install-required-kubernetes-components.sh`first!"
-                echo "$(date +'%F %H:%M:%S') Prereqs aren't ready!"
-                echo "------------------------------------------------------------------------"
-                break               
-            else
-                echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
-                echo "------------------------------------------------------------------------"
-            fi
-            sleep 3
-        done
-    done 
-
-  array=("catalog-operator" "olm-operator" "operatorhubio-catalog" )
-  namespace=olm
-  export STATUS_SUCCESS="Running"
-  for i in "${array[@]}"
-    do 
-        echo ""
-        echo "------------------------------------------------------------------------"
-        echo "Check $i"
-        while :
-        do
-            FIND=$i
-            ((j++))
-            STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
-            echo "Status: $STATUS_CHECK"
-            STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
-            if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
-                echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
-                echo "------------------------------------------------------------------------"
-                break
-            elif [[ $j -eq $max_retrys ]]; then
-                echo "$(date +'%F %H:%M:%S') Please run `install-required-kubernetes-components.sh`first!"
-                echo "$(date +'%F %H:%M:%S') Prereqs aren't ready!"
-                echo "------------------------------------------------------------------------"
-                break               
-            else
-                echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
-                echo "------------------------------------------------------------------------"
-            fi
-            sleep 3
-        done
-    done 
-
-  array=("prometheus-operator" )
-  namespace=monitoring
-  export STATUS_SUCCESS="Running"
-   for i in "${array[@]}"
-    do 
-        echo ""
-        echo "------------------------------------------------------------------------"
-        echo "Check $i"
-        while :
-        do
-            FIND=$i
-            ((j++))
-            STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
-            echo "Status: $STATUS_CHECK"
-            STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
-            if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
-                echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
-                echo "------------------------------------------------------------------------"
-                break
-            elif [[ $j -eq $max_retrys ]]; then
-                echo "$(date +'%F %H:%M:%S') Please run `install-required-kubernetes-components.sh`first!"
-                echo "$(date +'%F %H:%M:%S') Prereqs aren't ready!"
-                echo "------------------------------------------------------------------------"
-                break               
-            else
-                echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
-                echo "------------------------------------------------------------------------"
-            fi
-            sleep 3
-        done
-    done 
+function setupApplication () {
+    bash "$ROOT_FOLDER/scripts/ci-create-operator-application-kubernetes.sh" $CI_CONFIG $RESET $RESET_PODMAN
+        if [ $? == "1" ]; then
+        echo "*** The setup of the applicatiob-operator failed !"
+        echo "*** The script 'ce-create-operators-kubernetes.sh' ends here!"
+        exit 1
+    fi
 }
 
-function buildDatabaseOperator () {
-    cd $ROOT_FOLDER/operator-database
-    make generate
-    make manifests
-    # Build container
-    make docker-build IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
-    # Push container
-    podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
+function run () {
+    if [[ $RUN == "database" ]]; then
+        echo "*** Setup database only:"
+        echo "*** $CI_CONFIG "
+        echo "*** $RESET "
+        echo "*** $RESET_PODMAN "
+        setupDatabase       
+    elif [[ $RUN == "app" ]]; then
+        echo "*** Setup database and app:"
+        echo "*** $CI_CONFIG "
+        echo "*** $RESET "
+        echo "*** $RESET_PODMAN "    
+        setupDatabase
+        setupApplication
+    else 
+        echo "*** Please select a valid option to run!"
+        echo "*** Use 'database' for the database operator."
+        echo "*** Use 'app' for the database and application operator."
+        echo "*** Example:"
+        echo "*** sh scripts/ci-create-operators-kubernetes.sh database local reset"
+        exit 1
+    fi
 }
 
-function buildDatabaseOperatorBundle () {
-    cd $ROOT_FOLDER/operator-database
-    # Build bundle
-    make bundle IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
-    make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
-    # Push container
-    podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
+function duration() {
+
+    end=$(date +%s)
+    echo "*** Duration Start: $start to End: $end"
+    echo "*** End: $end"
+    seconds=$(echo "$end - $start" | bc)
+    echo $seconds' sec'
+    export SCRIPT_DURATION=$(awk -v t=$seconds 'BEGIN{t=int(t*1000); printf "%d:%02d:%02d\n", t/3600000, t/60000%60, t/1000%60}')
+    echo "Formatted: $SCRIPT_DURATION"
+    
 }
 
-function buildDatabaseOperatorCatalog () {
-    cd $ROOT_FOLDER/operator-database
-    make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
-    podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
-}
+function tag () {
+    export commit_id=$(git rev-parse --short HEAD)
+    echo "Commint ID: $commit_id"
+    export tag_new="verify_scripts_automation_$commit_id"
 
-function createOLMDatabaseOperatorYAMLs () {
-    CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
-    sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $ROOT_FOLDER/scripts/kubernetes-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
-}
-
-function deployDatabaseOperatorOLM () {
-    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
-    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml
-
-    kubectl get all -n $NAMESPACE
-    kubectl get catalogsource operator-database-catalog -n $NAMESPACE -oyaml
-    kubectl get subscriptions operator-database-v0-0-1-sub -n $NAMESPACE -oyaml
-    kubectl get installplans -n $NAMESPACE
-}
-
-function createDatabaseInstance () {
-    kubectl create ns database   
-    kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml
-    kubectl get databases.database.sample.third.party/database -n database -oyaml
+    git tag -l | grep "verify_scripts_automation_automation_$commit_id"
+    CHECK_TAG=$(git tag -l | grep "verify_scripts_automation_$commit_id")
+    if [[ $tag_new == $CHECK_TAG ]]; then
+        echo "*** The tag $tag_new exists."
+        echo "*** No tag will be added"
+    else 
+       echo "*** Create tag: $tag_new "
+       loginfo=$(cat $ROOT_FOLDER/scripts/script-automation.log)
+       git tag -a $tag_new $commit_id -m "Script configuration: [$RUN] [$CI_CONFIG] [$RESET] [$RESET_PODMAN] - Script duration: [$SCRIPT_DURATION] - $loginfo"
+       git push origin $tag_new
+    fi
 }
 
 # **********************************************************************************
 # Execution
 # **********************************************************************************
 
+echo "Starting: $start"
 echo "************************************"
-echo " Set context"
+echo " Run setup for $RUN"
 echo "************************************"
-setEnvironmentVariables
+run
+duration
+tag
 
-echo "************************************"
-echo " Verify prerequisites"
-echo "************************************"
-verifyPreReqs
-
-echo "************************************"
-echo " Build 'database operator'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
-echo "************************************"
-buildDatabaseOperator
-
-echo "************************************"
-echo " Build 'database operator bundle'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
-echo "************************************"
-buildDatabaseOperatorBundle
-
-echo "************************************"
-echo " Build 'database operator catalog'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
-echo "************************************"
-buildDatabaseOperatorCatalog
-
-echo "************************************"
-echo " Create OLM yamls"
-echo "************************************"
-createOLMDatabaseOperatorYAMLs
-
-echo "************************************"
-echo " Deploy Database Operator OLM"
-echo "************************************"
-deployDatabaseOperatorOLM
-
-echo "************************************"
-echo " Create Database Instance"
-echo "************************************"
-createDatabaseInstance

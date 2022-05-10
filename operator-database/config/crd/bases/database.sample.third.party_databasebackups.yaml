@@ -33,6 +33,8 @@ spec:
             type: object
           spec:
             properties:
+              image:
+                type: string
               manualTrigger:
                 properties:
                   repo:
@@ -68,6 +70,7 @@ spec:
                     type: string
                 type: object
             required:
+            - image
             - manualTrigger
             - repos
             - scheduledTrigger

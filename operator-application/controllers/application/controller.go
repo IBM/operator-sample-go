@@ -78,7 +78,7 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 		return ctrl.Result{}, err
 	}
 
-	variables.SetGlobalVariables(application.Name)
+	variables.SetGlobalVariables(application.Name, application.Spec.Image)
 	variables.PrintVariables(application.Name, application.Namespace, application.Spec.Version, application.Spec.AmountPods, application.Spec.DatabaseName, application.Spec.DatabaseNamespace)
 
 	_, err = reconciler.tryDeletions(ctx, application)

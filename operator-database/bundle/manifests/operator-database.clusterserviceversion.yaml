@@ -114,9 +114,9 @@ spec:
           - update
           - watch
         - apiGroups:
-          - database.sample.third.party
+          - batch
           resources:
-          - databases
+          - cronjobs
           verbs:
           - create
           - delete
@@ -126,35 +126,9 @@ spec:
           - update
           - watch
         - apiGroups:
-          - database.sample.third.party
+          - batch
           resources:
-          - databases/finalizers
-          verbs:
-          - update
-        - apiGroups:
-          - database.sample.third.party
-          resources:
-          - databases/status
-          verbs:
-          - get
-          - patch
-          - update
-        - apiGroups:
-          - ""
-          resources:
-          - clusterrolebindings
-          verbs:
-          - create
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - ""
-          resources:
-          - clusterroles
+          - jobs
           verbs:
           - create
           - delete
@@ -200,13 +174,41 @@ spec:
           - update
           - watch
         - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - pods
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
           - ""
           resources:
           - pods
           verbs:
+          - create
+          - delete
           - get
           - list
+          - patch
+          - update
           - watch
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databases
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch  
         - apiGroups:
           - database.sample.third.party
           resources:
@@ -233,56 +235,6 @@ spec:
           - get
           - patch
           - update
-        - apiGroups:
-          - database.sample.third.party
-          resources:
-          - databaseclusters
-          verbs:
-          - create
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - database.sample.third.party
-          resources:
-          - databaseclusters/finalizers
-          verbs:
-          - update
-        - apiGroups:
-          - database.sample.third.party
-          resources:
-          - databaseclusters/status
-          verbs:
-          - get
-          - patch
-          - update
-        - apiGroups:
-          - ""
-          resources:
-          - cronjobs
-          verbs:
-          - create
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - ""
-          resources:
-          - jobs
-          verbs:
-          - create
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
         - apiGroups:
           - database.sample.third.party
           resources:

@@ -1,0 +1,400 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: ClusterServiceVersion
+metadata:
+  annotations:
+    alm-examples: |-
+      [
+        {
+          "apiVersion": "database.sample.third.party/v1alpha1",
+          "kind": "Database",
+          "metadata": {
+            "name": "database",
+            "namespace": "database"
+          },
+          "spec": {
+            "certificate": "certificate",
+            "password": "password",
+            "url": "url",
+            "user": "name"
+          }
+        },
+        {
+          "apiVersion": "database.sample.third.party/v1alpha1",
+          "kind": "DatabaseBackup",
+          "metadata": {
+            "name": "databasebackup-manual",
+            "namespace": "database"
+          },
+          "spec": {
+            "manualTrigger": {
+              "repo": "ibmcos-repo",
+              "time": "2022-04-20T02:59:43.1Z"
+            },
+            "repos": [
+              {
+                "bucketNamePrefix": "database-backup-",
+                "cosRegion": "eu-geo",
+                "name": "ibmcos-repo",
+                "secretName": "ibmcos-repo",
+                "serviceEndpoint": "s3.eu.cloud-object-storage.appdomain.cloud",
+                "type": "ibmcos"
+              }
+            ],
+            "scheduledTrigger": {
+              "repo": "ibmcos-repo",
+              "schedule": "*/3 * * * *"
+            }
+          }
+        },
+        {
+          "apiVersion": "database.sample.third.party/v1alpha1",
+          "kind": "DatabaseCluster",
+          "metadata": {
+            "name": "databasecluster-sample",
+            "namespace": "database"
+          },
+          "spec": {
+            "amountPods": 2
+          }
+        }
+      ]
+    capabilities: Basic Install
+    operators.operatorframework.io/builder: operator-sdk-v1.19.0+git
+    operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
+  name: operator-database.v0.0.1
+  namespace: placeholder
+spec:
+  apiservicedefinitions: {}
+  customresourcedefinitions:
+    owned:
+    - displayName: Database Backup
+      kind: DatabaseBackup
+      name: databasebackups.database.sample.third.party
+      version: v1alpha1
+    - description: DatabaseCluster is the Schema for the databaseclusters API
+      displayName: Database Cluster
+      kind: DatabaseCluster
+      name: databaseclusters.database.sample.third.party
+      version: v1alpha1
+    - displayName: Database
+      kind: Database
+      name: databases.database.sample.third.party
+      version: v1alpha1
+  description: database-operator
+  displayName: database-operator
+  icon:
+  - base64data: ""
+    mediatype: ""
+  install:
+    spec:
+      clusterPermissions:
+      - rules:
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterroles
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterrolebindings
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - cronjobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - jobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - secrets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - services
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - apps
+          resources:
+          - statefulsets
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - pods
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ""
+          resources:
+          - pods
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databases
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch  
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databasebackups
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databasebackups/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databasebackups/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databaseclusters
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databaseclusters/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - database.sample.third.party
+          resources:
+          - databaseclusters/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - authentication.k8s.io
+          resources:
+          - tokenreviews
+          verbs:
+          - create
+        - apiGroups:
+          - authorization.k8s.io
+          resources:
+          - subjectaccessreviews
+          verbs:
+          - create
+        serviceAccountName: operator-database-controller-manager
+      deployments:
+      - label:
+          control-plane: controller-manager
+        name: operator-database-controller-manager
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              control-plane: controller-manager
+          strategy: {}
+          template:
+            metadata:
+              annotations:
+                kubectl.kubernetes.io/default-container: manager
+              labels:
+                control-plane: controller-manager
+            spec:
+              containers:
+              - args:
+                - --secure-listen-address=0.0.0.0:8443
+                - --upstream=http://127.0.0.1:8080/
+                - --logtostderr=true
+                - --v=0
+                image: gcr.io/kubebuilder/kube-rbac-proxy:v0.8.0
+                name: kube-rbac-proxy
+                ports:
+                - containerPort: 8443
+                  name: https
+                  protocol: TCP
+                resources:
+                  limits:
+                    cpu: 500m
+                    memory: 128Mi
+                  requests:
+                    cpu: 5m
+                    memory: 64Mi
+              - args:
+                - --health-probe-bind-address=:8081
+                - --metrics-bind-address=127.0.0.1:8080
+                - --leader-elect
+                command:
+                - /manager
+                image: docker.io/nheidloff/database-operator:v1.0.21
+                livenessProbe:
+                  httpGet:
+                    path: /healthz
+                    port: 8081
+                  initialDelaySeconds: 15
+                  periodSeconds: 20
+                name: manager
+                readinessProbe:
+                  httpGet:
+                    path: /readyz
+                    port: 8081
+                  initialDelaySeconds: 5
+                  periodSeconds: 10
+                resources:
+                  limits:
+                    cpu: 500m
+                    memory: 128Mi
+                  requests:
+                    cpu: 10m
+                    memory: 64Mi
+                securityContext:
+                  allowPrivilegeEscalation: false
+              securityContext:
+                runAsNonRoot: true
+              serviceAccountName: operator-database-controller-manager
+              terminationGracePeriodSeconds: 10
+      permissions:
+      - rules:
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - coordination.k8s.io
+          resources:
+          - leases
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
+          - ""
+          resources:
+          - events
+          verbs:
+          - create
+          - patch
+        serviceAccountName: operator-database-controller-manager
+    strategy: deployment
+  installModes:
+  - supported: false
+    type: OwnNamespace
+  - supported: false
+    type: SingleNamespace
+  - supported: false
+    type: MultiNamespace
+  - supported: true
+    type: AllNamespaces
+  keywords:
+  - sample
+  - database-operator
+  links:
+  - name: Operator Database
+    url: https://operator-database.domain
+  maturity: alpha
+  provider:
+    name: database.sample.third.party
+    url: https://github.com/ibm/operator-sample-go
+  version: 0.0.1
