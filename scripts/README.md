@@ -2,26 +2,34 @@
 
 The script automation does following.
 
+* It ensure that with two `versions.env` file that the tagging is in an consitant way
+
 * Resets the cluster environment
+
     * OLM installation
     * Cert manager installation
     * Prometheus installation
     * Clean the installed operators and application to that example
+
 * Creates following containers:
+
     * Database operator related
         * `Database-service` (_quakus application_), a custom database which provides stateful sets
         * `operator-database` (operator), this operator creates an instance of the `Database-service`
         * `operator-database-backup`(_quarkus application_), this is an application which will be instantiated later from the  `operator-database` to create a backup on an object storage database
         * `operator-database-bundle`, that is a container image which will be created by the operator-sdk and will be used later inside the `operator-database-catalog` wihich is relevant for the `OLM` usage.
         * `operator-database-catalog`, that container image contains a reference to the `operator-database-bundle` and will be used in the context of `OLM`
+
     * Application operator related
         * `simple-microservice` (_quarkus application_), a simple microservice to display messages and runs as a stateless application
         * `operator-application-autoscaler`(_go application_), that application implements a cron job to manage the scaling for the instances of the `simple-microservice` which were created by `operator-application` operator.
         * `operator-application` (operator), this operator creates an instance of the `simple-microservice`
         * `operator-application-bundle`, that is a container image which will be created by the operator-sdk and will be used later inside the `operator-application-catalog` wihich is relevant for the `OLM` usage.
         * `operator-application-catalog`, that container image contains a reference to the `operator-application-bundle` and will be used in the context of `OLM`
-* Ensure based on templates that the manual configuration for the `operator-application` and `operator-database` are configured right to be ready for OLM usage
-* Reset the podman vm if needed 
+
+* It ensures based on templates that the manual configuration for the `operator-application` and `operator-database` are right configured to be ready for OLM usage
+
+* Resets the podman vm if needed 
 
 ### 1. Types of scripts
 
@@ -54,17 +62,18 @@ Setup or delete based on the **golden source versions** (version.env).
 
 Creates all operators or specific operators of the project in Kubernetes or OpenShift.
 
-The nam
-
 * `www == create or delete`
 * `xxx == operator or operators`
 * `zzz == Kubernetes or OpenShift`
+
+Here a list of the ci scripts
 
 | Name | Kubernetes | OpenShift **(not implemented yet)** | Database Operator | Application Operator|
 | --- |  --- |  --- |  --- |  --- |
 | **ci**-create-operator-database-kubernetes.sh | Yes | No  | Yes  | No  |
 | **ci**-create-operator-application-kubernetes.sh | Yes |  No | No  | Yes  |
 | **ci**-create-operators-kubernetes.sh | Yes |  No | Yes  | Yes  |
+| **ci**-delete-operators-kubernetes.sh | Yes (under construction) |  No | Yes  | Yes  |
 
 #### d.   **delete-everything**-xxx
 
@@ -80,9 +89,14 @@ That scripts creates the operators in Kubernetes and has following parameter opt
 
 * Kubernetes
 
-| Parameter combination | versions.env  |  versions_local.env | delete all and setup prerequisites | `operator database` | `operator database` |
-| --- |  --- | --- | --- |  --- | --- |
-| `database` `local` |  no | yes | no | yes | no |
+| Parameter combination | versions.env  |  versions_local.env | delete all and setup prerequisites | `operator database` | `operator application` | reset podman |
+| --- |  --- | --- | --- |  --- | --- | --- |
+| `database` `local` |  no | yes | no | yes | no | no |
+| `database` `local` `reset` |  no | yes |yes | yes | no | no |
+| `database` `local` `reset` `podman_reset` |  no | yes |yes | yes | no | yes |
+| `app` `local` |  no | yes | no | yes | yes | no |
+| `app` `local` `reset` |  no | yes |yes | yes | yes | no |
+| `app` `local` `reset` `podman_reset` |  no | yes |yes | yes | yes | yes |
 
 
 * First parameter: ('database' or 'app')
