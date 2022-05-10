@@ -89,7 +89,7 @@ function duration() {
 function tag () {
     export commit_id=$(git rev-parse --short HEAD)
     echo "Commint ID: $commit_id"
-    export tag_new="verify_scripts_$commit_id"
+    export tag_new="verify_scripts_$commit_id_automation"
 
     git tag -l | grep "verify_scripts_$commit_id"
     CHECK_TAG=$(git tag -l | grep "verify_scripts_$commit_id")
