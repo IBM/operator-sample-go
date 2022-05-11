@@ -44,7 +44,6 @@ function logBuild () {
     INFO=$(cat "$INPUTFILE" | grep "Successfully" | awk '{print $1;}')
     if [[ $INFO == "Successfully" ]] ; then
       customLog "$TYPE" "$INFO"
-      exit
     else 
       INFO=$(cat "$INPUTFILE")
       customLog "$TYPE" "$INFO"
