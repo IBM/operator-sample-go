@@ -104,7 +104,7 @@ These steps allow the default Prometheus instance on OpenShift to monitor the re
 
 ```
 $ oc label namespace application-beta openshift.io/cluster-monitoring="true"
-$ kubectl apply -f prometheus
+$ kubectl apply -f prometheus/role-openshift.yaml
 $ oc get secrets -n openshift-ingress
 ```
 Locate the default TLS secret with type 'kubernetes.io/tls', e.g. 'deleeuw-ocp-cluster-162e406f043e20da9b0ef0731954a894-0000'
@@ -113,6 +113,12 @@ oc extract secret/<default TLS secret for your cluster> --to=/tmp -n openshift-i
 kubectl create secret generic prometheus-cert-secret --from-file=/tmp/tls.crt -n application-beta
 oc sa get-token -n openshift-monitoring prometheus-k8s > /tmp/token.txt
 kubectl create secret generic prometheus-token-secret --from-file=/tmp/token.txt -n openshift-operators
+```
+
+For both OpenShift and Kubernetes:
+
+```
+$ kubectl apply -f prometheus/role-all.yaml
 ```
 
 For both OpenShift and Kubernetes, open the Prometheus dashboard:
