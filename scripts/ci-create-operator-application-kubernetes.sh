@@ -42,6 +42,13 @@ function logBuild () {
     INFO=$(cat "$INPUTFILE" | grep "SUCCESS")
     if [[ $INFO == "BUILD SUCCESS" ]] ; then
        customLog "$TYPE" "$INFO"
+       exit
+    fi
+
+    INFO=$(cat "$INPUTFILE" | grep "Successfully tagged")
+    if [[ $INFO == "Successfully tagged" ]] ; then
+      customLog "$TYPE" "$INFO"
+      exit
     else 
       INFO=$(cat "$INPUTFILE")
       customLog "$TYPE" "$INFO"
@@ -116,7 +123,7 @@ function buildSimpleMicroservice () {
     INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
     customLog "$TYPE" "$INFO" 
     podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" > 
+    podman push "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" 
 }
 
 function buildApplicationScaler () {

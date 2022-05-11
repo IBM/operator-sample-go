@@ -120,8 +120,39 @@ function deleteOLM () {
 }
 
 function deleteCertManager () {
-    kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
-        
+  kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
+    
+  export max_retrys=2
+  array=("cert-manager" "olm" "operators")
+  export STATUS_SUCCESS=""
+  for i in "${array[@]}"
+    do 
+        echo ""
+        echo "------------------------------------------------------------------------"
+        echo "Check $i"
+        j=0
+        export FIND=$i
+        while :
+        do       
+           ((j++))
+           STATUS_CHECK=$(kubectl get namespace -n $FIND | grep $FIND | awk '{print $2;}')
+           echo "Status: $STATUS_CHECK"
+           if [ "$STATUS_CHECK" = "$STATUS_SUCCESS" ]; then
+                echo "$(date +'%F %H:%M:%S') Status: $FIND is deleted"
+                echo "------------------------------------------------------------------------"
+                break
+            elif [[ $j -eq $max_retrys ]]; then
+                echo "$(date +'%F %H:%M:%S') Please run 'delete-everything-kubernetes.sh' first!"
+                echo "$(date +'%F %H:%M:%S') Prereqs aren't ready!"
+                echo "------------------------------------------------------------------------"
+                break            
+            else
+                echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
+                echo "------------------------------------------------------------------------"
+            fi
+            sleep 3
+        done
+    done 
     #echo "Press any key to move on"
     #read input
 }
