@@ -48,7 +48,7 @@ function logBuild () {
     if [[ $INFO == "BUILD SUCCESS" ]] ; then
        customLog "$TYPE" "$INFO"
        exit
-    if
+    fi
 
     INFO=$(cat "$INPUTFILE" | grep "Successfully tagged")
     if [[ $INFO == "Successfully tagged" ]] ; then
