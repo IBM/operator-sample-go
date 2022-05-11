@@ -36,6 +36,18 @@ function customLog () {
     echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
 }
 
+function logBuild () {
+    TYPE="$1"
+    INPUTFILE="$2"
+    INFO=$(cat "$INPUTFILE" | grep "SUCCESS")
+    if [[ $INFO == "BUILD SUCCESS" ]] ; then
+       customLog "$TYPE" "$INFO"
+    else 
+      INFO=$(cat "$INPUTFILE")
+      customLog "$TYPE" "$INFO"
+    fi
+}
+
 function logInit () {
     TYPE="script"
     INFO="script: ci-create-operator-application-kubernetes.sh"

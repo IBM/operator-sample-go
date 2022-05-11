@@ -10,7 +10,7 @@ ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 
 function verifyDeletion () {
   
-  max_retrys=2
+  export max_retrys=2
   j=0
   array=("cert-manager" "olm" "operators")
   export STATUS_SUCCESS=""
