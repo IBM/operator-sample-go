@@ -25,10 +25,19 @@ export RESET=$2
 export RESET_PODMAN=$3
 export VERSIONS_FILE=""
 export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/database-operator-templates
+export LOGFILE_NAME=script-automation.log
 
 # **********************************************************************************
 # Functions
 # **********************************************************************************
+
+function customLog () {
+    LOG_TYPE=$1
+    LOG_MESSAGE=$2
+    echo "$(date +'%F %H:%M:%S'): $LOG_TYPE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$LOG_MESSAGE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+}
 
 function setEnvironmentVariables () {
     
@@ -228,9 +237,11 @@ function buildDatabaseOperator () {
     # Build container
     # make docker-build IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
     podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR" .
+
     # Push container
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
+    echo $RESULT
 }
 
 function buildDatabaseOperatorBundle () {
@@ -392,9 +403,13 @@ function createDatabaseInstance () {
 }
 
 function verifyDatabase() {
-     kubectl get database/databasecluster-sample -oyaml
-     kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
-     kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
+    TYPE="*** verify database - Database operator"
+    #kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
+    MESSAGE=$(kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons)
+    customLog $TYPE $MESSAGE
+    #kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
+    MESSAGE=$(kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader)
+    customLog $TYPE $MESSAGE
 }
 
 # **********************************************************************************

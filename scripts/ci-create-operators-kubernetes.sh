@@ -27,16 +27,34 @@ export RESET=$3
 export RESET_PODMAN=$4
 export SCRIPT_DURATION=""
 export start=$(date +%s)
+export LOGFILE_NAME=script-automation.log
 
 # **********************************************************************************
 # Functions
 # **********************************************************************************
+
+function initLog () {
+    echo "$(date +'%F %H:%M:%S'): Init Script Automation Log" > $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$(date +'%F %H:%M:%S'): Parameters: [$RUN] [$CI_CONFIG] [$RESET] [$RESET_PODMAN]" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+}
+
+function customLog () {
+    LOG_TYPE=$1
+    LOG_MESSAGE=$2
+    echo "$(date +'%F %H:%M:%S'): $LOG_TYPE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$LOG_MESSAGE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+}
 
 function setupDatabase () {
     bash "$ROOT_FOLDER/scripts/ci-create-operator-database-kubernetes.sh" $CI_CONFIG $RESET $RESET_PODMAN
     if [ $? == "1" ]; then
         echo "*** The setup of the database-operator failed !"
         echo "*** The script 'ce-create-operators-kubernetes.sh' ends here!"
+        TYPE="*** Error"
+        MESSAGE="*** The setup of the database-operator failed !"
+        customLog $TYPE $MESSAGE
         exit 1
     fi
 }
@@ -44,8 +62,11 @@ function setupDatabase () {
 function setupApplication () {
     bash "$ROOT_FOLDER/scripts/ci-create-operator-application-kubernetes.sh" $CI_CONFIG $RESET $RESET_PODMAN
         if [ $? == "1" ]; then
-        echo "*** The setup of the applicatiob-operator failed !"
+        echo "*** The setup of the applicatior-operator failed !"
         echo "*** The script 'ce-create-operators-kubernetes.sh' ends here!"
+        TYPE="*** Error"
+        MESSAGE="*** The setup of the applicatior-operator failed !"
+        customLog $TYPE $MESSAGE
         exit 1
     fi
 }
@@ -77,12 +98,12 @@ function run () {
 function duration() {
 
     end=$(date +%s)
-    echo "*** Duration Start: $start to End: $end"
-    echo "*** End: $end"
+    echo "*** Duration: (Start: $start) to (End: $end)"
+    #echo "*** End: $end"
     seconds=$(echo "$end - $start" | bc)
-    echo $seconds' sec'
+    #echo $seconds' sec'
     export SCRIPT_DURATION=$(awk -v t=$seconds 'BEGIN{t=int(t*1000); printf "%d:%02d:%02d\n", t/3600000, t/60000%60, t/1000%60}')
-    echo "Formatted: $SCRIPT_DURATION"
+    echo "*** Duration Formatted: $SCRIPT_DURATION"
     
 }
 
@@ -108,11 +129,20 @@ function tag () {
 # Execution
 # **********************************************************************************
 
-echo "Starting: $start"
 echo "************************************"
-echo " Run setup for $RUN"
+echo "Starting time in sec: $start"
+echo "************************************"
+initLog
+echo "************************************"
+echo " Starting setup for: $RUN"
 echo "************************************"
 run
+echo "************************************"
+echo " Calculate duration"
+echo "************************************"
 duration
+echo "************************************"
+echo " Add tag related to current automation "
+echo "************************************"
 tag
 

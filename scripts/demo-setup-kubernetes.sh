@@ -442,6 +442,11 @@ echo "************************************"
 createDatabaseInstance
 
 echo "************************************"
+echo " Create OLM application operator YAMLs"
+echo "************************************"
+createOLMApplicationOperatorYAMLs
+
+echo "************************************"
 echo " Deploy Application Operator"
 echo "************************************"
 deployApplicationOperator
