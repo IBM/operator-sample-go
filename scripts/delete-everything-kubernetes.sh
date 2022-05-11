@@ -122,7 +122,7 @@ function deleteOLM () {
 function deleteCertManager () {
   kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
     
-  export max_retrys=2
+  export max_retrys=5
   array=("cert-manager" "olm" "operators")
   export STATUS_SUCCESS=""
   for i in "${array[@]}"
