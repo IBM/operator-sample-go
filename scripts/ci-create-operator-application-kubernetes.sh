@@ -121,7 +121,8 @@ function buildSimpleMicroservice () {
     podman build -t "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildSimpleMicroservice"
     INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    customLog "$TYPE" "$INFO" 
+    buildLog "$TYPE" "$INFO" 
+    rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" 
 }
@@ -130,8 +131,9 @@ function buildApplicationScaler () {
     cd $ROOT_FOLDER/operator-application-scaler
     podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationScaler"
-    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS" )
-    customLog "$TYPE" "$INFO" 
+    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
+    buildLog "$TYPE" "$INFO" 
+    rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER"
 }
@@ -151,7 +153,8 @@ function buildApplicationOperator () {
     podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationOperator"
     INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    customLog "$TYPE" "$INFO" 
+    customLog "$TYPE" "$INFO"
+    rm -f $ROOT_FOLDER/scripts/temp.log 
     # Push container
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
@@ -174,7 +177,8 @@ function buildApplicationOperatorBundle () {
     podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationBundleOperator"
     INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    customLog "$TYPE" "$INFO" 
+    buildLog "$TYPE" "$INFO"
+    rm -f $ROOT_FOLDER/scripts/temp.log
     
     # Push container
     podman login $REGISTRY
@@ -187,7 +191,7 @@ function buildApplicationOperatorCatalog () {
     $ROOT_FOLDER/operator-application/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationOperatorCatalog"
     INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    customLog "$TYPE" "$INFO" 
+    buildLog "$TYPE" "$INFO" 
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
 }
