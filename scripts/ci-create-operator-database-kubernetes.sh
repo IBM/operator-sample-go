@@ -47,6 +47,7 @@ function setEnvironmentVariables () {
        echo "************************************"
        echo " Reset podman"
        echo "************************************"
+       podman machine start
        podman version
        podman machine stop
        podman machine list
