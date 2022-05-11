@@ -31,6 +31,8 @@ export LOGFILE_NAME=script-automation.log
 # Functions
 # **********************************************************************************
 
+
+
 function customLog () {
     echo "Log parameter: $1"
     echo "Log parameter: $2"
@@ -39,6 +41,12 @@ function customLog () {
     echo "$(date +'%F %H:%M:%S'): $LOG_TYPE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
     echo "$LOG_MESSAGE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
     echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+}
+
+function logInit () {
+    TYPE="script"
+    INFO="script: ci-create-operator-database-kubernetes.sh"
+    customLog "$TYPE" "$INFO"
 }
 
 function setEnvironmentVariables () {
@@ -53,7 +61,10 @@ function setEnvironmentVariables () {
        podman machine list
        podman machine rm -f podman-machine-default
        podman machine init --disk-size 15
-       podman machine start
+       podman machine start > $ROOT_FOLDER/scripts/temp.log
+       INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
+       customLog "podman_reset" "$INFO"
+       rm -f $ROOT_FOLDER/scripts/temp.log
     fi
 
     echo "************************************"
@@ -402,17 +413,21 @@ function createDatabaseInstance () {
         done
     
     kubectl get databases/database -n database -oyaml
-    kubectl get databases.database.sample.third.party/database -n database -oyaml
+    TYPE="*** Database operator info"
+    kubectl get databases.database.sample.third.party/database -n database -oyaml > $ROOT_FOLDER/scripts/temp.log
+    INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
+    customLog "$TYPE" "$INFO" 
 }
 
 function verifyDatabase() {
     TYPE="*** verify database - Database operator"
-    #kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
-    MESSAGE=$(kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons)
-    customLog "$TYPE" "$MESSAGE"
-    #kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
-    MESSAGE=$(kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader)
-    customLog "$TYPE" "$MESSAGE"
+    kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons > $ROOT_FOLDER/scripts/temp.log
+    INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
+    customLog "$TYPE" "$INFO"  
+    kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader > $ROOT_FOLDER/scripts/temp.log
+    INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
+    customLog "$TYPE" "$INFO"
+    rm -f $ROOT_FOLDER/scripts/temp.log
 }
 
 # **********************************************************************************

@@ -36,6 +36,12 @@ function customLog () {
     echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
 }
 
+function logInit () {
+    TYPE="script"
+    INFO="script: ci-create-operator-application-kubernetes.sh"
+    customLog "$TYPE" "$INFO"
+}
+
 function setEnvironmentVariables () {
 
     if [[ $CI_CONFIG == "local" ]]; then
@@ -95,7 +101,7 @@ function buildSimpleMicroservice () {
     cd $ROOT_FOLDER/simple-microservice
     podman build -t "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" .
     podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_MICROSERVICE"
+    podman push "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" > 
 }
 
 function buildApplicationScaler () {
@@ -254,20 +260,21 @@ function createApplicationInstance () {
 function verifyApplication() {
     
     TYPE="*** verify database - Database operator"
-    #kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
-    MESSAGE=$(kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons)
-    customLog "$TYPE" "$MESSAGE"
-    #kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
-    MESSAGE=$(kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader)
-    customLog "$TYPE" "$MESSAGE"
+    kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons > $ROOT_FOLDER/scripts/temp.log
+    INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
+    customLog "$TYPE" "$INFO"  
+    kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader > $ROOT_FOLDER/scripts/temp.log
+    INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
+    customLog "$TYPE" "$INFO"
+    rm -f $ROOT_FOLDER/scripts/temp.log
 
     TYPE="*** verify application - Application operator"
-    #kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
-    MESSAGE=$(kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello)
-    customLog "$TYPE" "$MESSAGE"
-    #kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager
-    MESSAGE=$(kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager)
-    customLog "$TYPE" "$MESSAGE"
+    kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello > $ROOT_FOLDER/scripts/temp.log
+    INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
+    customLog "$TYPE" "$INFO"
+    kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager > $ROOT_FOLDER/scripts/temp.log
+    INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
+    customLog "$TYPE" "$INFO"
 }
 
 # **********************************************************************************
