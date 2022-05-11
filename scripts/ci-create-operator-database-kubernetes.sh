@@ -237,6 +237,7 @@ function buildDatabaseService () {
     podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseService"
     logBuild "$TYPE" "$ROOT_FOLDER/scripts/temp.log"
+    rm -f "$ROOT_FOLDER/scripts/temp.log"
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
 }
@@ -247,6 +248,7 @@ function buildDatabaseBackup () {
     podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseBackup"
     logBuild "$TYPE" "$ROOT_FOLDER/scripts/temp.log"
+    rm -f "$ROOT_FOLDER/scripts/temp.log"
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 }
@@ -277,6 +279,7 @@ function buildDatabaseOperator () {
     podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseOperator"
     logBuild "$TYPE" "$ROOT_FOLDER/scripts/temp.log"
+    rm -f "$ROOT_FOLDER/scripts/temp.log"
 
     # Push container
     podman login $REGISTRY
@@ -301,6 +304,7 @@ function buildDatabaseOperatorBundle () {
     podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseOperatorBundle"
     logBuild "$TYPE" "$ROOT_FOLDER/scripts/temp.log"
+    rm -f "$ROOT_FOLDER/scripts/temp.log"
     
     # Push container
     podman login $REGISTRY
@@ -313,7 +317,9 @@ function buildDatabaseOperatorCatalog () {
     rm -f $ROOT_FOLDER/scripts/temp.log
     $ROOT_FOLDER/operator-database/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseOperatorCatalog"
-    logBuild "$TYPE" "$ROOT_FOLDER/scripts/temp.log"
+    INPUT="$ROOT_FOLDER/scripts/temp.log"
+    logBuild "$TYPE" "$INPUT"
+    rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" 
 }

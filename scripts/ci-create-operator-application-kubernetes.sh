@@ -120,8 +120,8 @@ function buildSimpleMicroservice () {
     cd $ROOT_FOLDER/simple-microservice
     podman build -t "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildSimpleMicroservice"
-    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    buildLog "$TYPE" "$INFO" 
+    INPUT="$ROOT_FOLDER/scripts/temp.log"
+    logBuild "$TYPE" "$INPUT"
     rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" 
@@ -131,8 +131,8 @@ function buildApplicationScaler () {
     cd $ROOT_FOLDER/operator-application-scaler
     podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationScaler"
-    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    buildLog "$TYPE" "$INFO" 
+    INPUT="$ROOT_FOLDER/scripts/temp.log"
+    logBuild "$TYPE" "$INPUT"
     rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER"
@@ -152,9 +152,9 @@ function buildApplicationOperator () {
     # make docker-build IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
     podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationOperator"
-    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    customLog "$TYPE" "$INFO"
-    rm -f $ROOT_FOLDER/scripts/temp.log 
+    INPUT="$ROOT_FOLDER/scripts/temp.log"
+    logBuild "$TYPE" "$INPUT"
+    rm -f $ROOT_FOLDER/scripts/temp.log
     # Push container
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
@@ -176,8 +176,8 @@ function buildApplicationOperatorBundle () {
     # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
     podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationBundleOperator"
-    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    buildLog "$TYPE" "$INFO"
+    INPUT="$ROOT_FOLDER/scripts/temp.log"
+    logBuild "$TYPE" "$INPUT"
     rm -f $ROOT_FOLDER/scripts/temp.log
     
     # Push container
@@ -190,8 +190,9 @@ function buildApplicationOperatorCatalog () {
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
     $ROOT_FOLDER/operator-application/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationOperatorCatalog"
-    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    buildLog "$TYPE" "$INFO" 
+    INPUT="$ROOT_FOLDER/scripts/temp.log"
+    logBuild "$TYPE" "$INPUT"
+    rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
 }
