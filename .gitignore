@@ -44,4 +44,4 @@ database-service/kubernetes/secret.yaml
 operator-database/config/rbac/role.yaml
 operator-application-scaler/README-DELEEUW.md
 versions_local.env
-shripts/script-automation.log
+scripts/script-automation.log
