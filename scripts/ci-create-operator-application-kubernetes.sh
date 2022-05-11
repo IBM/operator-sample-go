@@ -39,14 +39,14 @@ function customLog () {
 function logBuild () {
     TYPE="$1"
     INPUTFILE="$2"
-    INFO=$(cat "$INPUTFILE" | grep "SUCCESS")
-    if [[ $INFO == "BUILD SUCCESS" ]] ; then
+    INFO=$(cat "$INPUTFILE" | grep "SUCCESS" | awk '{print $3;}')
+    if [[ $INFO == "SUCCESS" ]] ; then
        customLog "$TYPE" "$INFO"
        exit
     fi
 
-    INFO=$(cat "$INPUTFILE" | grep "Successfully tagged")
-    if [[ $INFO == "Successfully tagged" ]] ; then
+    INFO=$(cat "$INPUTFILE" | grep "Successfully" | awk '{print $1;}')
+    if [[ $INFO == "Successfully" ]] ; then
       customLog "$TYPE" "$INFO"
       exit
     else 
@@ -130,7 +130,7 @@ function buildApplicationScaler () {
     cd $ROOT_FOLDER/operator-application-scaler
     podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationScaler"
-    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
+    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS" )
     customLog "$TYPE" "$INFO" 
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER"
@@ -167,7 +167,7 @@ function buildApplicationOperatorBundle () {
     sed "s+APPLICATION_OPERATOR_IMAGE+$APPLICATION_OPERATOR_IMAGE+g" $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
 
     OPERATOR_NAMESPACE=operators
-    sed "s+OPERATOR_NAMESPACE+$OPERATOR_NAMESPACE+g" $APPLICATION_TEMPLATE_FOLDER/operator-database-role_binding_patch_TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
+    sed "s+OPERATOR_NAMESPACE+$OPERATOR_NAMESPACE+g" $APPLICATION_TEMPLATE_FOLDER/operator-application-role_binding_patch_TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
     cp -nf $APPLICATION_TEMPLATE_FOLDER/operator-application-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role.yaml
     
     # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
@@ -302,7 +302,33 @@ function verifyApplication() {
     customLog "$TYPE" "$INFO"
     rm -f $ROOT_FOLDER/scripts/temp.log
 
+    array=("application-deployment-microservice" )
+    namespace=application-beta
+    export STATUS_SUCCESS="Running"
+    for i in "${array[@]}"
+        do 
+            echo ""
+            echo "------------------------------------------------------------------------"
+            echo "Check $i"
+            while :
+            do
+                FIND=$i
+                STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
+                echo "Status: $STATUS_CHECK"
+                STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
+                if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
+                    echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
+                    echo "------------------------------------------------------------------------"
+                    break
+                else
+                    echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
+                    echo "------------------------------------------------------------------------"
+                fi
+                sleep 3
+            done
+        done
     TYPE="*** verify application - Application operator"
+    sleep 2000
     kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello > $ROOT_FOLDER/scripts/temp.log
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
     customLog "$TYPE" "$INFO"

@@ -11,6 +11,8 @@ The documentation is structured in following sections.
 
 ### 1. Technical environment
 
+> 🔴 IMPORTANT: [opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) installation read the [blog post](https://suedbroecker.net/2022/04/28/make-generate-error-127/) or just copy the `bin` folder of an existing project `Operator SDK` project to the cloned directory.
+
 All local installation versions are related to macOS.
 
 | Tools or framework | Version |  (G)obal, (L) ocal or (C)loud installed | Tested |
@@ -18,8 +20,9 @@ All local installation versions are related to macOS.
 | [Podman](https://podman.io/) Client / Server | 4.1.0 / 4.3.0 | G | OK |
 | [Operator SDK](https://sdk.operatorframework.io/) | v1.18.0  | G | OK |
 | [Operator SDK](https://sdk.operatorframework.io/) | v1.18.1  | G | OK |
+| [Operator SDK](https://sdk.operatorframework.io/) | v1.19.1  | G | OK |
 | Go | go1.17.6 | G | OK |
-| Kubernetes cluster | 1.23.6_1527 | C | OK |
+| Kubernetes cluster (VPC) | 1.23.6_1527 | C | OK |
 | kubectl client | 1.23 | L | OK |
 | kubectl server | v1.23.6+IKS | C | OK |
 | operator-database/bin/[opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) | v1.21.0 | L | OK |
@@ -28,9 +31,6 @@ All local installation versions are related to macOS.
 | sed | 12.3.1 | L | OK |
 | awk | awk version 20200816 | L | OK |
 | macOS | 12.3.1 | L | OK |
-
-
-
 
 ### 2. The script automation
 
