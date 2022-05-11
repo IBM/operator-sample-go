@@ -72,7 +72,9 @@ The script automation does following.
 
 6. It ensures based on templates that the manual configuration for the `operator-application` and `operator-database` are right configured to be ready for OLM usage
 
-7. Resets the podman vm if needed 
+7. Resets the podman vm if needed.
+
+8. It creates `role.yaml`, `role-binding.yaml`, `clusterserviceversion.yaml` and sample custom resources for the given operators, based on templates.
 
 ### 3. Types of scripts
 
