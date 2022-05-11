@@ -39,11 +39,6 @@ function customLog () {
 function logBuild () {
     TYPE="$1"
     INPUTFILE="$2"
-    INFO=$(cat "$INPUTFILE" | grep "SUCCESS" | awk '{print $3;}')
-    if [[ $INFO == "SUCCESS" ]] ; then
-       customLog "$TYPE" "$INFO"
-       exit
-    fi
 
     INFO=$(cat "$INPUTFILE" | grep "Successfully" | awk '{print $1;}')
     if [[ $INFO == "Successfully" ]] ; then
