@@ -15,7 +15,7 @@ All local installation versions are related to macOS.
 
 | Tools or framework | Version |  (G)obal, (L) ocal or (C)loud installed | Tested |
 | --- | --- | --- |  --- |
-| [Podman](https://podman.io/) | 4.1.0 | G | OK |
+| [Podman](https://podman.io/) Client / Server | 4.1.0 / 4.3.0 | G | OK |
 | [Operator SDK](https://sdk.operatorframework.io/) | v1.18.0  | G | OK |
 | [Operator SDK](https://sdk.operatorframework.io/) | v1.18.1  | G | OK |
 | Go | go1.17.6 | G | OK |
