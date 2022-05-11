@@ -38,16 +38,16 @@ The script automation does following.
 
 > The functionality has variations depending on the script you are going to use.
 
-1. It ensures that with two `versions.env` files that the tagging for the container images is in a consistent way.
+1. It ensures that with two `versions.env` files the tagging for the container images works in a consistent way.
   
   *  `versions.env` for **golden sources**
   *  `versions_local.env` for **custom local configurations**
 
-2. It creates a temp `github tag` related to the last commit **before** the automation was started
+2. It creates a temp `github tag` related to the last commit **before** the automation was started.
 
 3. It creates a `script-automation.log` file which will not be load to the git repo.
 
-4. Resets the cluster environment
+4. Resets the cluster environment:
 
     * OLM installation
     * Cert manager installation
@@ -179,7 +179,7 @@ That scripts creates the operators in Kubernetes and has following parameter opt
 
 * Third parameter: ('reset')
 
-    * Use 'reset' to deinstall the operators and prereq.
+    * Use 'reset' to deinstall the operators and prereq and reinstall them.
 
 * Fourth parameter: ('podman_reset')
 

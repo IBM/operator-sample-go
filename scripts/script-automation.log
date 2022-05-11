@@ -2255,3 +2255,64 @@ Storing signatures
 Successfully tagged quay.io/tsuedbroecker/database-service:v1.0.35
 ff9189478da77aae36efe001e49c22b9a67ba51cd5688500155b7833a655a23c
 2022-05-11 18:17:27: ********************************************************
+2022-05-11 18:24:54: buildDatabaseBackup
+[1/2] STEP 1/8: FROM golang:1.18.0 AS builder
+Resolving "golang" using unqualified-search registries (/etc/containers/registries.conf.d/999-podman-machine.conf)
+Trying to pull docker.io/library/golang:1.18.0...
+Getting image source signatures
+Copying blob sha256:97677ce66d019432b771fd5fb28df7611f78367ff7c03323713e0fe822f03496
+Copying blob sha256:dbba69284b2786013fe94fefe0c2e66a7d3cecbb20f6d691d71dac891ee37be5
+Copying blob sha256:9baf437a1badb6aad2dae5f2cd4a7b53a6c7ab6c14cba1ed1ecb42b4822b0e87
+Copying blob sha256:6ade5c59e324bd7cf369c72ad781c23d37e8fb48c9bbb4abbecafafd9be4cc35
+Copying blob sha256:b19a994f6d4cdbb620339bd2e4ad47b229f14276b542060622ae447649294e5d
+Copying blob sha256:e3c59fd148bed37342299df52e64edd44cacda6c49e334a8de0da234d5e6beb5
+Copying blob sha256:97677ce66d019432b771fd5fb28df7611f78367ff7c03323713e0fe822f03496
+Copying blob sha256:dbba69284b2786013fe94fefe0c2e66a7d3cecbb20f6d691d71dac891ee37be5
+Copying blob sha256:9baf437a1badb6aad2dae5f2cd4a7b53a6c7ab6c14cba1ed1ecb42b4822b0e87
+Copying blob sha256:6ade5c59e324bd7cf369c72ad781c23d37e8fb48c9bbb4abbecafafd9be4cc35
+Copying blob sha256:b19a994f6d4cdbb620339bd2e4ad47b229f14276b542060622ae447649294e5d
+Copying blob sha256:e3c59fd148bed37342299df52e64edd44cacda6c49e334a8de0da234d5e6beb5
+Copying blob sha256:d481c2fcefdcf25a9b241d4c985b6b7a186858598dff3a830073cda2fac2b521
+Copying blob sha256:d481c2fcefdcf25a9b241d4c985b6b7a186858598dff3a830073cda2fac2b521
+Copying config sha256:7e4f3376ce4457350556e028798e3f76e6928463fe05195fe1bda289a3a5db2f
+Writing manifest to image destination
+Storing signatures
+[1/2] STEP 2/8: WORKDIR /app
+--> 5d06c71fc56
+[1/2] STEP 3/8: COPY go.mod ./
+--> 9e9bfbe5854
+[1/2] STEP 4/8: COPY go.sum ./
+--> 1a24175051f
+[1/2] STEP 5/8: RUN go mod download
+--> edfb8eac3fd
+[1/2] STEP 6/8: COPY main.go ./
+--> bdd29fea552
+[1/2] STEP 7/8: COPY backup ./backup/
+--> b22e34a54c4
+[1/2] STEP 8/8: RUN CGO_ENABLED=0 GOOS=linux go build -a -o app .
+--> 1fad5eb24a8
+[2/2] STEP 1/6: FROM registry.access.redhat.com/ubi8/ubi-micro:8.5-833
+Trying to pull registry.access.redhat.com/ubi8/ubi-micro:8.5-833...
+Getting image source signatures
+Checking if image destination supports signatures
+Copying blob sha256:fa4aa5826ad0a8740604a8f50034d8ff80263cbf5eb339e416ee2bfa23c09dc6
+Copying blob sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1
+Copying blob sha256:fa4aa5826ad0a8740604a8f50034d8ff80263cbf5eb339e416ee2bfa23c09dc6
+Copying blob sha256:4f4fb700ef54461cfa02571ae0db9a0dc1e0cdb5577484a6d75e68dc38e8acc1
+Copying config sha256:2d9a3a00bcc65c0801d043c3c71c26fe9f1e72f08a70a76ceb75c1f9ca4e8abc
+Writing manifest to image destination
+Storing signatures
+[2/2] STEP 2/6: WORKDIR /app
+--> 24313d89f97
+[2/2] STEP 3/6: RUN chown -R 1001:0 /app &&     chmod -R g=u /app
+--> cfe452e9ffd
+[2/2] STEP 4/6: COPY --from=builder /app /app/
+--> 44a87c17732
+[2/2] STEP 5/6: USER 1001
+--> ac8f1e054ce
+[2/2] STEP 6/6: CMD ["./app"]
+[2/2] COMMIT quay.io/tsuedbroecker/operator-database-backup:v1.0.35
+--> 4b1acd43000
+Successfully tagged quay.io/tsuedbroecker/operator-database-backup:v1.0.35
+4b1acd43000e44a371b3681281624cea366d9df101c533933265b2b2abfe61bf
+2022-05-11 18:24:54: ********************************************************
