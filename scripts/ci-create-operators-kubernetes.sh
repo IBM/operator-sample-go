@@ -40,8 +40,8 @@ function initLog () {
 }
 
 function customLog () {
-    LOG_TYPE=$1
-    LOG_MESSAGE=$2
+    LOG_TYPE="$1"
+    LOG_MESSAGE="$2"
     echo "$(date +'%F %H:%M:%S'): $LOG_TYPE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
     echo "$LOG_MESSAGE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
     echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
@@ -54,7 +54,7 @@ function setupDatabase () {
         echo "*** The script 'ce-create-operators-kubernetes.sh' ends here!"
         TYPE="*** Error"
         MESSAGE="*** The setup of the database-operator failed !"
-        customLog $TYPE $MESSAGE
+        customLog "$TYPE" "$MESSAGE"
         exit 1
     fi
 }
@@ -66,7 +66,7 @@ function setupApplication () {
         echo "*** The script 'ce-create-operators-kubernetes.sh' ends here!"
         TYPE="*** Error"
         MESSAGE="*** The setup of the applicatior-operator failed !"
-        customLog $TYPE $MESSAGE
+        customLog "$TYPE" "$MESSAGE"
         exit 1
     fi
 }

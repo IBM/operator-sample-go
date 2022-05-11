@@ -32,8 +32,10 @@ export LOGFILE_NAME=script-automation.log
 # **********************************************************************************
 
 function customLog () {
-    LOG_TYPE=$1
-    LOG_MESSAGE=$2
+    echo "Log parameter: $1"
+    echo "Log parameter: $2"
+    LOG_TYPE="$1"
+    LOG_MESSAGE="$2"
     echo "$(date +'%F %H:%M:%S'): $LOG_TYPE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
     echo "$LOG_MESSAGE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
     echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
@@ -406,10 +408,10 @@ function verifyDatabase() {
     TYPE="*** verify database - Database operator"
     #kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
     MESSAGE=$(kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons)
-    customLog $TYPE $MESSAGE
+    customLog "$TYPE" "$MESSAGE"
     #kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
     MESSAGE=$(kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader)
-    customLog $TYPE $MESSAGE
+    customLog "$TYPE" "$MESSAGE"
 }
 
 # **********************************************************************************

@@ -11,15 +11,26 @@ The documentation is structured in following sections.
 
 ### 1. Technical environment
 
-| Tools or framework | Version |  (G)obal or (L) ocal installed | Tested |
+All local installation versions are related to macOS.
+
+| Tools or framework | Version |  (G)obal, (L) ocal or (C)loud installed | Tested |
 | --- | --- | --- |  --- |
 | [Podman](https://podman.io/) | 4.1.0 | G | OK |
 | [Operator SDK](https://sdk.operatorframework.io/) | v1.18.0  | G | OK |
 | [Operator SDK](https://sdk.operatorframework.io/) | v1.18.1  | G | OK |
 | Go | go1.17.6 | G | OK |
-| Kubernetes | 1.23.6_1527 | G | OK |
+| Kubernetes cluster | 1.23.6_1527 | C | OK |
+| kubectl client | 1.23 | L | OK |
+| kubectl server | v1.23.6+IKS | C | OK |
 | operator-database/bin/[opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) | v1.21.0 | L | OK |
-| operator-application/bin/opm | v1.21.0 | L | OK |
+| operator-application/bin/[opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) | v1.21.0 | L | OK |
+| bash | GNU bash, version 3.2.57(1)-release (x86_64-apple-darwin21)  | L | OK |
+| sed | 12.3.1 | L | OK |
+| awk | awk version 20200816 | L | OK |
+| macOS | 12.3.1 | L | OK |
+
+
+
 
 ### 2. The script automation
 

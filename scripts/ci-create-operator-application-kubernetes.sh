@@ -17,7 +17,7 @@ echo "-----------------------------"
 # **************** Global variables
 
 ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
-NAMESPACE=operators
+export NAMESPACE=operators
 export CI_CONFIG=$1
 export VERSIONS_FILE=""
 export APPLICATION_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/application-operator-templates
@@ -29,8 +29,8 @@ export LOGFILE_NAME=script-automation.log
 # **********************************************************************************
 
 function customLog () {
-    LOG_TYPE=$1
-    LOG_MESSAGE=$2
+    LOG_TYPE="$1"
+    LOG_MESSAGE="$2"
     echo "$(date +'%F %H:%M:%S'): $LOG_TYPE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
     echo "$LOG_MESSAGE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
     echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
@@ -256,18 +256,18 @@ function verifyApplication() {
     TYPE="*** verify database - Database operator"
     #kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons
     MESSAGE=$(kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons)
-    customLog $TYPE $MESSAGE
+    customLog "$TYPE" "$MESSAGE"
     #kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader
     MESSAGE=$(kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader)
-    customLog $TYPE $MESSAGE
+    customLog "$TYPE" "$MESSAGE"
 
     TYPE="*** verify application - Application operator"
     #kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello
     MESSAGE=$(kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello)
-    customLog $TYPE $MESSAGE
+    customLog "$TYPE" "$MESSAGE"
     #kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager
     MESSAGE=$(kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager)
-    customLog $TYPE $MESSAGE
+    customLog "$TYPE" "$MESSAGE"
 }
 
 # **********************************************************************************
