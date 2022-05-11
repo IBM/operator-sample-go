@@ -1,7 +1,7 @@
-2022-05-11 14:23:07: Init Script Automation Log
-2022-05-11 14:23:07: Parameters: [app] [local] [reset] [podman_reset]
-2022-05-11 14:23:07: ********************************************************
-2022-05-11 14:24:25: podman_reset
+2022-05-11 14:28:03: Init Script Automation Log
+2022-05-11 14:28:03: Parameters: [app] [local] [reset] [podman_reset]
+2022-05-11 14:28:03: ********************************************************
+2022-05-11 14:29:22: podman_reset
 Starting machine "podman-machine-default"
 Waiting for VM ...
 
@@ -26,4 +26,4 @@ following command in your terminal session:
 	export DOCKER_HOST='unix:///Users/thomassuedbroecker/.local/share/containers/podman/machine/podman-machine-default/podman.sock'
 
 Machine "podman-machine-default" started successfully
-2022-05-11 14:24:25: ********************************************************
+2022-05-11 14:29:22: ********************************************************
