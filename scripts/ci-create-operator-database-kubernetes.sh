@@ -216,14 +216,20 @@ function verifyPreReqs () {
 
 function buildDatabaseService () {
     cd $ROOT_FOLDER/database-service
-    podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE" .
+    podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE" . > $ROOT_FOLDER/scripts/temp.log
+    TYPE="buildDatabaseService"
+    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
+    customLog "$TYPE" "$INFO" 
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
 }
 
 function buildDatabaseBackup () {
     cd $ROOT_FOLDER/operator-database-backup
-    podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP" .
+    podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP" . > $ROOT_FOLDER/scripts/temp.log
+    TYPE="buildDatabaseBackup"
+    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
+    customLog "$TYPE" "$INFO" 
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 }
@@ -250,8 +256,10 @@ function buildDatabaseOperator () {
     make manifests
     # Build container
     # make docker-build IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
-    podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR" .
-
+    podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR" . > $ROOT_FOLDER/scripts/temp.log
+    TYPE="buildDatabaseOperator"
+    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
+    customLog "$TYPE" "$INFO" 
     # Push container
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
@@ -280,9 +288,12 @@ function buildDatabaseOperatorBundle () {
 function buildDatabaseOperatorCatalog () {
     cd $ROOT_FOLDER/operator-database
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
-    $ROOT_FOLDER/operator-database/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
+    $ROOT_FOLDER/operator-database/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" > $ROOT_FOLDER/scripts/temp.log
+    TYPE="buildDatabaseOperatorCatalog"
+    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
+    customLog "$TYPE" "$INFO" 
     podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
+    podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" 
 }
 
 function createOLMDatabaseOperatorYAMLs () {
