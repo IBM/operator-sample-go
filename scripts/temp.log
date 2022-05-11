@@ -1,0 +1,61 @@
+[1/2] STEP 1/12: FROM golang:1.17 AS builder
+Resolving "golang" using unqualified-search registries (/etc/containers/registries.conf.d/999-podman-machine.conf)
+Trying to pull docker.io/library/golang:1.17...
+Getting image source signatures
+Copying blob sha256:983e437bc88ffadd3136b0590e26f5ee37edefa8dad00ebfa0b972befbf42e16
+Copying blob sha256:6aefca2dc61dcbcd268b8a9861e552f9cdb69e57242faec64ac120d2355a9c1a
+Copying blob sha256:967757d5652770cfa81b6cc7577d65e06d336173da116d1fb5b2d349d5d44127
+Copying blob sha256:c357e2c68cb3bf1e98dcb3eb6ceb16837253db71535921d6993c594588bffe04
+Copying blob sha256:c766e27afb21eddf9ab3e4349700ebe697c32a4c6ada6af4f08282277a291a28
+Copying blob sha256:d6a8ea6bd5f867dbdf5bad1c42bc569afacf062a0241c1a8b45718fc8ae26fba
+Copying blob sha256:983e437bc88ffadd3136b0590e26f5ee37edefa8dad00ebfa0b972befbf42e16
+Copying blob sha256:6aefca2dc61dcbcd268b8a9861e552f9cdb69e57242faec64ac120d2355a9c1a
+Copying blob sha256:967757d5652770cfa81b6cc7577d65e06d336173da116d1fb5b2d349d5d44127
+Copying blob sha256:c357e2c68cb3bf1e98dcb3eb6ceb16837253db71535921d6993c594588bffe04
+Copying blob sha256:c766e27afb21eddf9ab3e4349700ebe697c32a4c6ada6af4f08282277a291a28
+Copying blob sha256:d6a8ea6bd5f867dbdf5bad1c42bc569afacf062a0241c1a8b45718fc8ae26fba
+Copying blob sha256:f1f7421662df87be9521b14529be664ffd35a2cae38e2d6eeb92e8dc4554dd66
+Copying blob sha256:f1f7421662df87be9521b14529be664ffd35a2cae38e2d6eeb92e8dc4554dd66
+Copying config sha256:ebfe77556ee656238b2a90c625d305eb3c60a498170e390c9ba9e43b7a3940c1
+Writing manifest to image destination
+Storing signatures
+[1/2] STEP 2/12: WORKDIR /workspace
+--> 9698e876a01
+[1/2] STEP 3/12: COPY go.mod go.mod
+--> 3741b1ea8c8
+[1/2] STEP 4/12: COPY go.sum go.sum
+--> 97b1e903344
+[1/2] STEP 5/12: RUN go mod download
+--> 4b735e3b2be
+[1/2] STEP 6/12: COPY main.go main.go
+--> e0ac798b3ff
+[1/2] STEP 7/12: COPY api/ api/
+--> 63a2b078a85
+[1/2] STEP 8/12: COPY variablesdatabase/ variablesdatabase/
+--> a0c1ca53e71
+[1/2] STEP 9/12: COPY variablesdatabasebackup/ variablesdatabasebackup/
+--> 0c39d2985e6
+[1/2] STEP 10/12: COPY variablesdatabasecluster/ variablesdatabasecluster/
+--> b6b9764d9b0
+[1/2] STEP 11/12: COPY controllers/ controllers/
+--> b77d66602de
+[1/2] STEP 12/12: RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o manager main.go
+--> 53bd29bd541
+[2/2] STEP 1/5: FROM gcr.io/distroless/static:nonroot
+Trying to pull gcr.io/distroless/static:nonroot...
+Getting image source signatures
+Copying blob sha256:36698cfa5275e0bda70b0f864b7b174e0758ca122d8c6a54fb329d70082c73f8
+Copying blob sha256:36698cfa5275e0bda70b0f864b7b174e0758ca122d8c6a54fb329d70082c73f8
+Copying config sha256:bbd57f9cdb20afb520e49785bd05fc089700862d740b059432c3cd21c059d708
+Writing manifest to image destination
+Storing signatures
+[2/2] STEP 2/5: WORKDIR /
+--> e22d33bec89
+[2/2] STEP 3/5: COPY --from=builder /workspace/manager .
+--> 4e5f4727669
+[2/2] STEP 4/5: USER 65532:65532
+--> 800fd1f242e
+[2/2] STEP 5/5: ENTRYPOINT ["/manager"]
+[2/2] COMMIT quay.io/tsuedbroecker/database-operator:v1.0.35
+--> e4a3f7cfb71
+Successfully tagged quay.io/tsuedbroecker/database-operator:v1.0.35

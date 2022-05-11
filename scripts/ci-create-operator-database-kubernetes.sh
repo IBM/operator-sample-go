@@ -31,8 +31,6 @@ export LOGFILE_NAME=script-automation.log
 # Functions
 # **********************************************************************************
 
-
-
 function customLog () {
     echo "Log parameter: $1"
     echo "Log parameter: $2"
@@ -41,6 +39,18 @@ function customLog () {
     echo "$(date +'%F %H:%M:%S'): $LOG_TYPE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
     echo "$LOG_MESSAGE" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
     echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+}
+
+function logBuild () {
+    TYPE="$1"
+    INPUTFILE="$2"
+    INFO=$(cat "$INPUTFILE" | grep "SUCCESS")
+    if [[ $INFO == "BUILD SUCCESS" ]] ; then
+       customLog "$TYPE" "$INFO"
+    else 
+      INFO=$(cat "$INPUTFILE")
+      customLog "$TYPE" "$INFO"
+    fi
 }
 
 function logInit () {
@@ -216,20 +226,20 @@ function verifyPreReqs () {
 
 function buildDatabaseService () {
     cd $ROOT_FOLDER/database-service
+    rm -f $ROOT_FOLDER/scripts/temp.log
     podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseService"
-    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    customLog "$TYPE" "$INFO" 
+    logBuild "$TYPE" "$ROOT_FOLDER/scripts/temp.log"
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
 }
 
 function buildDatabaseBackup () {
     cd $ROOT_FOLDER/operator-database-backup
+    rm -f $ROOT_FOLDER/scripts/temp.log
     podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseBackup"
-    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    customLog "$TYPE" "$INFO" 
+    logBuild "$TYPE" "$ROOT_FOLDER/scripts/temp.log"
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 }
@@ -256,10 +266,11 @@ function buildDatabaseOperator () {
     make manifests
     # Build container
     # make docker-build IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
+    rm -f $ROOT_FOLDER/scripts/temp.log
     podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseOperator"
-    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    customLog "$TYPE" "$INFO" 
+    logBuild "$TYPE" "$ROOT_FOLDER/scripts/temp.log"
+
     # Push container
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
@@ -278,7 +289,11 @@ function buildDatabaseOperatorBundle () {
     sed "s+OPERATOR_NAMESPACE+$OPERATOR_NAMESPACE+g" $DATABASE_TEMPLATE_FOLDER/operator-database-role_binding_patch_TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
     cp -nf $DATABASE_TEMPLATE_FOLDER/scripts/operator-database-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role.yaml
     # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
-    podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" .
+    
+    rm -f $ROOT_FOLDER/scripts/temp.log
+    podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" . > $ROOT_FOLDER/scripts/temp.log
+    TYPE="buildDatabaseOperatorBundle"
+    logBuild "$TYPE" "$ROOT_FOLDER/scripts/temp.log"
     
     # Push container
     podman login $REGISTRY
@@ -288,10 +303,10 @@ function buildDatabaseOperatorBundle () {
 function buildDatabaseOperatorCatalog () {
     cd $ROOT_FOLDER/operator-database
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
+    rm -f $ROOT_FOLDER/scripts/temp.log
     $ROOT_FOLDER/operator-database/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseOperatorCatalog"
-    INFO=$(cat $ROOT_FOLDER/scripts/temp.log | grep "SUCCESS")
-    customLog "$TYPE" "$INFO" 
+    logBuild "$TYPE" "$ROOT_FOLDER/scripts/temp.log"
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" 
 }
@@ -424,8 +439,10 @@ function createDatabaseInstance () {
         done
     
     kubectl get databases/database -n database -oyaml
-    TYPE="*** Database operator info"
+    
+    rm -f $ROOT_FOLDER/scripts/temp.log
     kubectl get databases.database.sample.third.party/database -n database -oyaml > $ROOT_FOLDER/scripts/temp.log
+    TYPE="*** Database operator info"
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
     customLog "$TYPE" "$INFO" 
 }
