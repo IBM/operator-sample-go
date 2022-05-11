@@ -312,8 +312,8 @@ function buildDatabaseOperatorCatalog () {
     rm -f $ROOT_FOLDER/scripts/temp.log
     $ROOT_FOLDER/operator-database/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseOperatorCatalog"
-    INPUT="$ROOT_FOLDER/scripts/temp.log"
-    logBuild "$TYPE" "$INPUT"
+    INPUT="cat $ROOT_FOLDER/scripts/temp.log"
+    customLog "$TYPE" "$INPUT"
     rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" 

@@ -185,8 +185,8 @@ function buildApplicationOperatorCatalog () {
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
     $ROOT_FOLDER/operator-application/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationOperatorCatalog"
-    INPUT="$ROOT_FOLDER/scripts/temp.log"
-    logBuild "$TYPE" "$INPUT"
+    INPUT="cat $ROOT_FOLDER/scripts/temp.log"
+    customLog "$TYPE" "$INPUT"
     rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
@@ -328,7 +328,7 @@ function verifyApplication() {
             done
         done
     TYPE="*** verify application - Application operator"
-    sleep 2000
+    sleep 2
     kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello > $ROOT_FOLDER/scripts/temp.log
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
     customLog "$TYPE" "$INFO"
