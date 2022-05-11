@@ -11,7 +11,7 @@ The documentation is structured in following sections.
 
 ### 1. Technical environment
 
-> 🔴 IMPORTANT: [opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) installation read the [blog post](https://suedbroecker.net/2022/04/28/make-generate-error-127/) or just copy the `bin` folder of an existing project `Operator SDK` project to the cloned directory.
+> 🔴 IMPORTANT: [opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) installation please read the [blog post](https://suedbroecker.net/2022/04/28/make-generate-error-127/) or just copy the `bin` folder of an **existing project** `Operator SDK` project to the **cloned github project** directory.
 
 All local installation versions are related to macOS.
 
