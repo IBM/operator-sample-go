@@ -44,6 +44,7 @@ function customLog () {
 function logBuild () {
     TYPE="$1"
     INPUTFILE="$2"
+    echo "*** Input: $INPUTFILE"
 
     INFO=$(cat "$INPUTFILE" | grep "Successfully")
     if [[ $INFO == "Successfully" ]] ; then
