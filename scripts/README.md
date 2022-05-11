@@ -135,11 +135,11 @@ Deletes all depending on the Platfrom such as the operators, OLM, Prometheus or 
 
 ### 4. Script parameters
 
+> 🔴 IMPORTANT: The order of the parameters is hard coded!
+
 #### a. ci-create-operators-kubernetes.sh
 
 That scripts creates the operators in Kubernetes and has following parameter options.
-
-> **Attention:** The order of the parameters is hard coded!
 
 * Kubernetes
 
