@@ -155,14 +155,14 @@ installCertManager
 echo "************************************"
 echo " Install prometheus operator"
 echo "************************************"
-installPrometheusOperator
+# installPrometheusOperator
 
 echo "************************************"
 echo " Create prometheus instance"
 echo "************************************"
-createPrometheusInstance
+# createPrometheusInstance
 
 echo "************************************"
 echo " Verify prometheus instance"
 echo "************************************"
-verifyPrometheusInstance
+# verifyPrometheusInstance
