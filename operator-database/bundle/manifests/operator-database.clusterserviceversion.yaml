@@ -258,9 +258,13 @@ spec:
           resources:
           - databasebackups/status
           verbs:
+          - create
+          - delete
           - get
+          - list
           - patch
           - update
+          - watch
         - apiGroups:
           - database.sample.third.party
           resources:
@@ -342,7 +346,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/deleeuw/database-operator:v1.0.76
+                image: docker.io/deleeuw/database-operator:v1.0.78
                 livenessProbe:
                   httpGet:
                     path: /healthz

@@ -14,6 +14,7 @@ Use this section as a guide to give a live demo of the operator-sample-go asset 
 * Install all demo components using the provided [script](../scripts/README.md)
 * Create a Cloud Object Storage bucket for testing database backup [Setup Cloud Object Storage - link TODO]()
 * Create a secret with credentials for Cloud Object Storage (not included in the repo) [Setup COS Secret - link TODO]()
+* Ensure the COS storage ()
 
 
 **Note that after following the install setps, you will need to reverse some of the deployment steps as they are intended to be performed live in the demo script below.**
@@ -151,6 +152,7 @@ metadata:
   name: databasebackup-manual
   namespace: database
 spec:
+  image: docker.io/nheidloff/operator-database-backup:v1.0.46
   repos:
   - name: ibmcos-repo
     type: ibmcos
@@ -162,12 +164,16 @@ spec:
     time: "2022-04-20T02:59:43.1Z"
     repo: ibmcos-repo
   scheduledTrigger:
-    schedule: "*/3 * * * *"
+    schedule: "0 * * * *"
     repo: ibmcos-repo
 EOF
 ```
 
-Once the CR has been processed by the operator, you’ll see it created a CronJob which launches a Job (a pod which runs to completion), every three minutes.
+Once the CR has been processed by the operator, you’ll see it created a CronJob which launches a Job (a pod which runs to completion), every hour minutes.  Alternatively, you can trigger the job manually:
+
+```
+kubectl create job --from=cronjob/databasebackup-manual-cronjob manuallytriggered -n database
+```
 
 <img src="images/demo12.png" />
 
