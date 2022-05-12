@@ -36,6 +36,12 @@ All local installation versions are related to macOS.
 | grep | 2.6.0-FreeBSD | L | OK |
 | container registry | [DockerHub](https://hub.docker.com/), [Quay(Red Hat)](https://quay.io/) | C | OK |
 
+| IBM Cloud Services used| Version | Tested |
+| --- | ---  |  --- |
+| [IBM Cloud Kubernetess Service](https://cloud.ibm.com/kubernetes/catalog/create) (on VPC)| v1.23.6+IKS |  OK |
+| [IBM Cloud Object Storage](https://cloud.ibm.com/objectstorage/create) | TBD |  TBD |
+| [IBM Cloud 'Virtual Private Cloud'](https://cloud.ibm.com/vpc-ext/provision/vpc) | TBD |  TBD |
+
 
 ### 2. The script automation
 
