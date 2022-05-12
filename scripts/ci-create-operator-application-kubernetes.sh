@@ -295,7 +295,9 @@ function deployApplicationOperatorOLM () {
 }
 
 function createApplicationInstance () {
+    kubectl get pods -n operators | grep "application"
     kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
+    kubectl get pods -n operators | grep "application-beta"
 }
 
 function verifyApplication() {
