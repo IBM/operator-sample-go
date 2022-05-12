@@ -45,3 +45,4 @@ operator-database/config/rbac/role.yaml
 operator-application-scaler/README-DELEEUW.md
 versions_local.env
 scripts/script-automation.log
+scripts/temp.log
