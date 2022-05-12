@@ -260,8 +260,6 @@ echo "3. Verify cURL"
 verifyCURL
 echo "4. Verify Sed"
 verifySed
-echo "5. Verify libpq (psql)"
-verifyLibpq
 echo "6. Verify Podman"
 verifyPodman
 echo "7. Verify ibmcloud cli"
@@ -272,7 +270,7 @@ echo "9. Verify operator-sdk"
 verifyOperatorSDK
 echo "10. Verify go"
 verifyGo
-echo "10. Verify OPM"
+echo "11. Verify OPM"
 verifyOPM
 
 echo "**********************************************"

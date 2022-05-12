@@ -47,6 +47,7 @@ function logBuild () {
     else 
       INFO=$(cat "$INPUTFILE")
       customLog "$TYPE" "$INFO"
+      exit 1
     fi
 }
 
