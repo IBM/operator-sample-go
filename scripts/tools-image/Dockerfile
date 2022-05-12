@@ -49,8 +49,12 @@ RUN export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n 
     && export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/download/v1.19.1 \
     && curl -LO ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH} \
     && chmod +x operator-sdk_${OS}_${ARCH} && mv operator-sdk_${OS}_${ARCH} /usr/local/bin/operator-sdk \
-    && curl -LO https://go.dev/dl/go1.17.6.darwin-amd64.pkg \
-    && installer -pkg go1.17.6.darwin-amd64.pkg -target \
-    && operator-sdk version \
-    && go version   
+
+RUN && apt-get --assume-yes install golang \
+# RUN curl -LO wget https://golang.org/dl/go1.17.6.linux-amd64.tar.gz \
+#     && tar -xzf go1.17.6.linux-amd64.tar.gz -C /usr/local/ \
+#     && mv go /usr/local
+# installer -pkg go1.17.6.darwin-amd64.pkg -target \
+#     && go version \
+#    && operator-sdk version
 
