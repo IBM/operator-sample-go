@@ -258,9 +258,13 @@ spec:
           resources:
           - databasebackups/status
           verbs:
+          - create
+          - delete
           - get
+          - list
           - patch
           - update
+          - watch
         - apiGroups:
           - database.sample.third.party
           resources:
