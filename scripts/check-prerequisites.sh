@@ -274,7 +274,7 @@ echo "11. Verify OPM"
 verifyOPM
 
 echo "**********************************************"
-echo "Success! All prerequisites tool are installed!"
+echo "Success! All prerequisite tools or frameworks are installed!"
 echo ""
 echo "Please ensure you use the right versions!"
 echo ""
