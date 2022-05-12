@@ -79,7 +79,7 @@ function setEnvironmentVariables () {
        curl -L -O https://builds.coreos.fedoraproject.org/prod/streams/next/builds/36.20220507.1.0/x86_64/fedora-coreos-36.20220507.1.0-qemu.x86_64.qcow2.xz
        cd $ROOT_FOLDER
        # podman machine init --disk-size 15
-       podman machine init --image-path=$ROOT_FOLDER/scripts/fedora-coreos-36.20220507.1.0-qemu.x86_64.qcow2.xz 
+       podman machine init --image-path=$ROOT_FOLDER/scripts/fedora-coreos-36.20220507.1.0-qemu.x86_64.qcow2.xz --disk-size 15
        podman machine start > $ROOT_FOLDER/scripts/temp.log
        INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
        customLog "podman_reset" "$INFO"

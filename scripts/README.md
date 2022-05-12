@@ -212,3 +212,7 @@ That scripts creates the operators in Kubernetes and has following parameter opt
 ```sh
 sh scripts/ci-create-operators-kubernetes.sh database local reset podman_reset
 ```
+
+#### Example architecture:
+
+![](../documentation/images/ci-automation-kubernetes-v1.png)
