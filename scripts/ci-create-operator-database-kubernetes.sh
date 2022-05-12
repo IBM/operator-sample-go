@@ -83,12 +83,14 @@ function setEnvironmentVariables () {
        podman machine start > $ROOT_FOLDER/scripts/temp.log
        INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
        customLog "podman_reset" "$INFO"
+        sleep 2
        rm -f $ROOT_FOLDER/scripts/temp.log
     fi
 
     echo "************************************"
     echo " Check if podman is running"
     echo "************************************"
+
     podman images &> $ROOT_FOLDER/scripts/check_podman.log
 
     CHECK=$(cat $ROOT_FOLDER/scripts/check_podman.log | grep 'Cannot connect to Podman' | awk '{print $1;}')
