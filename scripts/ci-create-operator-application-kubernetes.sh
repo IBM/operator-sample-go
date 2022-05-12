@@ -58,13 +58,19 @@ function logInit () {
 }
 
 function setEnvironmentVariables () {
-
+ 
     if [[ $CI_CONFIG == "local" ]]; then
-        echo "*** Set versions_local.env file a input"
+        echo "*** Set versions_local.env file as input"
         source $ROOT_FOLDER/versions_local.env
+        INFO="*** Using following registry: $REGISTRY/$ORG"
+        echo $INFO
+        customLog "$CI_CONFIG" "$INFO"
     elif [[ $CI_CONFIG == "ci" ]]; then
-        echo "*** Set versions.env file a input"        
+        echo "*** Set versions.env file as input"        
         source $ROOT_FOLDER/versions.env
+        INFO="*** Using following registry: $REGISTRY/$ORG"
+        echo $INFO
+        customLog "$CI_CONFIG" "$INFO"
     else 
         echo "*** Please select a valid option to run!"
         echo "*** Use 'local' for your local test."
@@ -345,6 +351,7 @@ function verifyApplication() {
 echo "************************************"
 echo " Set context"
 echo "************************************"
+logInit
 setEnvironmentVariables
 
 echo "************************************"

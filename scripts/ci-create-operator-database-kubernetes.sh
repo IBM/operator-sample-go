@@ -63,7 +63,7 @@ function logInit () {
 }
 
 function setEnvironmentVariables () {
-    
+ 
     if [[ $RESET_PODMAN == "podman_reset" ]] ; then
        echo "************************************"
        echo " Reset podman"
@@ -99,12 +99,18 @@ function setEnvironmentVariables () {
     fi
 
     if [[ $CI_CONFIG == "local" ]]; then
-        echo "*** Set versions_local.env file a input"
+        echo "*** Set versions_local.env file as input"
         source $ROOT_FOLDER/versions_local.env
+        INFO="*** Using following registry: $REGISTRY/$ORG"
+        echo $INFO
+        customLog "$CI_CONFIG" "$INFO"
         rm -f $ROOT_FOLDER/scripts/check_podman.log
     elif [[ $CI_CONFIG == "ci" ]]; then
-        echo "*** Set versions.env file a input"        
+        echo "*** Set versions.env file as input"        
         source $ROOT_FOLDER/versions.env
+        INFO="*** Using following registry: $REGISTRY/$ORG"
+        echo $INFO
+        customLog "$CI_CONFIG" "$INFO"
         rm -f $ROOT_FOLDER/scripts/check_podman.log
     else 
         echo "*** Please select a valid option to run!"
@@ -478,6 +484,7 @@ function verifyDatabase() {
 echo "************************************"
 echo " Set context"
 echo "************************************"
+logInit
 setEnvironmentVariables
 
 resetAll
