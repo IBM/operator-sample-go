@@ -275,5 +275,11 @@ verifyOPM
 
 echo "**********************************************"
 echo "Success! All prerequisites tool are installed!"
+echo ""
 echo "Please ensure you use the right versions!"
+echo ""
+echo "Open following link: "
+echo "https://github.com/IBM/operator-sample-go/tree/main/scripts#1-technical-environment "
 echo "**********************************************"
+
+open https://github.com/IBM/operator-sample-go/tree/main/scripts#1-technical-environment
