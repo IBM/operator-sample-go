@@ -185,7 +185,7 @@ function buildApplicationOperatorCatalog () {
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
     $ROOT_FOLDER/operator-application/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationOperatorCatalog"
-    INPUT="cat $ROOT_FOLDER/scripts/temp.log"
+    INPUT="$(cat $ROOT_FOLDER/scripts/temp.log)"
     customLog "$TYPE" "$INPUT"
     rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
