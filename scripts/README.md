@@ -11,7 +11,11 @@ The documentation is structured in following sections.
 
 ### 1. Technical environment
 
-> 🔴 IMPORTANT: [opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) installation please read the [blog post](https://suedbroecker.net/2022/04/28/make-generate-error-127/) or just copy the `bin` folder of an **existing project** `Operator SDK` project to the **cloned github project** directory.
+> 🔴 IMPORTANT: For the [opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) tool installation please read the [blog post](https://suedbroecker.net/2022/04/28/make-generate-error-127/) or just copy the `bin` folder of an **existing project** `Operator SDK` project to the **cloned github project** directory.
+
+| OS| Version | Tested |
+| --- | ---  |  --- |
+| macOS | 12.3.1 | OK |
 
 All local installation versions are related to macOS.
 
@@ -30,7 +34,9 @@ All local installation versions are related to macOS.
 | bash | GNU bash, version 3.2.57(1)-release (x86_64-apple-darwin21)  | L | OK |
 | sed | 12.3.1 | L | OK |
 | awk | awk version 20200816 | L | OK |
-| macOS | 12.3.1 | L | OK |
+| cURL | 7.79.1 | L | OK |
+| grep | 2.6.0-FreeBSD | L | OK |
+
 
 ### 2. The script automation
 
