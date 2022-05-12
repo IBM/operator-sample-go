@@ -22,9 +22,7 @@ All local installation versions are related to macOS.
 | Tools or framework | Version |  (G)obal, (L) ocal or (C)loud installed | Tested |
 | --- | --- | --- |  --- |
 | [Podman](https://podman.io/) Client / Server | 4.1.0 / 4.3.0 | G | OK |
-| [Operator SDK](https://sdk.operatorframework.io/) | v1.18.0  | G | OK |
-| [Operator SDK](https://sdk.operatorframework.io/) | v1.18.1  | G | OK |
-| [Operator SDK](https://sdk.operatorframework.io/) | v1.19.1  | G | OK |
+| [Operator SDK](https://sdk.operatorframework.io/) | v1.18.0,  v1.18.1, v1.19.1  | G | OK |
 | Go | go1.17.6 | G | OK |
 | Kubernetes cluster (VPC) | 1.23.6_1527 | C | OK |
 | kubectl client | 1.23 | L | OK |
