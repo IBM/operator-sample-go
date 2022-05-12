@@ -48,9 +48,11 @@ function logBuild () {
 
     INFO=$(cat "$INPUTFILE" | grep "Successfully" | awk '{print $1;}')
     if [[ $INFO == "Successfully" ]] ; then
+      echo $INFO
       customLog "$TYPE" "$INFO"
     else 
       INFO=$(cat "$INPUTFILE")
+      echo $INFO
       customLog "$TYPE" "$INFO"
       exit 1
     fi
@@ -324,6 +326,7 @@ function buildDatabaseOperatorCatalog () {
     $ROOT_FOLDER/operator-database/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseOperatorCatalog"
     INPUT=$(cat $ROOT_FOLDER/scripts/temp.log)
+    echo $INPUT
     customLog "$TYPE" "$INPUT"
     rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
@@ -463,15 +466,19 @@ function createDatabaseInstance () {
     kubectl get databases.database.sample.third.party/database -n database -oyaml > $ROOT_FOLDER/scripts/temp.log
     TYPE="*** Database operator info"
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
+    echo $INFO
     customLog "$TYPE" "$INFO" 
 }
 
 function verifyDatabase() {
     TYPE="*** verify database - Database operator"
+    rm -f $ROOT_FOLDER/scripts/temp.log
     kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons > $ROOT_FOLDER/scripts/temp.log
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
+    echo $INFO
     customLog "$TYPE" "$INFO"  
     kubectl exec -n database database-cluster-0 -- curl -s http://localhost:8089/api/leader > $ROOT_FOLDER/scripts/temp.log
+    echo $INFO
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
     customLog "$TYPE" "$INFO"
     rm -f $ROOT_FOLDER/scripts/temp.log
