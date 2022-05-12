@@ -17,6 +17,7 @@ export CHECK_LIBPQ="psql"
 export CHECK_PODMAN="Podman Engine"
 export CHECK_OPERATORSDK="operator-sdk"
 export CHECK_GO="go"
+export CHECK_OPM="Version"
 
 
 # **********************************************************************************
@@ -27,6 +28,7 @@ verifyPodman() {
     VERICATION=$(podman version)
 
     if [[ $VERICATION =~ $CHECK_PODMAN ]]; then
+    echo "---------------------------------"
     echo "- podman is installed: $VERICATION !"
     else 
     echo "*** podman is NOT installed or running!"
@@ -40,6 +42,7 @@ verifyLibpq() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_LIBPQ ]]; then
+    echo "---------------------------------"
     echo "- libpq (psql) is installed: $VERICATION !"
     else 
     echo "*** libpq (psql) is NOT installed !"
@@ -53,6 +56,7 @@ verifyGrep() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_GREP  ]]; then
+    echo "---------------------------------"
     echo "- Grep is installed: $VERICATION !"
     else 
     echo "*** Grep is NOT installed !"
@@ -66,6 +70,7 @@ verifyCURL() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_CURL  ]]; then
+    echo "---------------------------------"
     echo "- cURL is installed: $VERICATION !"
     else 
     echo "*** cURL is NOT installed !"
@@ -79,6 +84,7 @@ verifyAWK() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_AWK  ]]; then
+    echo "---------------------------------"
     echo "- AWK is installed: $VERICATION !"
     else 
     echo "*** AWK is NOT installed !"
@@ -91,6 +97,7 @@ verifySed() {
     VERICATION="$(sw_vers -productVersion)"
 
     if [[ $VERICATION =~ $CHECK_SED  ]]; then
+    echo "---------------------------------"
     echo "- Sed is installed: $VERICATION !"
     else 
     echo "*** Sed is NOT installed !"
@@ -104,6 +111,7 @@ verifyIBMCloudCLI() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_IBMCLOUDCLI  ]]; then
+    echo "---------------------------------"
     echo "- IBM Cloud CLI is installed: $VERICATION !"
     else 
     echo "*** IBM Cloud CLI is NOT installed !"
@@ -117,6 +125,7 @@ verifyJQ() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_JQ  ]]; then
+    echo "---------------------------------"
     echo "- JQ is installed: $VERICATION !"
     else 
     echo "*** JQ is NOT installed !"
@@ -130,6 +139,7 @@ verifyIBMCloudPluginCloudDatabases() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_PLUGIN_CLOUDDATABASES  ]]; then
+    echo "---------------------------------"
     echo "- IBM Cloud Plugin 'cloud-databases' is installed: $VERICATION !"
     else 
     echo "IBM Cloud Plugin 'cloud-databases' is NOT installed !"
@@ -143,6 +153,7 @@ verifyIBMCloudPluginCodeEngine() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_PLUGIN_CODEENGINE  ]]; then
+    echo "---------------------------------"
     echo "- IBM Cloud Plugin 'code-engine' is installed: $VERICATION !"
     else 
     echo "IBM Cloud Plugin 'code-engine' is NOT installed !"
@@ -156,6 +167,7 @@ verifyIBMCloudPluginContainerRegistry() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_PLUGIN_CONTAINERREGISTERY  ]]; then
+    echo "---------------------------------"
     echo "- IBM Cloud Plugin 'container-registry' is installed: $VERICATION !"
     else 
     echo "IBM Cloud Plugin 'container-registry' is NOT installed !"
@@ -169,6 +181,7 @@ verifyBuildah() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_BUILDAH ]]; then
+    echo "---------------------------------"
     echo "- buildah is installed: $VERICATION !"
     else 
     echo "*** buildah is NOT installed !"
@@ -182,6 +195,7 @@ verifyKubectl() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_KUBECTL ]]; then
+    echo "---------------------------------"
     echo "- kubectl is installed: $VERICATION !"
     else 
     echo "*** kubectl is NOT installed !"
@@ -195,6 +209,7 @@ verifyOperatorSDK() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_OPERATORSDK ]]; then
+    echo "---------------------------------"
     echo "- operator-sdk is installed: $VERICATION !"
     else 
     echo "*** operator-sdk is NOT installed !"
@@ -208,9 +223,25 @@ verifyGo() {
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_GO ]]; then
+    echo "---------------------------------"
     echo "- go is installed: $VERICATION !"
     else 
     echo "*** go is NOT installed !"
+    echo "*** The scripts ends here!"
+    exit 1
+    fi
+}
+
+verifyOPM() {  
+    VERICATION=$(opm version)
+    echo $VERICATION
+
+    if [[ $VERICATION =~ $CHECK_OPM ]]; then
+    echo "---------------------------------"
+    echo "- opm is installed: $VERICATION !"
+    echo "Please ensure you copy the 'opm bin' to the 'bin' folder of your operator-sdk project."
+    else 
+    echo "*** opm is NOT installed !"
     echo "*** The scripts ends here!"
     exit 1
     fi
@@ -241,6 +272,8 @@ echo "9. Verify operator-sdk"
 verifyOperatorSDK
 echo "10. Verify go"
 verifyGo
+echo "10. Verify OPM"
+verifyOPM
 
 echo "**********************************************"
 echo "Success! All prerequisites tool are installed!"
