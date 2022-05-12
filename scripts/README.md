@@ -34,6 +34,7 @@ All local installation versions are related to macOS.
 | awk | awk version 20200816 | L | OK |
 | cURL | 7.79.1 | L | OK |
 | grep | 2.6.0-FreeBSD | L | OK |
+| container registry | [DockerHub](https://hub.docker.com/), [Quay(Red Hat)](https://quay.io/) | C | OK |
 
 
 ### 2. The script automation
@@ -44,8 +45,8 @@ The script automation does following.
 
 1. It ensures that with two `versions.env` files the tagging for the container images works in a consistent way.
   
-  *  `versions.env` for **golden sources**
-  *  `versions_local.env` for **custom local configurations**
+  *  [`versions.env`](https://github.com/IBM/operator-sample-go/blob/main/versions.env) for **golden sources**
+  *  `versions_local.env` for **custom local configurations** your version of [`versions_local.env-template`](https://github.com/IBM/operator-sample-go/blob/main/versions_local.env-template)
 
 2. It creates a temp `github tag` related to the last commit **before** the automation was started.
 
@@ -53,37 +54,40 @@ The script automation does following.
 
 4. Resets the cluster environment:
 
-    * OLM installation
-    * Cert manager installation
-    * Prometheus installation
+    * [OLM](https://olm.operatorframework.io/) installation
+    * [Cert manager](https://cert-manager.io/docs/) installation
+    * [Prometheus operator](https://github.com/prometheus-operator/prometheus-operator) installation
     * Clean the installed operators and application to that example
 
 5. Creates following containers:
 
     * Database operator related
-        * `Database-service` (_quarkus application_), a custom database which provides stateful sets
-        * `operator-database` (operator), this operator creates an instance of the `Database-service`
-        * `operator-database-backup`(_quarkus application_), this is an application which will be instantiated later from the  `operator-database` to create a backup on an object storage database
+        * [`Database-service`](https://github.com/IBM/operator-sample-go/tree/main/database-service) (_quarkus application_), a custom database which provides stateful sets
+        * [`operator-database`](https://github.com/IBM/operator-sample-go/tree/main/operator-database) (operator), this operator creates an instance of the [`Database-service`](https://github.com/IBM/operator-sample-go/tree/main/database-service)
+        * [`operator-database-backup`](https://github.com/IBM/operator-sample-go/tree/main/operator-database-backup) (_quarkus application_), this is an application which will be instantiated later from the [`operator-database`](https://github.com/IBM/operator-sample-go/tree/main/operator-database) to create a backup on an object storage database
         * `operator-database-bundle`, that is a container image which will be created by the operator-sdk and will be used later inside the `operator-database-catalog` which is relevant for the `OLM` usage.
         * `operator-database-catalog`, that container image contains a reference to the `operator-database-bundle` and will be used in the context of `OLM`
 
     * Application operator related
-        * `simple-microservice` (_quarkus application_), a simple microservice to display messages and runs as a stateless application
-        * `operator-application-autoscaler`(_go application_), that application implements a cron job to manage the scaling for the instances of the `simple-microservice` which were created by `operator-application` operator.
-        * `operator-application` (operator), this operator creates an instance of the `simple-microservice`
+        * [`simple-microservice`](https://github.com/IBM/operator-sample-go/tree/main/simple-microservice) (_quarkus application_), a simple microservice to display messages and runs as a stateless application
+        * [`operator-application-autoscaler`](https://github.com/IBM/operator-sample-go/tree/main/operator-application-scaler) (_go application_), that application implements a cron job to manage the scaling for the instances of the [`simple-microservice`](https://github.com/IBM/operator-sample-go/tree/main/simple-microservice) which were created by the [`operator-application`](https://github.com/IBM/operator-sample-go/tree/main/operator-application)  operator.
+        * [`operator-application`](https://github.com/IBM/operator-sample-go/tree/main/operator-application) (operator), this operator creates an instance of the [`simple-microservice`](https://github.com/IBM/operator-sample-go/tree/main/simple-microservice)
         * `operator-application-bundle`, that is a container image which will be created by the operator-sdk and will be used later inside the `operator-application-catalog` which is relevant for the `OLM` usage.
         * `operator-application-catalog`, that container image contains a reference to the `operator-application-bundle` and will be used in the context of `OLM`
 
-6. It ensures based on templates that the manual configuration for the `operator-application` and `operator-database` are right configured to be ready for OLM usage
+6. It ensures based on templates that the manual configuration for the [`operator-application` templates](https://github.com/IBM/operator-sample-go/tree/main/scripts/application-operator-templates) and [`operator-database` templates](https://github.com/IBM/operator-sample-go/tree/main/scripts/database-operator-templates) are right configured to be ready for OLM usage. There are templates for `Kubernetes` and for `OpenShift`.
 
-7. Resets the podman vm if needed.
+7. Resets the podman vm if needed and starts podman.
 
 8. It creates `role.yaml`, `role-binding.yaml`, `clusterserviceversion.yaml` and sample custom resources for the given operators, based on templates.
 
+9. It verifies the pre-requisites.
+
 ### 3. Types of scripts
 
-There are four major types of scripts:
+There are five types of scripts:
 
+* **check**
 * **install-required**
 * **demo**
 * **ci**
@@ -104,8 +108,6 @@ Installs the required components for Kubernetes or OpenShift.
 | OLM | Yes |  No |
 | Prometheus Operator | Yes |  No |
 | Prometheus Instance | Yes |  No |
-
-
 
 #### b. **demo**-xxx-yyyy.sh
 
@@ -149,6 +151,10 @@ Here is a list of available ci scripts.
 Deletes all depending on the Platfrom such as the operators, OLM, Prometheus or Cert-Manager.
 
 * `xxx == Kubernetes or OpenShift`
+
+#### e.   **check**-prerequistes.sh
+
+Verifies, if the tools and the frameworks mentioned above are installed.
 
 ### 4. Script parameters
 
