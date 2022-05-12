@@ -80,24 +80,31 @@ spec:
       kind: Database
       name: databases.database.sample.third.party
       version: v1alpha1
-  description: IBM Build Labs Application Operator
-  displayName: Application Operator
+  description: IBM Build Labs Database Operator
+  displayName: Database Operator
   description: |-
-    # IBM Build Labs Application Operator
+    # IBM Build Labs Database Operator
     ## Introduction
     The IBM Build Labs operators provide Day 1 and Day 2 capabilities for a sample two tier 
     application.  
     
-    This application operator relates to the front end microservice which provides a simple 
-    web UI.  The web server provides a single HTTP enpoint:
+    This database operator relates to the backend database which provides a **very simple** 
+    file based database.  The database implements a cluster where one pod is the 'leader' to 
+    which applications can perform reads and writes.  Further pods are 'followers' providing 
+    high availability and scalability.  Followers synchronize the data from the leader, but 
+    only provide read capability.  Each pod of the database cluster stores its data to a 
+    persistent volume.
+    The database is very opinionated and only supports a single use case - storing a list of
+    first & last names, persisted in a JSON file.  Therefore only a single API is provided:
     
-    >**/hello** - Renders a Hello greeting to the names persisted in the corresponding database.
+    >**/persons** - GET/POST/PUT/DELETE a Person JSON object
+    (other APIs help the pods elect the leader, and synchronize the data)
     
     ## Day 1 capabilities create the following resources:
-    * Deployment, Pods, Service
-    * Database (a Custom Resource reconciled by another operator which creates the schema)
+    * StatefulSet, Pods, Persistent Volume Claims, Service
     ## Day 2 capabilities:
-    * Auto scaling pods according to how many times the /hello endpoint is invoked
+    * Immediate or scheduled backup of the data to one or more long term repositories 
+    (e.g. Cloud Object Storage)
     
     ## Note
     This sample is based on an [Operator Reference Architecture](https://github.com/IBM/operator-sample-go) from IBM Build Labs.
