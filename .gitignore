@@ -1,5 +1,6 @@
 READNIK.md
 local.env
+
 #Maven
 target/
 pom.xml.tag
@@ -38,7 +39,6 @@ nb-configuration.xml
 *.rej
 
 # Local environment
-.env
 database-service/kubernetes/cronjob.yaml
 database-service/kubernetes/secret.yaml
 operator-database/config/rbac/role.yaml
@@ -48,3 +48,4 @@ scripts/script-automation.log
 scripts/temp.log
 scripts/fedora-coreos-36.20220507.1.0-qemu.x86_64.qcow2.xz
 scripts/podman-machine-default_fedora-coreos-36.20220507.1.0-qemu.x86_64.qcow2
+versions_local.env
