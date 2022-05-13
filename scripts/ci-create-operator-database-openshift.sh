@@ -466,13 +466,13 @@ echo "************************************"
 echo " Build 'database service'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
 echo "************************************"
-# buildDatabaseService
+buildDatabaseService
 
 echo "************************************"
 echo " Build 'operator database backup'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 echo "************************************"
-# buildDatabaseBackup
+buildDatabaseBackup
 
 echo "************************************"
 echo " Configure CR samples for the 'database operator'"
@@ -483,19 +483,19 @@ echo "************************************"
 echo " Build 'database operator'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 echo "************************************"
-# buildDatabaseOperator
+buildDatabaseOperator
 
 echo "************************************"
 echo " Build 'database operator bundle'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
 echo "************************************"
-# buildDatabaseOperatorBundle
+buildDatabaseOperatorBundle
 
 echo "************************************"
 echo " Build 'database operator catalog'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
 echo "************************************"
-# buildDatabaseOperatorCatalog
+buildDatabaseOperatorCatalog
 
 echo "************************************"
 echo " Create OLM yamls"
