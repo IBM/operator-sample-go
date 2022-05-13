@@ -26,10 +26,28 @@ export RESET_PODMAN=$3
 export VERSIONS_FILE=""
 export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/database-operator-templates
 export LOGFILE_NAME=script-automation-openshift.log
+export TEMP_FOLDER=temp
 
 # **********************************************************************************
 # Functions
 # **********************************************************************************
+
+function configurePrometheusOpenShiftForSimpleApplication () {
+
+   oc label namespace application-beta openshift.io/cluster-monitoring="true"
+   
+   mkdir "$ROOT_FOLDER/scripts/$TEMP_FOLDER"
+   
+   oc get secrets -n openshift-ingress | grep "router-metrics-certs-default"
+   oc extract secret/router-metrics-certs-default --to="$ROOT_FOLDER/scripts/$TEMP_FOLDER" -n openshift-ingress
+   kubectl create secret generic prometheus-cert-secret --from-file=="$ROOT_FOLDER/scripts/$TEMP_FOLDER/tls.crt" -n application-beta
+   
+   oc sa get-token -n openshift-monitoring prometheus-k8s > "$ROOT_FOLDER/scripts/$TEMP_FOLDER/token.txt"
+   kubectl create secret generic prometheus-token-secret --from-file="$ROOT_FOLDER/scripts/$TEMP_FOLDER/token.txt" -n openshift-operators
+   
+   rm -f -r "$ROOT_FOLDER/scripts/$TEMP_FOLDER"
+
+}
 
 function customLog () {
     echo "Log parameter: $1"
