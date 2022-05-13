@@ -18,6 +18,11 @@ The documentation is structured in following sections.
 | macOS | 12.3.1 | OK |
 
 All local installation versions are related to macOS.
+You can run to verify following script if are the tools installed, but you need to verify the versions of the output with in the following table.
+
+```
+sh scripts/check-prerequisites.sh
+```
 
 | Tools or framework | Version |  (G)obal, (L) ocal or (C)loud installed | Tested |
 | --- | --- | --- |  --- |
