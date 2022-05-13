@@ -13,9 +13,8 @@ Use this section as a guide to give a live demo of the operator-sample-go asset 
 * First install the [prerequistes](Prerequisites.md)
 * Install all demo components using the provided [script](../scripts/README.md)
 * Create a Cloud Object Storage bucket for testing database backup [Setup Cloud Object Storage - link TODO]()
-* Create a secret with credentials for Cloud Object Storage (not included in the repo) [Setup COS Secret - link TODO]()
-* Ensure the COS storage ()
-
+* Create a secret with credentials for Cloud Object Storage [Setup COS Secret - link TODO]()
+* Create a Route to the /hello enpoint for the microservice pod in application-beta
 
 **Note that after following the install setps, you will need to reverse some of the deployment steps as they are intended to be performed live in the demo script below.**
 
@@ -211,8 +210,10 @@ spec:
   databaseName: database
   databaseNamespace: database
   title: people
+  image: docker.io/nheidloff/simple-microservice:v1.0.46
 EOF
 ```
+
 
 After a few minutes you will see the application operator has created several components:
 
