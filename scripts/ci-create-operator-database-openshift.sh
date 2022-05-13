@@ -243,7 +243,7 @@ function buildDatabaseOperatorBundle () {
     # Replace CSV and RBAC generate files with customized versions
     DATABASE_OPERATOR_IMAGE="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
     sed "s+DATABASE_OPERATOR_IMAGE+$DATABASE_OPERATOR_IMAGE+g" $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion-TEMPLATE.yaml > $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
-    OPERATOR_NAMESPACE=operators
+    OPERATOR_NAMESPACE=openshift-operators
     sed "s+OPERATOR_NAMESPACE+$OPERATOR_NAMESPACE+g" $DATABASE_TEMPLATE_FOLDER/operator-database-role_binding_patch_TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
     cp -nf $DATABASE_TEMPLATE_FOLDER/scripts/operator-database-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role.yaml
     # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
@@ -276,6 +276,7 @@ function buildDatabaseOperatorCatalog () {
 function createOLMDatabaseOperatorYAMLs () {
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
     sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/openshift-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
+    cp -nf $DATABASE_TEMPLATE_FOLDER/scripts/openshift-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/script/openshift-database-subscription.yaml 
 }
 
 function deployDatabaseOperatorOLM () {
@@ -315,7 +316,7 @@ function deployDatabaseOperatorOLM () {
         done
 
     array=("operator-database.v0.0.1")
-    namespace=operators
+    namespace=openshift-operators
     search=installplans
     export STATUS_SUCCESS="true"
     for i in "${array[@]}"
@@ -342,7 +343,7 @@ function deployDatabaseOperatorOLM () {
         done
 
     array=("operator-database-controller-manager" )
-    namespace=operators
+    namespace=openshift-operators
     export STATUS_SUCCESS="Running"
     for i in "${array[@]}"
         do 
