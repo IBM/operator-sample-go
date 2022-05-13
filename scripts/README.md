@@ -20,7 +20,7 @@ The documentation is structured in following sections.
 All local installation versions are related to macOS.
 You can run to verify following script if are the tools installed, but you need to verify the versions of the output with in the following table.
 
-```
+```sh
 sh scripts/check-prerequisites.sh
 ```
 
