@@ -45,7 +45,11 @@ All local installation versions are related to macOS.
 
 ### 2. The script automation
 
-The script automation does following. 
+The following image shoew a simplified system overview of the system we are going to setup with the automation scripts.
+
+![](../documentation/images/system-overview-kubernetes-v1.png)
+
+Currentl the script automation does following. 
 
 > The functionality has variations depending on the script you are going to use.
 
