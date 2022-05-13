@@ -25,7 +25,7 @@ export RESET=$2
 export RESET_PODMAN=$3
 export VERSIONS_FILE=""
 export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/database-operator-templates
-export LOGFILE_NAME=script-automation.log
+export LOGFILE_NAME=script-automation-kubernetes.log
 
 # **********************************************************************************
 # Functions

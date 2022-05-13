@@ -21,7 +21,7 @@ export NAMESPACE=operators
 export CI_CONFIG=$1
 export VERSIONS_FILE=""
 export APPLICATION_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/application-operator-templates
-export LOGFILE_NAME=script-automation.log
+export LOGFILE_NAME=script-automation-kubernetes.log
 
 
 # **********************************************************************************

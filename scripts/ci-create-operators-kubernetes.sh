@@ -27,7 +27,7 @@ export RESET=$3
 export RESET_PODMAN=$4
 export SCRIPT_DURATION=""
 export start=$(date +%s)
-export LOGFILE_NAME=script-automation.log
+export LOGFILE_NAME=script-automation-kubernetes.log
 
 # **********************************************************************************
 # Functions
