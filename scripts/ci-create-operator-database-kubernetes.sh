@@ -338,7 +338,7 @@ function buildDatabaseOperatorCatalog () {
 function createOLMDatabaseOperatorYAMLs () {
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
     sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/kubernetes-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
-    cp -nf $DATABASE_TEMPLATE_FOLDER/scripts/kubernetes-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/script/kubernetes-database-subscription.yaml 
+    cp -nf $DATABASE_TEMPLATE_FOLDER/kubernetes-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml 
 }
 
 function deployDatabaseOperatorOLM () {
