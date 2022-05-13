@@ -51,7 +51,7 @@ function setupDatabase () {
     bash "$ROOT_FOLDER/scripts/ci-create-operator-database-kubernetes.sh" $CI_CONFIG $RESET $RESET_PODMAN
     if [ $? == "1" ]; then
         echo "*** The setup of the database-operator failed !"
-        echo "*** The script 'ce-create-operators-kubernetes.sh' ends here!"
+        echo "*** The script 'ce-create-operator-database-kubernetes.sh' ends here!"
         TYPE="*** Error"
         MESSAGE="*** The setup of the database-operator failed !"
         customLog "$TYPE" "$MESSAGE"

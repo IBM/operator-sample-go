@@ -94,8 +94,9 @@ function deleteNamespacesRelatedToDatabaseOperator () {
 
 function deletePrometheus () {
     cd $ROOT_FOLDER
-    kubectl delete -f prometheus/kubernetes/operator
+     
     kubectl delete -f prometheus/kubernetes/instance
+    kubectl delete -f prometheus/kubernetes/operator
     kubectl delete customresourcedefinition alertmanagerconfigs.monitoring.coreos.com
 
     # delete crds
