@@ -3,6 +3,7 @@
 # **************** Global variables
 
 export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
+export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/database-operator-templates
 
 # **********************************************************************************
 # Functions
@@ -21,27 +22,23 @@ function deleteMicroserviceApplicationInstance () {
     kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
     kubectl delete -f config/samples/application.sample_v1alpha1_application.yaml
 
-    kubectl delete customresourcedefinition applications.application.sample.ibm.com
-    kubectl delete deployment operator-application-controller-manager -n operators
-    kubectl delete clusterserviceversion operator-application.v0.0.1
- 
-    #echo "Press any key to move on"
-    #read input
-}
-
-function deleteApplicationOperator () {
-    make undeploy IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
-    operator-sdk cleanup operator-application -n operators --delete-all
     #echo "Press any key to move on"
     #read input
 }
 
 function deleteOLMdeployment () {
-    kubectl delete catalogsource operator-application-catalog -n operators 
-    kubectl delete subscriptions operator-application-v0-0-1-sub -n operators 
-    kubectl delete csv operator-application.v0.0.1 -n operators
-    kubectl delete operators operator-application.operators -n operators
-    kubectl delete installplans -n operators --all
+    kubectl delete subscriptions operator-application-v0-0-1-sub -n openshift-operators  
+    kubectl delete catalogsource operator-application-catalog -n openshift-operators 
+    
+    
+    CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
+    sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/openshift-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
+    cp -nf $DATABASE_TEMPLATE_FOLDER/openshift-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/script/openshift-database-subscription.yaml 
+
+    kubectl delete subscriptions operator-database-v0-0-1-sub -n openshift-operators  
+    kubectl delete catalogsource operator-database-catalog -n openshift-operators 
+
+    #kubectl delete installplans -n openshift-operators --all
     #echo "Press any key to move on"
     #read input
 }
@@ -49,8 +46,6 @@ function deleteOLMdeployment () {
 function deleteNamespacesRelatedToApplicationOperator () {
     kubectl delete namespace application-alpha
     kubectl delete namespace application-beta
-    kubectl delete all --all -n operator-application-system
-    kubectl delete namespace operator-application-system
     #echo "Press any key to move on"
     #read input
 }
@@ -63,20 +58,16 @@ function deleteDatabaseInstance () {
 }
 
 function deleteDatabaseOperator () {
-    make undeploy IMG="$REGISTRY/$ORG/$IMAGE_DATBASE_OPERATOR"
-    operator-sdk cleanup operator-database -n operators --delete-all   
-    
-    kubectl delete -f $ROOT_FOLDER/operator-database/olm/subscription.yaml
-    kubectl delete -f $ROOT_FOLDER/scripts/subscription.yaml
+     
+    kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml 
+    kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
 
-    kubectl delete -f $ROOT_FOLDER/operator-database/olm/catalogsource.yaml 
-    kubectl delete -f $ROOT_FOLDER/scripts/catalogsource.yaml
+    namespace=openshift-operators
+    kubectl delete customresourcedefinition databasebackups.database.sample.third.party -n $namespace
+    kubectl delete customresourcedefinition databases.database.sample.third.party -n $namespace
+    kubectl delete customresourcedefinition databaseclusters.database.sample.third.party -n $namespace
 
-    kubectl delete customresourcedefinition databasebackups.database.sample.third.party -n operators
-    kubectl delete customresourcedefinition databases.database.sample.third.party -n operators
-    kubectl delete customresourcedefinition databaseclusters.database.sample.third.party -n operators
-
-    kubectl delete deployment operator-database-controller-manager -n operators
+    kubectl delete deployment operator-database-controller-manager -n $namespace
     kubectl delete clusterserviceversion operator-database.v0.0.1 
     kubectl delete clusterrole operator-database-metrics-reader
     
@@ -86,8 +77,6 @@ function deleteDatabaseOperator () {
 
 function deleteNamespacesRelatedToDatabaseOperator () {
     kubectl delete namespace database
-    kubectl delete all --all -n operator-database-system
-    kubectl delete namespace operator-database-system
     #echo "Press any key to move on"
     #read input
 }
@@ -126,7 +115,7 @@ echo "************************************"
 echo "************************************"
 echo " Delete application operator OLM deployment"
 echo "************************************"
-# deleteOLMdeployment
+deleteOLMdeployment
 
 echo "************************************"
 echo " Delete database instance"

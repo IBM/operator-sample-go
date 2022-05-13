@@ -20,7 +20,7 @@ echo "-----------------------------"
 # **************** Global variables
 
 export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
-export NAMESPACE=operators
+export NAMESPACE=openshift-operators
 export RUN=$1
 export CI_CONFIG=$2
 export RESET=$3
