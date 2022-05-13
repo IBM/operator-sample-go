@@ -1,0 +1,13 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: operator-application-catalog
+  namespace: openshift-marketplace
+spec:
+  displayName: IBM Build Labs Apps Catalog
+  publisher: IBM Build Labs
+  sourceType: grpc
+  image: APPLICATION_CATALOG_IMAGE
+  updateStrategy:
+    registryPoll:
+      interval: 10m

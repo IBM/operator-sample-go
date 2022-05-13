@@ -12,7 +12,7 @@ echo "-----------------------------"
 
 # **************** Global variables
 
-ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
+export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 source $ROOT_FOLDER/versions.env
 export APPLICATION_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/application-operator-templates
 export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/database-operator-templates

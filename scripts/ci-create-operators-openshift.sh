@@ -19,15 +19,15 @@ echo "-----------------------------"
 
 # **************** Global variables
 
-ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
-NAMESPACE=operators
+export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
+export NAMESPACE=operators
 export RUN=$1
 export CI_CONFIG=$2
 export RESET=$3
 export RESET_PODMAN=$4
 export SCRIPT_DURATION=""
 export start=$(date +%s)
-export LOGFILE_NAME=script-automation.log
+export LOGFILE_NAME=script-automation-openshift.log
 
 # **********************************************************************************
 # Functions
@@ -48,10 +48,10 @@ function customLog () {
 }
 
 function setupDatabase () {
-    bash "$ROOT_FOLDER/scripts/ci-create-operator-database-kubernetes.sh" $CI_CONFIG $RESET $RESET_PODMAN
+    bash "$ROOT_FOLDER/scripts/ci-create-operator-database-openshift.sh" $CI_CONFIG $RESET $RESET_PODMAN
     if [ $? == "1" ]; then
         echo "*** The setup of the database-operator failed !"
-        echo "*** The script 'ce-create-operators-kubernetes.sh' ends here!"
+        echo "*** The script 'ce-create-operators-openshift.sh' ends here!"
         TYPE="*** Error"
         MESSAGE="*** The setup of the database-operator failed !"
         customLog "$TYPE" "$MESSAGE"
@@ -60,12 +60,12 @@ function setupDatabase () {
 }
 
 function setupApplication () {
-    bash "$ROOT_FOLDER/scripts/ci-create-operator-application-kubernetes.sh" $CI_CONFIG $RESET $RESET_PODMAN
+    bash "$ROOT_FOLDER/scripts/ci-create-operator-application-openshift.sh" $CI_CONFIG $RESET $RESET_PODMAN
         if [ $? == "1" ]; then
-        echo "*** The setup of the applicatior-operator failed !"
-        echo "*** The script 'ce-create-operators-kubernetes.sh' ends here!"
+        echo "*** The setup of the application-operator failed !"
+        echo "*** The script 'ce-create-operators-openshift.sh' ends here!"
         TYPE="*** Error"
-        MESSAGE="*** The setup of the applicatior-operator failed !"
+        MESSAGE="*** The setup of the application-operator failed !"
         customLog "$TYPE" "$MESSAGE"
         exit 1
     fi
@@ -83,14 +83,14 @@ function run () {
         echo "*** $CI_CONFIG "
         echo "*** $RESET "
         echo "*** $RESET_PODMAN "    
-        setupDatabase
-        setupApplication
+        #setupDatabase
+        #setupApplication
     else 
         echo "*** Please select a valid option to run!"
         echo "*** Use 'database' for the database operator."
         echo "*** Use 'app' for the database and application operator."
         echo "*** Example:"
-        echo "*** sh scripts/ci-create-operators-kubernetes.sh database local reset"
+        echo "*** sh scripts/ci-create-operators-openshift.sh database local reset"
         exit 1
     fi
 }
@@ -110,7 +110,7 @@ function duration() {
 function tag () {
     export commit_id=$(git rev-parse --short HEAD)
     echo "Commint ID: $commit_id"
-    export tag_new="verify_scripts_automation_$commit_id"
+    export tag_new="verify_scripts_automation_oc_$commit_id"
 
     git tag -l | grep "verify_scripts_automation_automation_$commit_id"
     CHECK_TAG=$(git tag -l | grep "verify_scripts_automation_$commit_id")

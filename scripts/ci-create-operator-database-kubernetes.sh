@@ -18,8 +18,8 @@ echo "-----------------------------"
 
 # **************** Global variables
 
-ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
-NAMESPACE=operators
+export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
+export NAMESPACE=operators
 export CI_CONFIG=$1
 export RESET=$2
 export RESET_PODMAN=$3
@@ -121,7 +121,7 @@ function setEnvironmentVariables () {
         echo "*** Use 'local' for your local test."
         echo "*** Use 'ci' for your the ci test."
         echo "*** Example:"
-        echo "*** sh ci-operators-kubernetes.sh local"
+        echo "*** sh ci-operator-database-kubernetes.sh local"
         exit 1
     fi
 }

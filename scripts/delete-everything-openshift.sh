@@ -2,7 +2,7 @@
 
 # **************** Global variables
 
-ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
+export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 
 # **********************************************************************************
 # Functions
@@ -111,58 +111,48 @@ setEnvironmentVariables
 echo "************************************"
 echo " Delete microservice application"
 echo "************************************"
-deleteMicroserviceApplicationInstance
+# deleteMicroserviceApplicationInstance
 
 echo "************************************"
 echo " Delete application operator"
 echo "************************************"
-deleteApplicationOperator
+# deleteApplicationOperator
 
 echo "************************************"
 echo " Delete database operator"
 echo "************************************"
-deleteDatabaseOperator 
+# deleteDatabaseOperator 
 
 echo "************************************"
 echo " Delete application operator OLM deployment"
 echo "************************************"
-deleteOLMdeployment
+# deleteOLMdeployment
 
 echo "************************************"
 echo " Delete database instance"
 echo "************************************"
-deleteDatabaseInstance
+# deleteDatabaseInstance
 
 echo "************************************"
 echo " Delete namespaces related to application operator"
 echo "************************************"
-deleteNamespacesRelatedToApplicationOperator
+# deleteNamespacesRelatedToApplicationOperator
 
 echo "************************************"
 echo " Delete database application"
 echo "************************************"
-deleteNamespacesRelatedToDatabaseOperator
+# deleteNamespacesRelatedToDatabaseOperator
 
 echo "************************************"
 echo " Delete for local configuration"
 echo "************************************"
-setEnvironmentVariablesLocal
-deleteMicroserviceApplicationInstance
-deleteApplicationOperator
-deleteNamespacesRelatedToApplicationOperator
-deleteDatabaseInstance
-deleteDatabaseOperator
-deleteNamespacesRelatedToDatabaseOperator
-
-echo "************************************"
-echo " Delete prometheus"
-echo "************************************"
-deletePrometheus
-
-echo "************************************"
-echo " Delete OLM"
-echo "************************************"
-deleteOLM
+#setEnvironmentVariablesLocal
+#deleteMicroserviceApplicationInstance
+#deleteApplicationOperator
+#deleteNamespacesRelatedToApplicationOperator
+#deleteDatabaseInstance
+#deleteDatabaseOperator
+#deleteNamespacesRelatedToDatabaseOperator
 
 echo "************************************"
 echo " Delete cert manager"

@@ -2,7 +2,7 @@
 
 # **************** Global variables
 
-ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
+export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 source $ROOT_FOLDER/versions.env
 
 # **********************************************************************************
