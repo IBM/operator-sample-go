@@ -33,7 +33,7 @@ function deleteOLMdeployment () {
     
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
     sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/openshift-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
-    cp -nf $DATABASE_TEMPLATE_FOLDER/openshift-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/script/openshift-database-subscription.yaml 
+    cp -nf $DATABASE_TEMPLATE_FOLDER/openshift-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-database-subscription.yaml 
 
     kubectl delete subscriptions operator-database-v0-0-1-sub -n openshift-operators  
     kubectl delete catalogsource operator-database-catalog -n openshift-operators 
@@ -110,10 +110,10 @@ echo "************************************"
 echo "************************************"
 echo " Delete database operator"
 echo "************************************"
-# deleteDatabaseOperator 
+deleteDatabaseOperator 
 
 echo "************************************"
-echo " Delete application operator OLM deployment"
+echo " Delete application operator OLM deployments"
 echo "************************************"
 deleteOLMdeployment
 
@@ -135,12 +135,12 @@ echo "************************************"
 echo "************************************"
 echo " Delete for local configuration"
 echo "************************************"
-#setEnvironmentVariablesLocal
+setEnvironmentVariablesLocal
 #deleteMicroserviceApplicationInstance
 #deleteApplicationOperator
 #deleteNamespacesRelatedToApplicationOperator
 #deleteDatabaseInstance
-#deleteDatabaseOperator
+deleteDatabaseOperator
 #deleteNamespacesRelatedToDatabaseOperator
 
 echo "************************************"

@@ -114,11 +114,11 @@ function setEnvironmentVariables () {
     CHECK=$(cat $ROOT_FOLDER/scripts/check_podman.log | grep 'Cannot connect to Podman' | awk '{print $1;}')
     echo "*** Podman check: $CHECK"
     
-    if [[ $CHECK == "Cannot" ]]; then
-       echo "*** Podman is not running! The script ends here."
+    #if [[ $CHECK == "Cannot" ]]; then
+    #   echo "*** Podman is not running! The script ends here."
        rm -f $ROOT_FOLDER/scripts/check_podman.log
-       exit 1
-    fi
+    #   exit 1
+    #fi
 
     if [[ $CI_CONFIG == "local" ]]; then
         echo "*** Set versions_local.env file as input"
@@ -151,6 +151,8 @@ function resetAll () {
         echo "*** DELETE all OpenShift compoments!"
         cd $ROOT_FOLDER/scripts
         bash $ROOT_FOLDER/scripts/delete-everything-openshift.sh
+        
+        sleep 2
         
         echo "*** Install required OpenShift compoments!"
         cd $ROOT_FOLDER/scripts
@@ -298,8 +300,8 @@ function createOLMDatabaseOperatorYAMLs () {
 }
 
 function deployDatabaseOperatorOLM () {
-    kubectl create -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
-    kubectl create -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
+    kubectl create -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml -n $NAMESPACE
+    kubectl create -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml -n $NAMESPACE
 
     kubectl get catalogsource operator-database-catalog -n $NAMESPACE -oyaml
     kubectl get subscriptions operator-database-v0-0-1-sub -n $NAMESPACE -oyaml
@@ -464,13 +466,13 @@ echo "************************************"
 echo " Build 'database service'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
 echo "************************************"
-buildDatabaseService
+# buildDatabaseService
 
 echo "************************************"
 echo " Build 'operator database backup'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 echo "************************************"
-buildDatabaseBackup
+# buildDatabaseBackup
 
 echo "************************************"
 echo " Configure CR samples for the 'database operator'"
@@ -481,19 +483,19 @@ echo "************************************"
 echo " Build 'database operator'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 echo "************************************"
-buildDatabaseOperator
+# buildDatabaseOperator
 
 echo "************************************"
 echo " Build 'database operator bundle'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
 echo "************************************"
-buildDatabaseOperatorBundle
+# buildDatabaseOperatorBundle
 
 echo "************************************"
 echo " Build 'database operator catalog'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
 echo "************************************"
-buildDatabaseOperatorCatalog
+# buildDatabaseOperatorCatalog
 
 echo "************************************"
 echo " Create OLM yamls"
