@@ -28,8 +28,6 @@ export LOGFILE_NAME=script-automation-kubernetes.log
 # Functions
 # **********************************************************************************
 
-function 
-
 function customLog () {
     LOG_TYPE="$1"
     LOG_MESSAGE="$2"
