@@ -19,11 +19,25 @@ export CHECK_PODMAN="Podman Engine"
 export CHECK_OPERATORSDK="operator-sdk"
 export CHECK_GO="go"
 export CHECK_OPM="Version"
+export CHECK_TAR="bsdtar"
 
 
 # **********************************************************************************
 # Functions definition
 # **********************************************************************************
+
+verifyTar() {  
+    VERICATION=$(tar version)
+
+    if [[ $VERICATION =~ $CHECK_TAR ]]; then
+    echo "---------------------------------"
+    echo "- tar is installed: $VERICATION !"
+    else 
+    echo "*** tar is NOT installed or running!"
+    echo "*** The scripts ends here!"
+    exit 1
+    fi
+}
 
 verifyPodman() {  
     VERICATION=$(podman version)

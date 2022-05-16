@@ -11,7 +11,7 @@ The documentation is structured in following sections.
 
 ### 1. Technical environment
 
-> 🔴 IMPORTANT: For the [opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) tool installation please read the [blog post](https://suedbroecker.net/2022/04/28/make-generate-error-127/) or just copy the `bin` folder of an **existing project** `Operator SDK` project to the **cloned github project** directory.
+> 🔴 IMPORTANT: For the [opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) tool installation please read the [blog post](https://suedbroecker.net/2022/04/28/make-generate-error-127/) or just copy the `bin` folder of an **existing project** `Operator SDK` project to the **cloned github project** directory, or run the available script automation in b).
 
 | OS| Version | Tested |
 | --- | ---  |  --- |
@@ -64,7 +64,9 @@ controller-gen  kustomize       opm             setup-envtest
 | awk | awk version 20200816 | L | OK |
 | cURL | 7.79.1 | L | OK |
 | grep | 2.6.0-FreeBSD | L | OK |
+| tar | bsdtar 3.5.1 | L | OK |
 | container registry | [DockerHub](https://hub.docker.com/), [Quay(Red Hat)](https://quay.io/) | C | OK |
+
 
 | IBM Cloud Services used| Version | Tested |
 | --- | ---  |  --- |
