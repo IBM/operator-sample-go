@@ -17,18 +17,41 @@ The documentation is structured in following sections.
 | --- | ---  |  --- |
 | macOS | 12.3.1 | OK |
 
+#### a) Verification of the prerequisites
+
 All local installation versions are related to macOS.
-You can run to verify following script if are the tools installed, but you need to verify the versions of the output with in the following table.
+You can run to [verify following script](https://github.com/IBM/operator-sample-go/blob/main/scripts/check-prerequisites.sh) if are the tools installed, but you need to verify the versions of the output with in the following table.
 
 ```sh
 sh scripts/check-prerequisites.sh
 ```
 
-| Tools or framework | Version |  (G)obal, (L) ocal or (C)loud installed | Tested |
+#### b) Setup of the needed executable `bin` files 
+
+Setup the needed `bin` files (`controller-gen`, `kustomize`,` opm`, `setup-envtest`) for the operator-sdk projects:
+
+```sh
+sh scripts/check-binfiles-for-operator-sdk-projects.sh
+```
+
+* Example output:
+
+```sh
+***  Bin folder status: operator-database
+controller-gen  kustomize       opm             setup-envtest
+***  Bin folder status: operator-database
+controller-gen  kustomize       opm             setup-envtest
+```
+
+#### A Table with the tested version of tools and frameworks of the prerequsites
+
+| Tools or frameworks | Version/s |  (G)obal, (L) ocal or (C)loud installed | Tested |
 | --- | --- | --- |  --- |
 | [Podman](https://podman.io/) Client / Server | 4.1.0 / 4.3.0 | G | OK |
-| [Operator SDK](https://sdk.operatorframework.io/) | v1.18.0,  v1.18.1, v1.19.1  | G | OK |
-| Go | go1.17.6 | G | OK |
+| [Operator SDK](https://sdk.operatorframework.io/) | v1.18.0,  v1.18.1 | G | OK |
+| Go | go1.17.6 _(operator-sdk v1.18.0, v1.18.1 )_ | G | OK |
+| [Operator SDK](https://sdk.operatorframework.io/) | v1.19.1 | G | OK |
+| Go | go1.17.8 _(operator-sdk v1.19.1)_ | G | OK |
 | Kubernetes cluster (VPC) | 1.23.6_1527 | C | OK |
 | kubectl client | 1.23 | L | OK |
 | kubectl server | v1.23.6+IKS | C | OK |
