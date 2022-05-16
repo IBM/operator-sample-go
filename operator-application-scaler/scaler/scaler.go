@@ -35,6 +35,7 @@ var (
 	applicationContext  context.Context
 	kubernetesClient    client.Client
 	applicationResource *applicationoperatorv1beta1.Application
+	prometheusClient    api.Client
 )
 
 func Run() {
@@ -48,38 +49,41 @@ func Run() {
 	}
 	if openShift {
 		prometheusAddress = "https://prometheus-k8s.openshift-monitoring:9091"
-		//prometheusAddress = "https://prometheus-k8s-openshift-monitoring.mycluster-eu-de-1-688607-162e406f043e20da9b0ef0731954a894-0000.eu-de.containers.appdomain.cloud"
-
 	} else {
 		prometheusAddress = "http://prometheus-operated.monitoring:9090"
 	}
-
+	fmt.Printf("prometheusAddress=%s\n", prometheusAddress)
 	queryAmountHelloEndpointInvocations := "application_net_heidloff_GreetingResource_countHelloEndpointInvoked_total"
 
 	// Run locally: docker run -p 9090:9090 prom/prometheus
 	//prometheusAddress = "http://localhost:9090"
 	//queryAmountHelloEndpointInvocations = "go_info"
 
-	var caFile = "/etc/prometheus-k8s-cert/tls.crt"
+	if openShift {
+		var caFile = "/etc/prometheus-k8s-cert/tls.crt"
+		var bearerToken = "/etc/prometheus-k8s-token/token.txt"
+		roundTripper, _ := createRoundTripper(caFile, true)
+		bearerTokenRoundTripper := addBearerAuthToRoundTripper(bearerToken, roundTripper)
+		prometheusClient, err = api.NewClient(api.Config{
+			Address:      prometheusAddress,
+			RoundTripper: bearerTokenRoundTripper,
+		})
+		if err != nil {
+			fmt.Printf("Error creating Prometheus client for OpenShift: %v\n", err)
+			os.Exit(1)
+		}
 
-	var bearerToken = "/etc/prometheus-k8s-token/token.txt"
-
-	roundTripper, _ := createRoundTripper(caFile, true)
-
-	bearerTokenRoundTripper := addBearerAuthToRoundTripper(bearerToken, roundTripper)
-
-	fmt.Printf("prometheusAddress=%s\n", prometheusAddress)
-
-	client, err := api.NewClient(api.Config{
-		Address:      prometheusAddress,
-		RoundTripper: bearerTokenRoundTripper,
-	})
-	if err != nil {
-		fmt.Printf("Error creating Prometheus client: %v\n", err)
-		os.Exit(1)
+	} else {
+		prometheusClient, err = api.NewClient(api.Config{
+			Address: prometheusAddress,
+		})
+		if err != nil {
+			fmt.Printf("Error creating Prometheus client for IKS: %v\n", err)
+			os.Exit(1)
+		}
 	}
 
-	v1api := v1.NewAPI(client)
+	v1api := v1.NewAPI(prometheusClient)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	result, warnings, err := v1api.Query(ctx, queryAmountHelloEndpointInvocations, time.Now())
