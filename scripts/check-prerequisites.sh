@@ -9,6 +9,7 @@ export CHECK_AWK="awk version 20200816"
 export CHECK_CURL="curl"
 export CHECK_BUILDAH="buildah"
 export CHECK_KUBECTL="Client"
+export CHECK_OC="Client"
 export CHECK_PLUGIN_CLOUDDATABASES="cloud-databases"
 export CHECK_PLUGIN_CODEENGINE="code-engine"
 export CHECK_PLUGIN_CONTAINERREGISTERY="container-registry"
@@ -232,6 +233,20 @@ verifyGo() {
     fi
 }
 
+verifyOC() {  
+    VERICATION=$(oc version)
+    echo $VERICATION
+
+    if [[ $VERICATION =~ $CHECK_OC ]]; then
+    echo "---------------------------------"
+    echo "- oc is installed: $VERICATION !"
+    else 
+    echo "*** oc is NOT installed !"
+    echo "*** The scripts ends here!"
+    exit 1
+    fi
+}
+
 verifyOPM() {  
     VERICATION=$(opm version)
     echo $VERICATION
@@ -272,6 +287,9 @@ echo "10. Verify go"
 verifyGo
 echo "11. Verify OPM"
 verifyOPM
+echo "12. Verify oc"
+verifyOC
+
 
 echo "**********************************************"
 echo "Success! All prerequisite tools or frameworks are installed!"

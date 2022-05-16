@@ -32,6 +32,8 @@ sh scripts/check-prerequisites.sh
 | Kubernetes cluster (VPC) | 1.23.6_1527 | C | OK |
 | kubectl client | 1.23 | L | OK |
 | kubectl server | v1.23.6+IKS | C | OK |
+| oc server | 4.7.0 | C | OK |
+| oc client | 4.10.9 | C | OK |
 | operator-database/bin/[opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) | v1.21.0 | L | OK |
 | operator-application/bin/[opm](https://github.com/operator-framework/operator-registry/blob/master/docs/design/opm-tooling.md#opm) | v1.21.0 | L | OK |
 | bash | GNU bash, version 3.2.57(1)-release (x86_64-apple-darwin21)  | L | OK |

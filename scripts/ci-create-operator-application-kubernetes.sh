@@ -381,7 +381,7 @@ echo "************************************"
 verifyPreReqs
 
 echo "************************************"
-echo " Build 'simple microserice'"
+echo " Build 'simple microservice'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_MICROSERVICE"
 echo "************************************"
 buildSimpleMicroservice 

@@ -17,6 +17,11 @@ function setEnvironmentVariablesLocal () {
     source $ROOT_FOLDER/versions_local.env
 }
 
+function deletePrometheusConfiguration () {
+    oc delete -f $ROOT_FOLDER/prometheus/openshift/
+    oc delete secret prometheus-token-secret
+}
+
 function deleteMicroserviceApplicationInstance () { 
     cd $ROOT_FOLDER/operator-application
     kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
@@ -98,14 +103,19 @@ echo "************************************"
 setEnvironmentVariables
 
 echo "************************************"
+echo " Delete prometheus configuration"
+echo "************************************"
+deletePrometheusConfiguration
+
+echo "************************************"
 echo " Delete microservice application"
 echo "************************************"
-# deleteMicroserviceApplicationInstance
+deleteMicroserviceApplicationInstance
 
 echo "************************************"
 echo " Delete application operator"
 echo "************************************"
-# deleteApplicationOperator
+deleteApplicationOperator
 
 echo "************************************"
 echo " Delete database operator"
@@ -120,28 +130,28 @@ deleteOLMdeployment
 echo "************************************"
 echo " Delete database instance"
 echo "************************************"
-# deleteDatabaseInstance
+deleteDatabaseInstance
 
 echo "************************************"
 echo " Delete namespaces related to application operator"
 echo "************************************"
-# deleteNamespacesRelatedToApplicationOperator
+deleteNamespacesRelatedToApplicationOperator
 
 echo "************************************"
 echo " Delete database application"
 echo "************************************"
-# deleteNamespacesRelatedToDatabaseOperator
+deleteNamespacesRelatedToDatabaseOperator
 
 echo "************************************"
 echo " Delete for local configuration"
 echo "************************************"
 setEnvironmentVariablesLocal
-#deleteMicroserviceApplicationInstance
-#deleteApplicationOperator
-#deleteNamespacesRelatedToApplicationOperator
-#deleteDatabaseInstance
+deleteMicroserviceApplicationInstance
+deleteApplicationOperator
+deleteNamespacesRelatedToApplicationOperator
+deleteDatabaseInstance
 deleteDatabaseOperator
-#deleteNamespacesRelatedToDatabaseOperator
+deleteNamespacesRelatedToDatabaseOperator
 
 echo "************************************"
 echo " Delete cert manager"

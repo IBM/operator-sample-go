@@ -17,7 +17,7 @@ echo "-----------------------------"
 # **************** Global variables
 
 export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
-export NAMESPACE=operators
+export NAMESPACE=openshift-operators
 export CI_CONFIG=$1
 export VERSIONS_FILE=""
 export APPLICATION_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/application-operator-templates
@@ -31,7 +31,7 @@ export LOGFILE_NAME=script-automation-kubernetes.log
 function configurePrometheusOpenShiftForSimpleApplication () {
 
    oc label namespace application-beta openshift.io/cluster-monitoring="true"
-   oc apply -f ../prometheus/openshift/
+   oc apply -f $ROOT_FOLDER/prometheus/openshift/
 
    mkdir "$ROOT_FOLDER/scripts/$TEMP_FOLDER"
    
@@ -238,13 +238,13 @@ function buildApplicationOperatorCatalog () {
 
 function createOLMApplicationOperatorYAMLs () {
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
-    sed "s+APPLICATION_CATALOG_IMAGE+$CATALOG_NAME+g" $APPLICATION_TEMPLATE_FOLDER/kubernetes-application-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/kubernetes-application-catalogsource.yaml
-    cp -nf $DATABASE_TEMPLATE_FOLDER/kubernetes-application-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/kubernetes-application-subscription.yaml 
+    sed "s+APPLICATION_CATALOG_IMAGE+$CATALOG_NAME+g" $APPLICATION_TEMPLATE_FOLDER/openshift-application-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
+    cp -nf $APPLICATION_TEMPLATE_FOLDER/openshift-application-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-application-subscription.yaml 
 }
 
 function deployApplicationOperatorOLM () {
-    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-application-catalogsource.yaml
-    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-application-subscription.yaml
+    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
+    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
 
     kubectl get catalogsource operator-application-catalog -n $NAMESPACE -oyaml
     kubectl get subscriptions operator-application-v0-0-1-sub -n $NAMESPACE -oyaml
@@ -253,7 +253,7 @@ function deployApplicationOperatorOLM () {
     kubectl get all -n $NAMESPACE
 
     array=("operator-application-catalog")
-    namespace=operators
+    namespace=openshift-operators
     export STATUS_SUCCESS="Running"
     for i in "${array[@]}"
         do 
@@ -279,7 +279,7 @@ function deployApplicationOperatorOLM () {
         done
 
     array=("operator-application.v0.0.1")
-    namespace=operators
+    namespace=openshift-operators
     search=installplans
     export STATUS_SUCCESS="true"
     for i in "${array[@]}"
@@ -400,34 +400,34 @@ echo "************************************"
 verifyPreReqs
 
 echo "************************************"
-echo " Build 'simple microserice'"
+echo " Build 'simple microservice'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_MICROSERVICE"
 echo "************************************"
-buildSimpleMicroservice 
+#buildSimpleMicroservice 
 
 echo "************************************"
 echo " Build 'application scaler'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER"
 echo "************************************"
-buildApplicationScaler
+#buildApplicationScaler
 
 echo "************************************"
 echo " Build 'application operator'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 echo "************************************"
-buildApplicationOperator
+#buildApplicationOperator
 
 echo "************************************"
 echo " Build 'application operator bundle'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
 echo "************************************"
-buildApplicationOperatorBundle
+#buildApplicationOperatorBundle
 
 echo "************************************"
 echo " Build 'application operator catalog'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
 echo "************************************"
-buildApplicationOperatorCatalog
+#buildApplicationOperatorCatalog
 
 echo "************************************"
 echo " Create OLM yamls"
