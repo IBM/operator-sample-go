@@ -49,8 +49,7 @@ controller-gen  kustomize       opm             setup-envtest
 | --- | --- | --- |  --- |
 | [Podman](https://podman.io/) Client / Server | 4.1.0 / 4.3.0 | G | OK |
 | [Operator SDK](https://sdk.operatorframework.io/) | v1.18.0,  v1.18.1, v1.19.1 | G | OK |
-| Go | go1.17.6 _(operator-sdk v1.18.0, v1.18.1 )_ | G | OK |
-| [Operator SDK](https://sdk.operatorframework.io/) | v1.19.1 | G | OK |
+| Go | go1.17.6 _(operator-sdk v1.18.0, v1.18.1 )_ (worked also with v1.19.1 ) | G | OK |
 | Go | go1.17.8 _(operator-sdk v1.19.1)_ | G | NOT TESTED |
 | Kubernetes cluster (VPC) | 1.23.6_1527 | C | OK |
 | kubectl client | 1.23 | L | OK |
