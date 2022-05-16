@@ -84,7 +84,23 @@ function setEnvironmentVariables () {
 }
 
 function verifyPreReqs () {
-  
+  echo "************************************"
+  echo " Check if podman is running"
+  echo "************************************"
+
+  podman images &> $ROOT_FOLDER/scripts/check_podman.log
+
+  CHECK=$(cat $ROOT_FOLDER/scripts/check_podman.log | grep 'Cannot connect to Podman' | awk '{print $1;}')
+  echo "*** Podman check: $CHECK"
+
+  if [[ $CHECK == "Cannot" ]]; then
+       echo "*** Podman is not running! The script ends here."
+       rm -f $ROOT_FOLDER/scripts/check_podman.log
+       exit 1
+  else 
+       rm -f $ROOT_FOLDER/scripts/check_podman.log
+  fi
+
   max_retrys=2
   j=0
   array=("database-cluster-0" "database-cluster-1")

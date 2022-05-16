@@ -50,3 +50,5 @@ scripts/fedora-coreos-36.20220507.1.0-qemu.x86_64.qcow2.xz
 scripts/podman-machine-default_fedora-coreos-36.20220507.1.0-qemu.x86_64.qcow2
 versions_local.env
 scripts/script-automation-openshift.log
+scripts/script-automation-kubernetes.log
+scripts/check_podman.log
