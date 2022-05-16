@@ -20,7 +20,7 @@ The documentation is structured in following sections.
 #### a) Verification of the prerequisites
 
 All local installation versions are related to macOS.
-You can run to [verify following script](https://github.com/IBM/operator-sample-go/blob/main/scripts/check-prerequisites.sh) if are the tools installed, but you need to verify the versions of the output with in the following table.
+You can run to verify the prerequisites [the following script](https://github.com/IBM/operator-sample-go/blob/main/scripts/check-prerequisites.sh). The scipt informs you if the tools are installed, but you need to verify the versions in the terminal output with the version in the following table.
 
 ```sh
 sh scripts/check-prerequisites.sh
