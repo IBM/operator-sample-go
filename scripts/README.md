@@ -43,7 +43,7 @@ controller-gen  kustomize       opm             setup-envtest
 controller-gen  kustomize       opm             setup-envtest
 ```
 
-#### A Table with the tested version of tools and frameworks of the prerequsites
+#### c) A Table with the tested version of tools and frameworks of the prerequsites
 
 | Tools or frameworks | Version/s |  (G)obal, (L) ocal or (C)loud installed | Tested |
 | --- | --- | --- |  --- |
