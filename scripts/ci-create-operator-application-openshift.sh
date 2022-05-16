@@ -403,31 +403,31 @@ echo "************************************"
 echo " Build 'simple microservice'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_MICROSERVICE"
 echo "************************************"
-#buildSimpleMicroservice 
+buildSimpleMicroservice 
 
 echo "************************************"
 echo " Build 'application scaler'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER"
 echo "************************************"
-#buildApplicationScaler
+buildApplicationScaler
 
 echo "************************************"
 echo " Build 'application operator'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 echo "************************************"
-#buildApplicationOperator
+buildApplicationOperator
 
 echo "************************************"
 echo " Build 'application operator bundle'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
 echo "************************************"
-#buildApplicationOperatorBundle
+buildApplicationOperatorBundle
 
 echo "************************************"
 echo " Build 'application operator catalog'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
 echo "************************************"
-#buildApplicationOperatorCatalog
+buildApplicationOperatorCatalog
 
 echo "************************************"
 echo " Create OLM yamls"

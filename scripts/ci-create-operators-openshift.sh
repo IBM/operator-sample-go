@@ -83,8 +83,8 @@ function run () {
         echo "*** $CI_CONFIG "
         echo "*** $RESET "
         echo "*** $RESET_PODMAN "    
-        #setupDatabase
-        #setupApplication
+        setupDatabase
+        setupApplication
     else 
         echo "*** Please select a valid option to run!"
         echo "*** Use 'database' for the database operator."
