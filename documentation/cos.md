@@ -90,7 +90,7 @@ more details on this [CR](https://github.com/IBM/operator-sample-go/blob/main/do
 
 - Login to your IBM Cloud Console
 - Go to Cloud Object Storage
-- Select your Cloud Object Storage created in  [Setup Cloud Object Storage]()
+- Select your Cloud Object Storage created in  [Setup Cloud Object Storage](https://github.com/IBM/operator-sample-go/blob/cos-backup-documentation/documentation/cos.md#setup-cloud-object-storage)
 - in the Bucket List you will see the backups created with interval defined in Cron Job
 
 
