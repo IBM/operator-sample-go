@@ -4,7 +4,7 @@ metadata:
   name: databasebackup-manual
   namespace: database
 spec:
-  image: docker.io/nheidloff/operator-database-backup:v1.0.46
+  image: docker.io/nheidloff/operator-database-backup:v1.0.50
   repos:
   - name: ibmcos-repo
     type: ibmcos
@@ -16,5 +16,5 @@ spec:
     time: "2022-04-20T02:59:43.1Z"
     repo: ibmcos-repo
   scheduledTrigger:
-    schedule: "0 * * * *"
+    schedule: "*/3 * * * *"
     repo: ibmcos-repo

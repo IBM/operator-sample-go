@@ -14,4 +14,4 @@ spec:
   databaseName: database
   databaseNamespace: database
   title: movies
-  image: docker.io/nheidloff/simple-microservice:v1.0.46
+  image: docker.io/nheidloff/simple-microservice:v1.0.50
