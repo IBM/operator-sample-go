@@ -346,7 +346,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/deleeuw/database-operator:v1.0.78
+                image: quay.io/diwakarptiwari/database-operator:v1.0.1
                 livenessProbe:
                   httpGet:
                     path: /healthz
