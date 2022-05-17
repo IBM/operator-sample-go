@@ -32,16 +32,30 @@ function deleteMicroserviceApplicationInstance () {
 }
 
 function deleteOLMdeployment () {
+
+    # Application
+    CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
+    sed "s+APPLICATION_CATALOG_IMAGE+$CATALOG_NAME+g" $APPLICATION_TEMPLATE_FOLDER/openshift-application-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
+    cp -nf $APPLICATION_TEMPLATE_FOLDER/openshift-application-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-application-subscription.yaml 
+
+    kubectl delete -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
+    kubectl delete -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
+    
     kubectl delete subscriptions operator-application-v0-0-1-sub -n openshift-operators  
     kubectl delete catalogsource operator-application-catalog -n openshift-operators 
     
-    
+    # Database
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
     sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/openshift-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
     cp -nf $DATABASE_TEMPLATE_FOLDER/openshift-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-database-subscription.yaml 
 
     kubectl delete subscriptions operator-database-v0-0-1-sub -n openshift-operators  
     kubectl delete catalogsource operator-database-catalog -n openshift-operators 
+
+    kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
+    kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
+
+    kubectl delete -f $ROOT_FOLDER/bundle/manifests/operator-database.clusterserviceversion.yaml
 
     #kubectl delete installplans -n openshift-operators --all
     #echo "Press any key to move on"
