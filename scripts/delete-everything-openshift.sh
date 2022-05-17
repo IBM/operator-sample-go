@@ -4,6 +4,7 @@
 
 export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/database-operator-templates
+export APPLICATION_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/application-operator-templates
 
 # **********************************************************************************
 # Functions
@@ -162,6 +163,7 @@ echo "************************************"
 setEnvironmentVariablesLocal
 deleteMicroserviceApplicationInstance
 deleteApplicationOperator
+deleteOLMdeployment
 deleteNamespacesRelatedToApplicationOperator
 deleteDatabaseInstance
 deleteDatabaseOperator
