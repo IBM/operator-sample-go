@@ -113,7 +113,7 @@ function tag () {
     export tag_new="verify_scripts_automation_$commit_id"
 
     git tag -l | grep "verify_scripts_automation_automation_$commit_id"
-    CHECK_TAG=$(git tag -l | grep "verify_scripts_automation_$commit_id")
+    CHECK_TAG=$(git tag -l | grep "verify_scripts_automation_kubernetes_$commit_id")
     if [[ $tag_new == $CHECK_TAG ]]; then
         echo "*** The tag $tag_new exists."
         echo "*** No tag will be added"
