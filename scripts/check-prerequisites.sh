@@ -4,7 +4,9 @@
 
 export CHECK_IBMCLOUDCLI="ibmcloud"
 export CHECK_JQ="jq-"
-export CHECK_SED="12" #12.3.1
+export CHECK_SED_12="12" #12.3.1
+export CHECK_SED_11="11" #11.2.3
+export CHECK_SED=""
 export CHECK_AWK="awk version 20200816"
 export CHECK_CURL="curl"
 export CHECK_BUILDAH="buildah"
@@ -114,13 +116,16 @@ verifySed() {
 
     VERICATION="$(sw_vers -productVersion)"
     echo $VERICATION
-    
-    if [[ $VERICATION =~ $CHECK_SED  ]]; then
+
+    if [[ $VERICATION =~ $CHECK_SED_12  ]]; then
+    echo "---------------------------------"
+    echo "- Sed is installed: $VERICATION !"
+    elif [[ $VERICATION =~ $CHECK_SED_11  ]]; then
     echo "---------------------------------"
     echo "- Sed is installed: $VERICATION !"
     else 
     echo "*** Sed is NOT installed or a in a different version !"
-         "*** Your versions $VERICATION expected version: $CHECK_SED"
+         "*** Your versions $VERICATION expected versions: '$CHECK_SED_11' or '$CHECK_SED_12'"
     echo "*** The scripts ends here!"
     exit 1
     fi
