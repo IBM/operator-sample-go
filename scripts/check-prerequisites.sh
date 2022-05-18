@@ -282,8 +282,8 @@ verifyOPM() {
     echo "Please ensure you copy the 'opm bin' to the 'bin' folder of your operator-sdk project."
     else 
     echo "*** opm is NOT installed !"
-    echo "*** Run following command:"
-    echo "*** $ sh script/check-binfiles-for-operator-sdk-projects.sh"
+    echo "*** Run following command the script folder:"
+    echo "*** $ sh check-binfiles-for-operator-sdk-projects.sh"
     echo "*** The scripts ends here!"
     exit 1
     fi
