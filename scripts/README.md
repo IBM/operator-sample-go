@@ -16,6 +16,7 @@ The documentation is structured in following sections.
 | OS| Version | Tested |
 | --- | ---  |  --- |
 | macOS | 12.3.1 | OK |
+| macOS | 11.2.3 | needs to be verified |
 
 | Operator | Cluster | Type | Region | Security Group | Public Gateway | Container Registry | Tested | Note |
 | --- | --- | --- |  --- |  --- | --- | --- |  --- | --- |
