@@ -16,10 +16,12 @@ The documentation is structured in following sections.
 | OS| Version | Tested |
 | --- | ---  |  --- |
 | macOS | 12.3.1 | OK |
+| macOS | 11.2.3 | needs to be verified |
 
-| Operator | Cluster | Type | Region | Security Group | Container Registry | Tested | Note |
-| --- | --- | --- |  --- |  --- | --- | --- |  --- |
-| Database | Kubernetes (1.23.6_1527) | VPC | us-south  | -- | `Quay.io` | OK | |
+| Operator | Cluster | Type | Region | Security Group | Public Gateway | Container Registry | Tested | Note |
+| --- | --- | --- |  --- |  --- | --- | --- |  --- | --- |
+| Database | Kubernetes (1.23.6_1527) | VPC | us-south  | Validated | Validated | `Quay.io` | OK | |
+| Application (microservice) | Kubernetes (1.23.6_1527) | VPC | us-south | Validated | Validated | `DockerHub` |  Problems | Can't be pulled from DockerHub. Solution delete repo on DockerHub and recreate it. |
 
 
 

@@ -4,7 +4,9 @@
 
 export CHECK_IBMCLOUDCLI="ibmcloud"
 export CHECK_JQ="jq-"
-export CHECK_SED="12.3.1"
+export CHECK_SED_12="12" #12.3.1
+export CHECK_SED_11="11" #11.2.3
+export CHECK_SED=""
 export CHECK_AWK="awk version 20200816"
 export CHECK_CURL="curl"
 export CHECK_BUILDAH="buildah"
@@ -20,6 +22,7 @@ export CHECK_OPERATORSDK="operator-sdk"
 export CHECK_GO="go"
 export CHECK_OPM="Version"
 export CHECK_TAR="bsdtar"
+export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 
 
 # **********************************************************************************
@@ -28,6 +31,7 @@ export CHECK_TAR="bsdtar"
 
 verifyTar() {  
     VERICATION=$(tar version)
+    echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_TAR ]]; then
     echo "---------------------------------"
@@ -41,12 +45,14 @@ verifyTar() {
 
 verifyPodman() {  
     VERICATION=$(podman version)
+    echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_PODMAN ]]; then
     echo "---------------------------------"
     echo "- podman is installed: $VERICATION !"
     else 
-    echo "*** podman is NOT installed or running!"
+    echo "*** podman is NOT 'installed' or 'running'!"
+    echo "*** Check command: '$ podman machine start'"
     echo "*** The scripts ends here!"
     exit 1
     fi
@@ -109,13 +115,19 @@ verifyAWK() {
 }
 
 verifySed() {  
-    VERICATION="$(sw_vers -productVersion)"
 
-    if [[ $VERICATION =~ $CHECK_SED  ]]; then
+    VERICATION="$(sw_vers -productVersion)"
+    echo $VERICATION
+
+    if [[ $VERICATION =~ $CHECK_SED_12  ]]; then
+    echo "---------------------------------"
+    echo "- Sed is installed: $VERICATION !"
+    elif [[ $VERICATION =~ $CHECK_SED_11  ]]; then
     echo "---------------------------------"
     echo "- Sed is installed: $VERICATION !"
     else 
-    echo "*** Sed is NOT installed !"
+    echo "*** Sed is NOT installed or a in a different version !"
+         "*** Your versions $VERICATION expected versions: '$CHECK_SED_11' or '$CHECK_SED_12'"
     echo "*** The scripts ends here!"
     exit 1
     fi
@@ -256,13 +268,14 @@ verifyOC() {
     echo "- oc is installed: $VERICATION !"
     else 
     echo "*** oc is NOT installed !"
+    echo "*** Note: Not needed when you plan to work with OpenShift"
     echo "*** The scripts ends here!"
     exit 1
     fi
 }
 
 verifyOPM() {  
-    VERICATION=$(opm version)
+    VERICATION=$($ROOT_FOLDER/operator-application/bin/opm version)
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_OPM ]]; then
@@ -271,6 +284,8 @@ verifyOPM() {
     echo "Please ensure you copy the 'opm bin' to the 'bin' folder of your operator-sdk project."
     else 
     echo "*** opm is NOT installed !"
+    echo "*** Run following command the script folder:"
+    echo "*** $ sh check-binfiles-for-operator-sdk-projects.sh"
     echo "*** The scripts ends here!"
     exit 1
     fi
