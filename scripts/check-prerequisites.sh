@@ -4,7 +4,7 @@
 
 export CHECK_IBMCLOUDCLI="ibmcloud"
 export CHECK_JQ="jq-"
-export CHECK_SED="12.3.1"
+export CHECK_SED="sed" #12.3.1
 export CHECK_AWK="awk version 20200816"
 export CHECK_CURL="curl"
 export CHECK_BUILDAH="buildah"
@@ -109,7 +109,7 @@ verifyAWK() {
 }
 
 verifySed() {  
-    VERICATION="$(sw_vers -productVersion)"
+    VERICATION="$(sed --help)"
 
     if [[ $VERICATION =~ $CHECK_SED  ]]; then
     echo "---------------------------------"
