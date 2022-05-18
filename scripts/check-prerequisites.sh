@@ -50,7 +50,8 @@ verifyPodman() {
     echo "---------------------------------"
     echo "- podman is installed: $VERICATION !"
     else 
-    echo "*** podman is NOT installed or running!"
+    echo "*** podman is NOT 'installed' or 'running'!"
+    echo "*** Check command: 'podman machine start'"
     echo "*** The scripts ends here!"
     exit 1
     fi
