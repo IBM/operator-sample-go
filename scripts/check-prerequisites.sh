@@ -4,7 +4,7 @@
 
 export CHECK_IBMCLOUDCLI="ibmcloud"
 export CHECK_JQ="jq-"
-export CHECK_SED="sed" #12.3.1
+export CHECK_SED="12" #12.3.1
 export CHECK_AWK="awk version 20200816"
 export CHECK_CURL="curl"
 export CHECK_BUILDAH="buildah"
@@ -28,6 +28,7 @@ export CHECK_TAR="bsdtar"
 
 verifyTar() {  
     VERICATION=$(tar version)
+    echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_TAR ]]; then
     echo "---------------------------------"
@@ -41,6 +42,7 @@ verifyTar() {
 
 verifyPodman() {  
     VERICATION=$(podman version)
+    echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_PODMAN ]]; then
     echo "---------------------------------"
@@ -109,13 +111,16 @@ verifyAWK() {
 }
 
 verifySed() {  
-    VERICATION="$(sed --help)"
 
+    VERICATION="$(sw_vers -productVersion)"
+    echo $VERICATION
+    
     if [[ $VERICATION =~ $CHECK_SED  ]]; then
     echo "---------------------------------"
     echo "- Sed is installed: $VERICATION !"
     else 
-    echo "*** Sed is NOT installed !"
+    echo "*** Sed is NOT installed or a in a different version !"
+         "*** Your versions $VERICATION expected version: $CHECK_SED"
     echo "*** The scripts ends here!"
     exit 1
     fi

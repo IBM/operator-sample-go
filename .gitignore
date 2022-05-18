@@ -52,3 +52,4 @@ versions_local.env
 scripts/script-automation-openshift.log
 scripts/script-automation-kubernetes.log
 scripts/check_podman.log
+temp.txt
