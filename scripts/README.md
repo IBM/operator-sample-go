@@ -20,7 +20,7 @@ The documentation is structured in following sections.
 | Operator | Cluster | Type | Region | Security Group | Security Group | Container Registry | Tested | Note |
 | --- | --- | --- |  --- |  --- | --- | --- |  --- |
 | Database | Kubernetes (1.23.6_1527) | VPC | us-south  | -- | `Quay.io` | OK | |
-| Application (microservice) | Kubernetes (1.23.6_1527) | us-south | -- | `DockerHub` | Problems | Can't be pulled from DockerHub. Solution delete repo on DockerHub and recreate it. |
+| Application (microservice) | Kubernetes (1.23.6_1527) | VPC | us-south | -- | `DockerHub` | Problems | Can't be pulled from DockerHub. Solution delete repo on DockerHub and recreate it. |
 
 
 
