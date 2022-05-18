@@ -51,7 +51,7 @@ verifyPodman() {
     echo "- podman is installed: $VERICATION !"
     else 
     echo "*** podman is NOT 'installed' or 'running'!"
-    echo "*** Check command: 'podman machine start'"
+    echo "*** Check command: '$ podman machine start'"
     echo "*** The scripts ends here!"
     exit 1
     fi
@@ -282,6 +282,8 @@ verifyOPM() {
     echo "Please ensure you copy the 'opm bin' to the 'bin' folder of your operator-sdk project."
     else 
     echo "*** opm is NOT installed !"
+    echo "*** Run following command:"
+    echo "*** $ sh script/check-binfiles-for-operator-sdk-projects.sh"
     echo "*** The scripts ends here!"
     exit 1
     fi
