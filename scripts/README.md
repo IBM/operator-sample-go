@@ -17,6 +17,12 @@ The documentation is structured in following sections.
 | --- | ---  |  --- |
 | macOS | 12.3.1 | OK |
 
+| Operator | Cluster | Type | Region | Security Group | Container Registry | Tested | Note |
+| --- | --- | --- |  --- |  --- | --- | --- |  --- |
+| Database | Kubernetes (1.23.6_1527) | VPC | us-south  | -- | `Quay.io` | OK | |
+
+
+
 #### a) Verification of the prerequisites
 
 All local installation versions are related to macOS.
