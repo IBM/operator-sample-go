@@ -7,4 +7,4 @@ spec:
   displayName: operator-application-catalog
   publisher: IBM Build Labs
   sourceType: grpc
-  image: docker.io/nheidloff/application-operator-catalog:v1.0.5
+  image: docker.io/nheidloff/application-operator-catalog:v1.0.50

@@ -2,12 +2,12 @@ apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
   name: operator-database-catalog
-  namespace: openshift-marketplace
+  namespace: openshift-operators
 spec:
   displayName: IBM Build Labs Database Catalog
   publisher: IBM Build Labs
   sourceType: grpc
-  image: quay.io/tsuedbroecker/database-operator-catalog:v1.0.36
+  image: docker.io/nheidloff/database-operator-catalog:v1.0.50
   updateStrategy:
     registryPoll:
       interval: 10m
