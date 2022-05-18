@@ -44,6 +44,9 @@ function deleteOLMdeployment () {
     
     kubectl delete subscriptions operator-application-v0-0-1-sub -n openshift-operators  
     kubectl delete catalogsource operator-application-catalog -n openshift-operators 
+
+    oc get clusterserviceversion | grep operator-application.v0.0.1 -n openshift-operators
+    oc delete clusterserviceversion operator-application.v0.0.1 -n openshift-operators
     
     # Database
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
@@ -51,7 +54,10 @@ function deleteOLMdeployment () {
     cp -nf $DATABASE_TEMPLATE_FOLDER/openshift-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-database-subscription.yaml 
 
     kubectl delete subscriptions operator-database-v0-0-1-sub -n openshift-operators  
-    kubectl delete catalogsource operator-database-catalog -n openshift-operators 
+    kubectl delete catalogsource operator-database-catalog -n openshift-operators
+
+    oc get clusterserviceversion | grep operator-database.v0.0.1 -n openshift-operators
+    oc delete clusterserviceversion operator-database.v0.0.1 -n openshift-operators
 
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
