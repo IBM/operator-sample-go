@@ -22,6 +22,7 @@ export CHECK_OPERATORSDK="operator-sdk"
 export CHECK_GO="go"
 export CHECK_OPM="Version"
 export CHECK_TAR="bsdtar"
+export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 
 
 # **********************************************************************************
@@ -273,7 +274,7 @@ verifyOC() {
 }
 
 verifyOPM() {  
-    VERICATION=$(opm version)
+    VERICATION=$($ROOT_FOLDER/operator-application/bin/opm version)
     echo $VERICATION
 
     if [[ $VERICATION =~ $CHECK_OPM ]]; then
