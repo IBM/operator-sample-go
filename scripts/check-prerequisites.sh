@@ -268,7 +268,7 @@ verifyOC() {
     echo "- oc is installed: $VERICATION !"
     else 
     echo "*** oc is NOT installed !"
-    echo "*** Note: Not needed when you plan to work with OpenShift"
+    echo "*** Note: Only needed when you plan to work with OpenShift!"
     echo "*** The scripts ends here!"
     exit 1
     fi
