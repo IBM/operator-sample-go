@@ -117,7 +117,9 @@ function verifyPreReqs () {
        rm -f $ROOT_FOLDER/scripts/check_podman.log
        exit 1
   else
-       rm -f $ROOT_FOLDER/scripts/check_podman.log
+      else 
+      echo "*** Podman is running!"
+      rm -f $ROOT_FOLDER/scripts/check_podman.log
   fi
 
   max_retrys=2

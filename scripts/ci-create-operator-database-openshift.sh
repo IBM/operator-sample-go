@@ -97,11 +97,13 @@ function setEnvironmentVariables () {
     CHECK=$(cat $ROOT_FOLDER/scripts/check_podman.log | grep 'Cannot connect to Podman' | awk '{print $1;}')
     echo "*** Podman check: $CHECK"
     
-    #if [[ $CHECK == "Cannot" ]]; then
-    #   echo "*** Podman is not running! The script ends here."
+    if [[ $CHECK == "Cannot" ]]; then
+      echo "*** Podman is not running! The script ends here."
        rm -f $ROOT_FOLDER/scripts/check_podman.log
-    #   exit 1
-    #fi
+       exit 1
+    else 
+      echo "*** Podman is running!"
+    fi
 
     if [[ $CI_CONFIG == "local" ]]; then
         echo "*** Set versions_local.env file as input"

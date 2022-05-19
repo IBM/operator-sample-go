@@ -26,6 +26,8 @@ Table of verifications
 | --- | --- | --- |  --- |  --- | --- | --- |  --- | --- |
 | Database | Kubernetes (1.23.6_1527) | VPC | us-south  | Validated | Validated | `Quay.io` | OK | |
 | Application (microservice) | Kubernetes (1.23.6_1527) | VPC | us-south | Validated | Validated | `DockerHub` |  Problems | Can't be pulled from DockerHub. Solution delete repo on DockerHub and recreate it. |
+| Application | OpenShift |  VPC | us-south | Validated | Validated | `DockerHub` and `Quay`|  Problems | Instance of `operators.coreos.com` can't be deleted. |
+| Application | OpenShift |  VPC | us-south | Validated | Validated | `DockerHub` and `Quay`|  Problems | Operator instance can't be created when using the automation script. |
 
 #### a) Verification of the prerequisites
 
