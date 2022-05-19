@@ -9,4 +9,4 @@ spec:
   name: operator-database
   source: operator-database-catalog
   sourceNamespace: openshift-operators
-  startingCSV: operator-database.v0.0.1
+# startingCSV: operator-database.v0.0.1

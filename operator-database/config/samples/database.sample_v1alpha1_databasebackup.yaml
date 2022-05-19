@@ -4,7 +4,7 @@ metadata:
   name: databasebackup-manual
   namespace: database
 spec:
-  image: quay.io/diwakarptiwari/operator-database-backup:v1.0.1
+  image: docker.io/nheidloff/operator-database-backup:v1.0.59
   repos:
   - name: ibmcos-repo
     type: ibmcos

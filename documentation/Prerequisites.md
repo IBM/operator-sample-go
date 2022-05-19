@@ -8,6 +8,12 @@
 4. podman
 5. Only if IBM Cloud is used: [ibmcloud](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli)
 
+Verify your prerequisites with following script:
+
+```sh
+sh scripts/check-prerequisites.sh
+```
+
 ### 1.1. Operator SDK
 
 🔴 IMPORTANT: There are issues with different combinations of operator-sdk and go. This repo has been tested with **operator-sdk 1.19.1** and **go 1.17.6**. If you don't use this combination, binaries will be missing. Brew doesn't work either.
@@ -87,10 +93,31 @@ $ kubectl apply -f https://github.com/cert-manager/cert-manager/releases/downloa
 
 If you want to run the samples without modifications, nothing needs to be changed.
 
-If you want to change them, replace REGISTRY and ORG with your registry account and change the version numbers in versions.env. 
+If you want to change them, replace `REGISTRY` and `ORG` with your registry account and change the version numbers in `versions_local.env` file. 
 
+* Create a `version_local.env` file based on the template.
+
+```sh
+cat versions_local.env-template > versions_local.env
 ```
-$ code versions.env
-$ podman login $REGISTRY
-$ source versions.env
+
+* Open the `versions_local.env` in Visual Studio Code
+
+```sh
+code versions_local.env
+```
+
+* Change the values to your needs
+
+```sh
+export REGISTRY='quay.io'
+export ORG='tsuedbroecker'
+export COMMON_TAG='v1.0.36'
+```
+
+* Open a terminal in the project and use the `versions_local.env` as input for your environment variables
+
+```sh
+source versions_local.env
+podman login $REGISTRY
 ```

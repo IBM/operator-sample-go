@@ -38,39 +38,6 @@ function installCertManager () {
     done 
 }
 
-function installPrometheusOperator () {
-  kubectl get packagemanifests -n openshift-marketplace | grep 'prom'
-  kubectl describe packagemanifests prometheus -n openshift-marketplace
-  kubectl create -f $ROOT_FOLDER/prometheus/prometheus_openshift/operator
-  kubectl get pods -n monitoring | grep 'prom'
-
-  array=("prometheus-operator" )
-  namespace=monitoring
-  export STATUS_SUCCESS="Running"
-  for i in "${array[@]}"
-    do 
-        echo ""
-        echo "------------------------------------------------------------------------"
-        echo "Check $i"
-        while :
-        do
-            FIND=$i
-            STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
-            echo "Status: $STATUS_CHECK"
-            STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
-            if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
-                echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
-                echo "------------------------------------------------------------------------"
-                break
-            else
-                echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
-                echo "------------------------------------------------------------------------"
-            fi
-            sleep 3
-        done
-    done 
-}
-
 function verifyPrometheusOperator () {
 
   kubectl get pods -n openshift-monitoring | grep 'prom'
@@ -153,14 +120,9 @@ echo "************************************"
 installCertManager
 
 echo "************************************"
-echo " Install prometheus operator"
+echo " Verify prometheus operator"
 echo "************************************"
-# installPrometheusOperator
-
-echo "************************************"
-echo " Create prometheus instance"
-echo "************************************"
-# createPrometheusInstance
+verifyPrometheusOperator
 
 echo "************************************"
 echo " Verify prometheus instance"

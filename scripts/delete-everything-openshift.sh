@@ -4,6 +4,7 @@
 
 export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/database-operator-templates
+export APPLICATION_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/application-operator-templates
 
 # **********************************************************************************
 # Functions
@@ -32,16 +33,37 @@ function deleteMicroserviceApplicationInstance () {
 }
 
 function deleteOLMdeployment () {
+
+    # Application
+    CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
+    sed "s+APPLICATION_CATALOG_IMAGE+$CATALOG_NAME+g" $APPLICATION_TEMPLATE_FOLDER/openshift-application-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
+    cp -nf $APPLICATION_TEMPLATE_FOLDER/openshift-application-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-application-subscription.yaml 
+
+    kubectl delete -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
+    kubectl delete -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
+    
     kubectl delete subscriptions operator-application-v0-0-1-sub -n openshift-operators  
     kubectl delete catalogsource operator-application-catalog -n openshift-operators 
-    
-    
+
+    oc get clusterserviceversion | grep operator-application.v0.0.1 -n openshift-operators
+    oc delete clusterserviceversion operator-application.v0.0.1 -n openshift-operators
+    kubectl delete operators.operators.coreos.com operator-application.openshift-operators
+
+    # Database
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
     sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/openshift-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
     cp -nf $DATABASE_TEMPLATE_FOLDER/openshift-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-database-subscription.yaml 
 
     kubectl delete subscriptions operator-database-v0-0-1-sub -n openshift-operators  
-    kubectl delete catalogsource operator-database-catalog -n openshift-operators 
+    kubectl delete catalogsource operator-database-catalog -n openshift-operators
+
+    oc get clusterserviceversion | grep operator-database.v0.0.1 -n openshift-operators
+    oc delete clusterserviceversion operator-database.v0.0.1 -n openshift-operators
+
+    kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
+    kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
+
+    kubectl delete -f $ROOT_FOLDER/bundle/manifests/operator-database.clusterserviceversion.yaml
 
     #kubectl delete installplans -n openshift-operators --all
     #echo "Press any key to move on"
@@ -71,6 +93,7 @@ function deleteDatabaseOperator () {
     kubectl delete customresourcedefinition databasebackups.database.sample.third.party -n $namespace
     kubectl delete customresourcedefinition databases.database.sample.third.party -n $namespace
     kubectl delete customresourcedefinition databaseclusters.database.sample.third.party -n $namespace
+    kubectl delete operators.operators.coreos.com operator-database.openshift-operators
 
     kubectl delete deployment operator-database-controller-manager -n $namespace
     kubectl delete clusterserviceversion operator-database.v0.0.1 
@@ -148,6 +171,7 @@ echo "************************************"
 setEnvironmentVariablesLocal
 deleteMicroserviceApplicationInstance
 deleteApplicationOperator
+deleteOLMdeployment
 deleteNamespacesRelatedToApplicationOperator
 deleteDatabaseInstance
 deleteDatabaseOperator

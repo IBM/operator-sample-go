@@ -21,7 +21,7 @@ export NAMESPACE=openshift-operators
 export CI_CONFIG=$1
 export VERSIONS_FILE=""
 export APPLICATION_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/application-operator-templates
-export LOGFILE_NAME=script-automation-kubernetes.log
+export LOGFILE_NAME=script-automation-openshift.log
 
 
 # **********************************************************************************
@@ -208,9 +208,9 @@ function buildApplicationOperatorBundle () {
     APPLICATION_OPERATOR_IMAGE="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
     sed "s+APPLICATION_OPERATOR_IMAGE+$APPLICATION_OPERATOR_IMAGE+g" $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
 
-    OPERATOR_NAMESPACE=operators
-    sed "s+OPERATOR_NAMESPACE+$OPERATOR_NAMESPACE+g" $APPLICATION_TEMPLATE_FOLDER/operator-application-role_binding_patch_TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
-    cp -nf $APPLICATION_TEMPLATE_FOLDER/operator-application-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role.yaml
+    # OPERATOR_NAMESPACE=openshift-operators
+    # sed "s+OPERATOR_NAMESPACE+$OPERATOR_NAMESPACE+g" $APPLICATION_TEMPLATE_FOLDER/operator-application-role_binding_patch_TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
+    # cp -nf $APPLICATION_TEMPLATE_FOLDER/operator-application-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role.yaml
     
     # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
     podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" . > $ROOT_FOLDER/scripts/temp.log
@@ -243,12 +243,14 @@ function createOLMApplicationOperatorYAMLs () {
 }
 
 function deployApplicationOperatorOLM () {
+    # create catalog
     kubectl create -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
-    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
-
     kubectl get catalogsource operator-application-catalog -n $NAMESPACE -oyaml
+
+     # create subscription
+    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
     kubectl get subscriptions operator-application-v0-0-1-sub -n $NAMESPACE -oyaml
-    kubectl get installplans -n $NAMESPACE
+    
     kubectl get pods -n $NAMESPACE
     kubectl get all -n $NAMESPACE
 
@@ -277,7 +279,9 @@ function deployApplicationOperatorOLM () {
                 sleep 3
             done
         done
-
+    kubectl get pods -n $NAMESPACE
+    kubectl get all -n $NAMESPACE
+    
     array=("operator-application.v0.0.1")
     namespace=openshift-operators
     search=installplans
@@ -304,6 +308,9 @@ function deployApplicationOperatorOLM () {
                 sleep 3
             done
         done
+     
+    kubectl get pods -n $NAMESPACE
+    kubectl get all -n $NAMESPACE
 
     array=("operator-application-controller-manager" )
     namespace=operators

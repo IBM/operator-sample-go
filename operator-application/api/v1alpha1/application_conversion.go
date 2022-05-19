@@ -18,6 +18,7 @@ func (src *Application) ConvertTo(dstRaw conversion.Hub) error {
 	dst.Spec.DatabaseNamespace = src.Spec.DatabaseNamespace
 	dst.Spec.SchemaUrl = src.Spec.SchemaUrl
 	dst.Spec.Version = src.Spec.Version
+	dst.Spec.Image = src.Spec.Image
 
 	if src.ObjectMeta.Annotations == nil {
 		dst.Spec.Title = variables.DEFAULT_ANNOTATION_TITLE
@@ -50,6 +51,7 @@ func (dst *Application) ConvertFrom(srcRaw conversion.Hub) error {
 	dst.Spec.DatabaseNamespace = src.Spec.DatabaseNamespace
 	dst.Spec.SchemaUrl = src.Spec.SchemaUrl
 	dst.Spec.Version = src.Spec.Version
+	dst.Spec.Image = src.Spec.Image
 
 	if dst.ObjectMeta.Annotations == nil {
 		dst.ObjectMeta.Annotations = make(map[string]string)

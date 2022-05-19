@@ -307,7 +307,7 @@ function buildDatabaseOperatorBundle () {
     sed "s+DATABASE_OPERATOR_IMAGE+$DATABASE_OPERATOR_IMAGE+g" $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion-TEMPLATE.yaml > $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
     OPERATOR_NAMESPACE=operators
     sed "s+OPERATOR_NAMESPACE+$OPERATOR_NAMESPACE+g" $DATABASE_TEMPLATE_FOLDER/operator-database-role_binding_patch_TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
-    cp -nf $DATABASE_TEMPLATE_FOLDER/scripts/operator-database-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role.yaml
+    cp -nf $DATABASE_TEMPLATE_FOLDER/operator-database-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role.yaml
     # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
     
     rm -f $ROOT_FOLDER/scripts/temp.log
@@ -433,8 +433,8 @@ function deployDatabaseOperatorOLM () {
 
 function createDatabaseInstance () {
     kubectl create ns database   
-    kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml
-    kubectl apply -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
+    kubectl create -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml
+    kubectl create -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
     kubectl get pods -n database
     
     array=("database-cluster-0" "database-cluster-1")
