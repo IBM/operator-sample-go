@@ -22,6 +22,7 @@ export CI_CONFIG=$1
 export VERSIONS_FILE=""
 export APPLICATION_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/application-operator-templates
 export LOGFILE_NAME=script-automation-openshift.log
+export TEMP_FOLDER=temp
 
 
 # **********************************************************************************
@@ -32,6 +33,7 @@ function configurePrometheusOpenShiftForSimpleApplication () {
 
    oc label namespace application-beta openshift.io/cluster-monitoring="true"
    oc apply -f $ROOT_FOLDER/prometheus/openshift/
+   
 
    mkdir "$ROOT_FOLDER/scripts/$TEMP_FOLDER"
    
