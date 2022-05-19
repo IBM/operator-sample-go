@@ -12,8 +12,7 @@ Use this section as a guide to give a live demo of the operator-sample-go asset 
 
 * First install the [prerequistes](Prerequisites.md)
 * Install all demo components using the provided [script](../scripts/README.md)
-* Create a Cloud Object Storage bucket for testing database backup [Setup Cloud Object Storage - link TODO](cos.md)
-* Create a secret with credentials for Cloud Object Storage [Setup COS Secret - link TODO](cos.md)
+* Create a Cloud Object Storage (COS) Bucket and add Secrets for accessing it. [Setup Cloud Object Storage - link TODO](cos.md)
 * Create a Route to the /hello enpoint for the microservice pod in application-beta
 
 **Note that after following the install setps, you will need to reverse some of the deployment steps as they are intended to be performed live in the demo script below.**
