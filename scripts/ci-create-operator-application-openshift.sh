@@ -117,7 +117,6 @@ function verifyPreReqs () {
        rm -f $ROOT_FOLDER/scripts/check_podman.log
        exit 1
   else
-      else 
       echo "*** Podman is running!"
       rm -f $ROOT_FOLDER/scripts/check_podman.log
   fi
@@ -315,7 +314,7 @@ function deployApplicationOperatorOLM () {
     kubectl get all -n $NAMESPACE
 
     array=("operator-application-controller-manager" )
-    namespace=operators
+    namespace=openshift-operators
     export STATUS_SUCCESS="Running"
     for i in "${array[@]}"
         do 
