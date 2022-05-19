@@ -12,10 +12,10 @@ Once you are ready with your IBM Cloud Account:
 - Once clicked a tab window will open of Cloud Ojbect Storage
 - **IBM Cloud** will be selected by default
 - Choose your pricing plan
-- in configure your resource section enter
-  a. Enter Service Name
-  b. Select a Resource Group
-  c. enter Tags as requied
+- in configure your resource section enter <br/>
+  a. Enter Service Name <br/>
+  b. Select a Resource Group <br/>
+  c. enter Tags as requied <br/>
 - Click on Create
 
 ## Create Service Credentials
@@ -32,14 +32,6 @@ to create a service credentials follow below instructions:
 7. Click on **"Add"** Button.
 8. Click on the **Arrow Down** before credential name to show the **ACCESS KEY ID** and  **SECRET ACCESS KEY** written in **JSON**.
 
-## Selecting the Region and Endpoint
-
-by default Global or region based on your location would be selected, to change it or show it:
-
-1. From the Left Navigation Menu Click on **Endpoints**.
-2. Select your region type from **Select resiliency** dropdown
-3. Choose your **REGION NAME** and **ENDPOINT URL** will also be shown in front of Region.
-
 
 ## Adding the Credentials in Secret YAML (For Auto Backup)
 
@@ -53,4 +45,10 @@ change the following lines at Number 8 and 9 respectively:
 ```
 
 
+now apply the secret file 
+
+```ssh
+cd operator-database-backup
+kubectl apply -f kubernetes/secret.yaml
+```
 
