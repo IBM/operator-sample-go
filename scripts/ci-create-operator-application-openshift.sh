@@ -341,13 +341,16 @@ function deployApplicationOperatorOLM () {
 }
 
 function createApplicationInstance () {
-    kubectl get pods -n operators | grep "application"
+    kubectl get pods -n openshift-operators | grep "application"
     kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
-    kubectl get pods -n operators | grep "application-beta"
+    kubectl get pods -n application-beta | grep "application"
+    #kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
+    #kubectl get pods -n application-alpha | grep "application"
 }
 
 function verifyApplication() {
     
+    # verify database 
     TYPE="*** verify database - Database operator"
     kubectl exec -n database database-cluster-1 -- curl -s http://localhost:8089/persons > $ROOT_FOLDER/scripts/temp.log
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
@@ -357,6 +360,7 @@ function verifyApplication() {
     customLog "$TYPE" "$INFO"
     rm -f $ROOT_FOLDER/scripts/temp.log
 
+    # verify database 
     array=("application-deployment-microservice" )
     namespace=application-beta
     export STATUS_SUCCESS="Running"
