@@ -47,7 +47,8 @@ function deleteOLMdeployment () {
 
     oc get clusterserviceversion | grep operator-application.v0.0.1 -n openshift-operators
     oc delete clusterserviceversion operator-application.v0.0.1 -n openshift-operators
-    
+    kubectl delete operators.operators.coreos.com operator-application.openshift-operators
+
     # Database
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
     sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/openshift-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
@@ -92,6 +93,7 @@ function deleteDatabaseOperator () {
     kubectl delete customresourcedefinition databasebackups.database.sample.third.party -n $namespace
     kubectl delete customresourcedefinition databases.database.sample.third.party -n $namespace
     kubectl delete customresourcedefinition databaseclusters.database.sample.third.party -n $namespace
+    kubectl delete operators.operators.coreos.com operator-database.openshift-operators
 
     kubectl delete deployment operator-database-controller-manager -n $namespace
     kubectl delete clusterserviceversion operator-database.v0.0.1 
