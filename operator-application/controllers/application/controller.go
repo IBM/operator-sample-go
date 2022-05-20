@@ -156,6 +156,8 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 		return ctrl.Result{}, err
 	}
 
+	// should put role-all code for K8s and OCP here
+
 	// Note: Commented out for dev productivity only
 	/*
 		_, err = reconciler.addFinalizer(ctx, application)
