@@ -45,6 +45,12 @@ type ApplicationReconciler struct {
 //+kubebuilder:rbac:groups=core,resources=pods,verbs=get;list;watch
 //+kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups="",resources=services,verbs=get;list;watch;create;update;patch;delete
+
+//+kubebuilder:rbac:groups="",resources=clusterrolebindings,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=clusterroles,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=cronjobs,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups="",resources=jobs,verbs=get;list;watch;create;update;patch;delete
+
 func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
 	log.Info("Reconcile started")
@@ -65,13 +71,13 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 		return ctrl.Result{}, err
 	}
 
-	if reconciler.checkPrerequisites() == false {
+	if !reconciler.checkPrerequisites() {
 		log.Info("Prerequisites not fulfilled")
 		err = reconciler.setConditionFailed(ctx, application, CONDITION_REASON_FAILED_INSTALL_READY)
 		if err != nil {
 			return ctrl.Result{}, err
 		}
-		return ctrl.Result{RequeueAfter: time.Second * 60}, fmt.Errorf("Prerequisites not fulfilled")
+		return ctrl.Result{RequeueAfter: time.Second * 60}, fmt.Errorf("prerequisites not fulfilled")
 	}
 	err = reconciler.setConditionInstallReady(ctx, application)
 	if err != nil {
@@ -120,6 +126,36 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 		return ctrl.Result{}, err
 	}
 
+	_, err = reconciler.reconcileClusterRole(ctx, application)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	_, err = reconciler.reconcileClusterRoleBinding(ctx, application)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
+	//CronJob - to be beutified
+	if !runsOnOpenShift {
+		_, err = reconciler.reconcileCronJob(ctx, application)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
+	if runsOnOpenShift {
+		_, err = reconciler.reconcileCronJobOCP(ctx, application)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+	}
+
+	err = reconciler.setConditionSucceeded(ctx, application)
+	if err != nil {
+		return ctrl.Result{}, err
+	}
+
 	// Note: Commented out for dev productivity only
 	/*
 		_, err = reconciler.addFinalizer(ctx, application)
@@ -127,11 +163,6 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 			return ctrl.Result{}, err
 		}
 	*/
-
-	err = reconciler.setConditionSucceeded(ctx, application)
-	if err != nil {
-		return ctrl.Result{}, err
-	}
 
 	return ctrl.Result{}, nil
 }

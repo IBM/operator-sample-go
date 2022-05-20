@@ -6,9 +6,9 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - application.sample.ibm.com
+  - ""
   resources:
-  - applications
+  - clusterrolebindings
   verbs:
   - create
   - delete
@@ -18,23 +18,33 @@ rules:
   - update
   - watch
 - apiGroups:
-  - application.sample.ibm.com
+  - ""
   resources:
-  - applications/finalizers
+  - clusterroles
   verbs:
-  - update
-- apiGroups:
-  - application.sample.ibm.com
-  resources:
-  - applications/status
-  verbs:
+  - create
+  - delete
   - get
+  - list
   - patch
   - update
+  - watch
 - apiGroups:
-  - application.sample.ibm.com
+  - ""
   resources:
-  - applications/metadata
+  - cronjobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - jobs
   verbs:
   - create
   - delete
@@ -68,6 +78,32 @@ rules:
   - update
   - watch
 - apiGroups:
+  - application.sample.ibm.com
+  resources:
+  - applications
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - application.sample.ibm.com
+  resources:
+  - applications/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - application.sample.ibm.com
+  resources:
+  - applications/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
   - apps
   resources:
   - deployments
@@ -91,18 +127,6 @@ rules:
   - database.sample.third.party
   resources:
   - databases
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - monitoring.coreos.com
-  resources:
-  - servicemonitors
   verbs:
   - create
   - delete
