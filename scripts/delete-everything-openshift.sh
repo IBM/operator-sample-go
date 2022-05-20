@@ -20,7 +20,8 @@ function setEnvironmentVariablesLocal () {
 
 function deletePrometheusConfiguration () {
     oc delete -f $ROOT_FOLDER/prometheus/openshift/
-    oc delete secret prometheus-token-secret
+    oc delete secret prometheus-token-secret -n openshift-operators
+    oc delete secret prometheus-token-secret -n application-beta
 }
 
 function deleteMicroserviceApplicationInstance () { 
@@ -71,8 +72,9 @@ function deleteOLMdeployment () {
 }
 
 function deleteNamespacesRelatedToApplicationOperator () {
-    kubectl delete namespace application-alpha
-    kubectl delete namespace application-beta
+    oc delete project application-alpha
+    oc delete project application-beta
+
     #echo "Press any key to move on"
     #read input
 }
@@ -104,7 +106,7 @@ function deleteDatabaseOperator () {
 }
 
 function deleteNamespacesRelatedToDatabaseOperator () {
-    kubectl delete namespace database
+    oc delete project database
     #echo "Press any key to move on"
     #read input
 }

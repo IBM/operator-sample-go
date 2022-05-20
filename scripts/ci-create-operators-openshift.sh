@@ -119,7 +119,7 @@ function tag () {
         echo "*** No tag will be added"
     else 
        echo "*** Create tag: $tag_new "
-       loginfo=$(cat $ROOT_FOLDER/scripts/script-automation.log)
+       loginfo=$(cat $ROOT_FOLDER/scripts/$LOGFILE_NAME)
        git tag -a $tag_new $commit_id -m "Script configuration: [$RUN] [$CI_CONFIG] [$RESET] [$RESET_PODMAN] - Script duration: [$SCRIPT_DURATION] - $loginfo"
        git push origin $tag_new
     fi

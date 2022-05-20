@@ -181,6 +181,8 @@ function buildApplicationScaler () {
 }
 
 function configureCR_SimpleMicroservice () {
+    oc new-project application-alpha 
+    oc new-project application-beta
     IMAGE_NAME="$REGISTRY/$ORG/$IMAGE_MICROSERVICE"
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
@@ -301,11 +303,10 @@ function deployApplicationOperatorOLM () {
                 echo "Status: $STATUS_CHECK"
                 STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
                 if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
-                    echo "$(date +'%F %H:%M:%S') Status: $search($STATUS_CHECK)"
                     echo "------------------------------------------------------------------------"
                     break
                 else
-                    echo "$(date +'%F %H:%M:%S') Status: $search($STATUS_CHECK)"
+                    echo "$(date +'%F %H:%M:%S') Status:  $i $search($STATUS_CHECK)"
                     echo "------------------------------------------------------------------------"
                 fi
                 sleep 3
@@ -343,8 +344,9 @@ function deployApplicationOperatorOLM () {
 }
 
 function createApplicationInstance () {
+    echo "*** create application instances"
     kubectl get pods -n openshift-operators | grep "application"
-    kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
+    kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml -n application-beta
     kubectl get pods -n application-beta | grep "application"
     #kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     #kubectl get pods -n application-alpha | grep "application"
@@ -362,7 +364,7 @@ function verifyApplication() {
     customLog "$TYPE" "$INFO"
     rm -f $ROOT_FOLDER/scripts/temp.log
 
-    # verify database 
+    # verify application
     array=("application-deployment-microservice" )
     namespace=application-beta
     export STATUS_SUCCESS="Running"
@@ -380,6 +382,22 @@ function verifyApplication() {
                 if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
                     echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
                     echo "------------------------------------------------------------------------"
+                    while :
+                    do
+                        kubectl get pods -n $namespace
+                        PODNAME=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $1;}' | sed 's/"//g' | sed 's/,//g')
+                        STATUS_CHECK='1/1'
+                        STATUS_VERIFICATION=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $2;}' | sed 's/"//g' | sed 's/,//g')
+                        if [ "$STATUS_VERIFICATION" = "$STATUS_CHECK" ]; then
+                            echo "$(date +'%F %H:%M:%S') Status: $PODNAME is Ready"
+                            echo "------------------------------------------------------------------------"
+                            break
+                        else
+                            echo "$(date +'%F %H:%M:%S') Status: $PODNAME($STATUS_VERIFICATION)"
+                            echo "------------------------------------------------------------------------"
+                        fi
+                        sleep 3
+                    done
                     break
                 else
                     echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
