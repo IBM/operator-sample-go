@@ -226,10 +226,10 @@ function deleteDatabaseInstance () {
                 echo "Status: $STATUS_CHECK"
                 STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
                 if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
-                    echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
+                    echo "$(date +'%F %H:%M:%S') Status: $FIND is deleted"
                     echo "------------------------------------------------------------------------"
                     LOG_TYPE="Delete"
-                    LOG_MESSAGE="Status: $FIND was deleted and is running."
+                    LOG_MESSAGE="Status: $FIND was deleted."
                     customLog "$LOG_TYPE" "$LOG_MESSAGE"
                     break
                 else
@@ -241,14 +241,39 @@ function deleteDatabaseInstance () {
         done
     
     kubectl get databases/$namespace -n $namespace -oyaml
-    kubectl delete ns $namespace  
+    kubectl delete ns $namespace
 
-    rm -f $ROOT_FOLDER/scripts/temp.log
-    kubectl get databases.database.sample.third.party/database -n $namespace -oyaml > $ROOT_FOLDER/scripts/temp.log
-    TYPE="*** Database operator info"
-    INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
-    echo $INFO
-    customLog "$TYPE" "$INFO" 
+       export max_retrys=9
+    array=("$namespace")
+    export STATUS_SUCCESS=""
+    for i in "${array[@]}"
+        do 
+            echo ""
+            echo "------------------------------------------------------------------------"
+            echo "Check $i"
+            j=0
+            export FIND=$i
+            while :
+            do       
+            ((j++))
+            STATUS_CHECK=$(kubectl get namespace -n $FIND | grep $FIND | awk '{print $2;}')
+            echo "Status: $STATUS_CHECK"
+            if [ "$STATUS_CHECK" = "$STATUS_SUCCESS" ]; then
+                    echo "$(date +'%F %H:%M:%S') Status: $FIND is deleted"
+                    echo "------------------------------------------------------------------------"
+                    break
+                elif [[ $j -eq $max_retrys ]]; then
+                    echo "$(date +'%F %H:%M:%S') $FIND isn't deleted!"
+                    echo "------------------------------------------------------------------------"
+                    break            
+                else
+                    echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
+                    echo "------------------------------------------------------------------------"
+                fi
+                sleep 3
+            done
+        done 
+ 
 }
 
 # **********************************************************************************
