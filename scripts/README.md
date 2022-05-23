@@ -46,6 +46,9 @@ Setup of the needed `bin` files (`controller-gen`, `kustomize`,` opm`, `setup-en
 sh scripts/check-binfiles-for-operator-sdk-projects.sh
 ```
 
+> Note: You need to interact with the script, because when you create the first time a bundle the temp values for the fix. These are the example value with are shown in the script: `'Display name   : myproblemfix'`, `Description    : myproblemfix`, `Provider's name: myproblemfix`, `Any relevant URL:`, `Comma-separated keywords   : myproblemfix`
+`Comma-separated maintainers: myproblemfix@myproblemfix.net`. It will create a temp operator sdk project and delete when it finished.
+
 * Example output:
 
 ```sh

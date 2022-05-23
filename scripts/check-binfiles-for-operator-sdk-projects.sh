@@ -99,6 +99,7 @@ function getOPMandCopyBin () {
     pwd
     cp -r . ../../../operator-database/bin
     cp -r . ../../../operator-application/bin
+    # delete the `fixproblem` project
     rm -rf $ROOT_FOLDER/scripts/fixproblem
     echo "***  Bin folder status: operator-database"
     cd $ROOT_FOLDER/operator-application/bin
