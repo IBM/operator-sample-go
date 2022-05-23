@@ -21,7 +21,7 @@ export NAMESPACE=openshift-operators
 export CI_CONFIG=$1
 export RESET=$2
 export VERSIONS_FILE=""
-export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/test-database-templates
+export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/test-openshift-templates
 export LOGFILE_NAME=test-database-script-openshift.log
 export TEMP_FOLDER=temp
 export SCRIPT_NAME=test-openshift-operator-database-instance.sh
@@ -29,12 +29,6 @@ export SCRIPT_NAME=test-openshift-operator-database-instance.sh
 # **********************************************************************************
 # Functions
 # **********************************************************************************
-
-# Verify prerequisite
-# Create yaml for test instance CR resoure
-# Apply yaml for test instance CR resoure
-# Verify the instances 
-# Delete the test instance
 
 function customLog () {
     echo "Log parameter: $1"
@@ -64,6 +58,7 @@ function logBuild () {
 }
 
 function logInit () {
+    echo "$(date +'%F %H:%M:%S') Start test" > $ROOT_FOLDER/scripts/$LOGFILE_NAME
     TYPE="script"
     INFO="script: $SCRIPT_NAME"
     customLog "$TYPE" "$INFO"
@@ -77,7 +72,7 @@ function setEnvironmentVariables () {
         INFO="*** Using following registry: $REGISTRY/$ORG"
         echo $INFO
         customLog "$CI_CONFIG" "$INFO"
-    elif [[ $CI_CONFIG == "demo" ]]; then
+    elif [[ $CI_CONFIG == "test" ]]; then
         echo "*** Set versions.env file as input"        
         source $ROOT_FOLDER/versions.env
         INFO="*** Using following registry: $REGISTRY/$ORG"
@@ -86,9 +81,9 @@ function setEnvironmentVariables () {
     else 
         echo "*** Please select a valid option to run!"
         echo "*** Use 'local' for your local test."
-        echo "*** Use 'demo' for your demo test."
+        echo "*** Use 'test' for your test."
         echo "*** Example:"
-        echo "*** sh $SCRIPT_NAME demo"
+        echo "*** sh $SCRIPT_NAME test"
         exit 1
     fi
 }
@@ -149,13 +144,15 @@ function configureCRs_DatabaseOperator () {
 }
 
 function createDatabaseInstance () {
-    kubectl create ns test-database   
-    kubectl create -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml
-    kubectl create -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
-    kubectl get pods -n test-database
+    namespace="test-database"
+
+    kubectl create ns $namespace  
+    kubectl create -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml -n $namespace
+    kubectl create -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml -n $namespace
+    kubectl get pods -n $namespace
     
     array=("database-cluster-0" "database-cluster-1")
-    namespace="test-database"
+    
     export STATUS_SUCCESS="Running"
     for i in "${array[@]}"
         do 
@@ -171,9 +168,9 @@ function createDatabaseInstance () {
                 if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
                     echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
                     echo "------------------------------------------------------------------------"
-                    LOG_TYPE="Verification Point"
+                    LOG_TYPE='Verification Point'
                     LOG_MESSAGE="Status: $FIND was created and is running."
-                    customLog ""
+                    customLog "$LOG_TYPE" "$LOG_MESSAGE"
                     break
                 else
                     echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
@@ -211,8 +208,8 @@ function deleteDatabaseInstance () {
     
     namespace="test-database"
     
-    kubectl delete -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml
-    kubectl delete -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
+    kubectl delete -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml -n $namespace
+    kubectl delete -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml -n $namespace
     kubectl get pods -n $namespace
     
     array=("database-cluster-0" "database-cluster-1")
@@ -231,9 +228,9 @@ function deleteDatabaseInstance () {
                 if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
                     echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
                     echo "------------------------------------------------------------------------"
-                    LOG_TYPE="Verification Point"
-                    LOG_MESSAGE="Status: $FIND was created and is running."
-                    customLog ""
+                    LOG_TYPE="Delete"
+                    LOG_MESSAGE="Status: $FIND was deleted and is running."
+                    customLog "$LOG_TYPE" "$LOG_MESSAGE"
                     break
                 else
                     echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
@@ -243,11 +240,11 @@ function deleteDatabaseInstance () {
             done
         done
     
-    kubectl get databases/database -n database -oyaml
-    kubectl delete ns test-database  
+    kubectl get databases/$namespace -n $namespace -oyaml
+    kubectl delete ns $namespace  
 
     rm -f $ROOT_FOLDER/scripts/temp.log
-    kubectl get databases.database.sample.third.party/database -n database -oyaml > $ROOT_FOLDER/scripts/temp.log
+    kubectl get databases.database.sample.third.party/database -n $namespace -oyaml > $ROOT_FOLDER/scripts/temp.log
     TYPE="*** Database operator info"
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
     echo $INFO
@@ -267,29 +264,24 @@ setEnvironmentVariables
 echo "************************************"
 echo " Verify prerequisites"
 echo "************************************"
-verifyPreReqs
+#verifyPreReqs
 
 echo "************************************"
 echo " Configure CR samples for the 'database operator'"
 echo "************************************"
-configureCRs_DatabaseOperator
-
-echo "************************************"
-echo " Create OLM yamls"
-echo "************************************"
-createOLMDatabaseOperatorYAMLs
-
-echo "************************************"
-echo " Deploy Database Operator OLM"
-echo "************************************"
-deployDatabaseOperatorOLM
+#configureCRs_DatabaseOperator
 
 echo "************************************"
 echo " Create Database Instance"
 echo "************************************"
-createDatabaseInstance
+#createDatabaseInstance
 
 echo "************************************"
 echo " Verify Database Instance"
 echo "************************************"
-verifyDatabase
+#verifyDatabase
+
+echo "************************************"
+echo " Delete Database Instance"
+echo "************************************"
+deleteDatabaseInstance
