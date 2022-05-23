@@ -11,6 +11,7 @@ spec:
   customresourcedefinitions:
     owned:
     - displayName: Database Backup
+      description: DatabaseBackup is the Schema for the databasebackup API
       kind: DatabaseBackup
       name: databasebackups.database.sample.third.party
       version: v1alpha1
@@ -20,6 +21,7 @@ spec:
       name: databaseclusters.database.sample.third.party
       version: v1alpha1
     - displayName: Database
+      description: Database is the Schema for the database API
       kind: Database
       name: databases.database.sample.third.party
       version: v1alpha1
