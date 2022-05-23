@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: database
+  name: test-database
 ---
 apiVersion: database.sample.third.party/v1alpha1
 kind: DatabaseCluster
 metadata:
-  name: databasecluster-sample
-  namespace: database
+  name: test-databasecluster-sample
+  namespace: test-database
 spec:
   image: DATABASE_SERVICE_IMAGE
   amountPods: 2
