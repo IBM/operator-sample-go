@@ -40,15 +40,16 @@ sh scripts/check-prerequisites.sh
 
 #### b) Setup of the needed executable `bin` files 
 
-Setup of the needed `bin` files (`controller-gen`, `kustomize`,` opm`, `setup-envtest`) for the operator-sdk projects:
+Setup of the needed `bin` files (`controller-gen`, `kustomize`,` opm`, `setup-envtest`) for the operator-sdk projects.
+**The script will create a temp operator sdk project, to create a the bin file and delete that temp project when it was finished.**
+
 
 ```sh
 sh scripts/check-binfiles-for-operator-sdk-projects.sh
 ```
 
-> Note: You need to interact with the script, because when you create the first time a bundle the temp values for the fix. These are the example value with are shown in the script: `'Display name   : myproblemfix'`, `Description    : myproblemfix`, `Provider's name: myproblemfix`, `Any relevant URL:`, `Comma-separated keywords   : myproblemfix`
-`Comma-separated maintainers: myproblemfix@myproblemfix.net`. It will create a temp operator sdk project and delete when it finished.
-
+> Note: You need to interact with the script, because when you create the first time a bundle. These are the temp values you can use for the script execution. These are the example values: `'Display name   : myproblemfix'`, `Description    : myproblemfix`, `Provider's name: myproblemfix`, `Any relevant URL:`, `Comma-separated keywords   : myproblemfix`
+`Comma-separated maintainers: myproblemfix@myproblemfix.net`. 
 * Example output:
 
 ```sh
