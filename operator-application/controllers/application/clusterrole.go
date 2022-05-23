@@ -25,8 +25,8 @@ func (reconciler *ApplicationReconciler) defineClusterRole(application *applicat
 		ObjectMeta: metav1.ObjectMeta{Name: variables.ClusterRoleName, Namespace: application.Namespace, Labels: labels},
 		Rules: []v1.PolicyRule{{
 			APIGroups: []string{"application.sample.ibm.com"},
-			Verbs:     []string{"create", "delete", "get", "list", "watch", "patch", "update"},
 			Resources: []string{"applications"},
+			Verbs:     []string{"create", "delete", "get", "list", "watch", "patch", "update"},
 		}, {APIGroups: []string{"application.sample.ibm.com"},
 			Verbs:     []string{"create", "delete", "get", "list", "watch", "patch", "update"},
 			Resources: []string{"applications/status"}}},
