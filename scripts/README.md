@@ -16,7 +16,7 @@ The documentation is structured in following sections.
 | OS| Version | Tested |
 | --- | ---  |  --- |
 | macOS | 12.3.1 | OK |
-| macOS | 11.2.3 | needs to be verified |
+| macOS | 11.2.3 | OK |
 
 #### Known problems
 
@@ -82,7 +82,7 @@ controller-gen  kustomize       opm             setup-envtest
 | IBM Cloud Services used| Version | Tested |
 | --- | ---  |  --- |
 | [IBM Cloud Kubernetess Service](https://cloud.ibm.com/kubernetes/catalog/create) (on VPC)| v1.23.6+IKS |  OK |
-| [Red Hat OpenShift on IBM Cloud](https://www.ibm.com/cloud/openshift) (on VPC)| -- |  OK |
+| [Red Hat OpenShift on IBM Cloud](https://www.ibm.com/cloud/openshift) (on VPC)| 4.10.9_1515 |  OK |
 | [IBM Cloud Object Storage](https://cloud.ibm.com/objectstorage/create) | TBD |  TBD |
 | [IBM Cloud 'Virtual Private Cloud'](https://cloud.ibm.com/vpc-ext/provision/vpc) | TBD |  TBD |
 
@@ -184,6 +184,18 @@ Setup or delete based on the **golden source versions** (version.env).
 | **demo**-opershift-operators.sh | No |  Yes  | `app` `demo` `reset` |
 | **demo**-opershift-operator-application.sh | No | Yes | `demo` `reset`  |
 | **demo**-opershift-operator-database.sh | No | Yes  |  `demo`  |
+
+* Setup demo for Kubernetes
+
+```sh
+sh scripts/demo-kubernetes-operators.sh app demo reset 
+```
+
+* Setup demo for OpenShift
+
+```sh
+sh scripts/demo-openshift-operators.sh app demo reset 
+```
 
 #### c.  **ci**-www-xxx-yyy-zzz.sh
 

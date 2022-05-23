@@ -12,7 +12,7 @@ echo "Parameter count : $@"
 echo "Parameter zero 'name of the script': $0"
 echo "---------------------------------"
 echo "Run configuration        : $1"
-echo "Demo Configuration         : $2"
+echo "Demo Configuration       : $2"
 echo "Reset                    : $3"
 echo "-----------------------------"
 
