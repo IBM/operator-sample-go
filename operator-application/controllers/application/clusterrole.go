@@ -27,9 +27,11 @@ func (reconciler *ApplicationReconciler) defineClusterRole(application *applicat
 			APIGroups: []string{"application.sample.ibm.com"},
 			Resources: []string{"applications"},
 			Verbs:     []string{"create", "delete", "get", "list", "watch", "patch", "update"},
-		}, {APIGroups: []string{"application.sample.ibm.com"},
-			Verbs:     []string{"create", "delete", "get", "list", "watch", "patch", "update"},
-			Resources: []string{"applications/status"}}},
+		},
+			{APIGroups: []string{"application.sample.ibm.com"},
+				Resources: []string{"applications/status"},
+				Verbs:     []string{"create", "delete", "get", "list", "watch", "patch", "update"},
+			}},
 	}
 
 	ctrl.SetControllerReference(application, clusterRole, reconciler.Scheme)
