@@ -25,11 +25,13 @@ func (reconciler *ApplicationReconciler) defineClusterRole(application *applicat
 		ObjectMeta: metav1.ObjectMeta{Name: variables.ClusterRoleName, Namespace: application.Namespace, Labels: labels},
 		Rules: []v1.PolicyRule{{
 			APIGroups: []string{"application.sample.ibm.com"},
-			Verbs:     []string{"create", "delete", "get", "list", "watch", "patch", "update"},
 			Resources: []string{"applications"},
-		}, {APIGroups: []string{"application.sample.ibm.com"},
 			Verbs:     []string{"create", "delete", "get", "list", "watch", "patch", "update"},
-			Resources: []string{"applications/status"}}},
+		},
+			{APIGroups: []string{"application.sample.ibm.com"},
+				Resources: []string{"applications/status"},
+				Verbs:     []string{"create", "delete", "get", "list", "watch", "patch", "update"},
+			}},
 	}
 
 	ctrl.SetControllerReference(application, clusterRole, reconciler.Scheme)
