@@ -38,6 +38,15 @@ func (reconciler *ApplicationReconciler) defineCronJobOCP(application *applicati
 						Spec: v1.PodSpec{
 							RestartPolicy: v1.RestartPolicyNever,
 							Containers: []v1.Container{{
+								VolumeMounts: []v1.VolumeMount{{
+									Name:      "certdata",
+									ReadOnly:  true,
+									MountPath: "/etc/prometheus-k8s-cert",
+								}, {
+									Name:      "tokendata",
+									ReadOnly:  true,
+									MountPath: "/etc/prometheus-k8s-token",
+								}},
 								Image: variables.ApplicationScalerImageName,
 								Name:  variables.ApplicationScalerContainerName,
 								Env: []v1.EnvVar{
@@ -78,7 +87,7 @@ func (reconciler *ApplicationReconciler) reconcileCronJobOCP(ctx context.Context
 	var cronJob *batchv1.CronJob
 	var cronJobDefinition *batchv1.CronJob
 
-	cronJobDefinition = reconciler.defineCronJob(application)
+	cronJobDefinition = reconciler.defineCronJobOCP(application)
 	cronJob = &batchv1.CronJob{}
 
 	err := reconciler.Get(ctx, types.NamespacedName{Name: variables.CronJobName, Namespace: application.Namespace}, cronJob)

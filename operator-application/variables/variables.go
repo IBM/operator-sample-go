@@ -15,6 +15,11 @@ var ContainerName string
 var MonitorName string
 var ClusterRoleName string
 var ClusterRoleBindingName string
+
+var ClusterRoleNameOCP string
+var ClusterRoleBindingNameOCPWithOLM string
+var ClusterRoleBindingNameOCPWithoutOLM string
+
 var ApplicationScalerContainerName string
 
 const ANNOTATION_TITLE = "applications.application.sample.ibm.com/title"
@@ -39,6 +44,11 @@ const ValueApplicationResourceNameSpace = "application-beta"
 
 const LabelValue = "application"
 const RoleBindingServiceAccount = "default"
+const RoleBindingServiceAccountOCP = "default"
+
+const OCPOperatorWithOLMNamespace = "openshift-operators"
+const OCPOperatorWithoutOLMNamespace = "operator-application-system"
+const OCPClusterRoleNamespace = "openshift-monitoring"
 
 // Note: For simplication purposes database properties are hardcoded
 const DatabaseUser string = "name"
@@ -47,14 +57,17 @@ const DatabaseUrl string = "url"
 const DatabaseCertificate string = "certificate"
 
 func SetGlobalVariables(applicationName string, image string) {
-	CronJobName = applicationName + "-cronjob"
+	CronJobName = applicationName + "-scaler"
 	SecretName = applicationName + "-secret-greeting"
 	DeploymentName = applicationName + "-deployment-microservice"
 	ServiceName = applicationName + "-service-microservice"
 	ContainerName = applicationName + "-microservice"
 	MonitorName = applicationName + "-monitor"
-	ClusterRoleName = applicationName + "-role"
-	ClusterRoleBindingName = applicationName + "-rolebinding"
+	ClusterRoleName = applicationName + "-application-scaler-role"
+	ClusterRoleBindingName = applicationName + "-application-scaler-rolebinding"
+	ClusterRoleNameOCP = applicationName + "-prometheus-k8s-role"
+	ClusterRoleBindingNameOCPWithOLM = applicationName + "-prometheus-k8s-rolebinding-olm"
+	ClusterRoleBindingNameOCPWithoutOLM = applicationName + "-prometheus-k8s-rolebinding"
 	ImageName = image
 	ApplicationScalerContainerName = applicationName + "-appscaler"
 }

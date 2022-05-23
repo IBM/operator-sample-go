@@ -16,41 +16,39 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-func (reconciler *ApplicationReconciler) defineClusterRole(application *applicationsamplev1beta1.Application) *v1.ClusterRole {
+func (reconciler *ApplicationReconciler) defineClusterRoleOCP(application *applicationsamplev1beta1.Application) *v1.ClusterRole {
 	labels := map[string]string{variables.LabelKey: variables.LabelValue}
 
 	clusterRole := &v1.ClusterRole{
 		TypeMeta: metav1.TypeMeta{APIVersion: "v1", Kind: "ClusterRole"},
 
-		ObjectMeta: metav1.ObjectMeta{Name: variables.ClusterRoleName, Namespace: application.Namespace, Labels: labels},
+		ObjectMeta: metav1.ObjectMeta{Name: variables.ClusterRoleNameOCP, Namespace: variables.OCPClusterRoleNamespace, Labels: labels},
 		Rules: []v1.PolicyRule{{
-			APIGroups: []string{"application.sample.ibm.com"},
-			Verbs:     []string{"create", "delete", "get", "list", "watch", "patch", "update"},
-			Resources: []string{"applications"},
-		}, {APIGroups: []string{"application.sample.ibm.com"},
-			Verbs:     []string{"create", "delete", "get", "list", "watch", "patch", "update"},
-			Resources: []string{"applications/status"}}},
+			APIGroups: []string{""},
+			Verbs:     []string{"get", "list", "watch"},
+			Resources: []string{"endpoints", "pods", "services", "nodes", "secrets"},
+		}},
 	}
 
 	ctrl.SetControllerReference(application, clusterRole, reconciler.Scheme)
 	return clusterRole
 }
 
-func (reconciler *ApplicationReconciler) reconcileClusterRole(ctx context.Context, application *applicationsamplev1beta1.Application) (ctrl.Result, error) {
+func (reconciler *ApplicationReconciler) reconcileClusterRoleOCP(ctx context.Context, application *applicationsamplev1beta1.Application) (ctrl.Result, error) {
 	log := log.FromContext(ctx)
-	clusterRoleDefinition := reconciler.defineClusterRole(application)
+	clusterRoleDefinition := reconciler.defineClusterRoleOCP(application)
 	clusterRole := &v1.ClusterRole{}
-	err := reconciler.Get(ctx, types.NamespacedName{Name: variables.ClusterRoleName, Namespace: application.Namespace}, clusterRole)
+	err := reconciler.Get(ctx, types.NamespacedName{Name: variables.ClusterRoleNameOCP, Namespace: variables.OCPClusterRoleNamespace}, clusterRole)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			log.Info("ClusterRole resource " + variables.ClusterRoleName + " not found. Creating or re-creating ClusterRole")
+			log.Info("ClusterRole resource " + variables.ClusterRoleNameOCP + " not found. Creating or re-creating ClusterRole")
 			err = reconciler.Create(ctx, clusterRoleDefinition)
 			if err != nil {
 				log.Info("Failed to create ClusterRole resource. Re-running reconcile.")
 				return ctrl.Result{}, err
 			}
 		} else {
-			log.Info("Failed to get ClusterRole resource " + variables.ClusterRoleName + ". Re-running reconcile.")
+			log.Info("Failed to get ClusterRole resource " + variables.ClusterRoleNameOCP + ". Re-running reconcile.")
 			return ctrl.Result{}, err
 		}
 	} else {

@@ -126,6 +126,7 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 		return ctrl.Result{}, err
 	}
 
+	// Roles for both IKS and OpenShift
 	_, err = reconciler.reconcileClusterRole(ctx, application)
 	if err != nil {
 		return ctrl.Result{}, err
@@ -134,6 +135,20 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 	_, err = reconciler.reconcileClusterRoleBinding(ctx, application)
 	if err != nil {
 		return ctrl.Result{}, err
+	}
+
+	// Additional roles for OpenShift only
+	if runsOnOpenShift {
+		_, err = reconciler.reconcileClusterRoleOCP(ctx, application)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+
+		_, err = reconciler.reconcileClusterRoleBindingOCP(ctx, application)
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+
 	}
 
 	//CronJob - to be beutified
