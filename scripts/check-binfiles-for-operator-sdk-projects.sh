@@ -107,6 +107,11 @@ function getOPMandCopyBin () {
     echo "***  Bin folder status: operator-database"
     cd $ROOT_FOLDER/operator-database/bin
     ls
+    
+    echo "************************************"
+    echo "*** The OPM version was copied to your operator-sdk projects!"
+    echo "*** You can verfy that manually, if you want."
+    echo "************************************"
 }
 
 
