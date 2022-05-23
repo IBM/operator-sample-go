@@ -18,4 +18,20 @@ spec:
                 value: "application"
               - name: APPLICATION_RESOURCE_NAMESPACE
                 value: "application-beta"
+              volumeMounts:
+                - name: certdata
+                  mountPath: "/etc/prometheus-k8s-cert"
+                  readOnly: true
+                - name: tokendata
+                  mountPath: "/etc/prometheus-k8s-token"
+                  readOnly: true              
+          volumes:
+            - name: certdata
+              secret:
+                secretName: prometheus-cert-secret
+                optional: true
+            - name: tokendata
+              secret:
+                secretName: prometheus-token-secret
+                optional: true
           restartPolicy: OnFailure 
