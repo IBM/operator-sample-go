@@ -82,6 +82,7 @@ controller-gen  kustomize       opm             setup-envtest
 | IBM Cloud Services used| Version | Tested |
 | --- | ---  |  --- |
 | [IBM Cloud Kubernetess Service](https://cloud.ibm.com/kubernetes/catalog/create) (on VPC)| v1.23.6+IKS |  OK |
+| [Red Hat OpenShift on IBM Cloud](https://www.ibm.com/cloud/openshift) (on VPC)| -- |  OK |
 | [IBM Cloud Object Storage](https://cloud.ibm.com/objectstorage/create) | TBD |  TBD |
 | [IBM Cloud 'Virtual Private Cloud'](https://cloud.ibm.com/vpc-ext/provision/vpc) | TBD |  TBD |
 
@@ -157,12 +158,12 @@ There are five types of scripts:
 
 Installs the required components for Kubernetes or OpenShift.
 
-| Component | Kubernetes | OpenShift **(not implemented yet)** |
+| Component | Kubernetes | OpenShift |
 | --- |  --- |  --- |
 | CertManager | Yes |  Yes |
 | OLM | Yes |  No |
 | Prometheus Operator | Yes |  No |
-| Prometheus Instance | Yes |  No |
+| Prometheus Instance | Yes |  Only configuration |
 
 #### b. **demo**-xxx-yyyy.sh
 
@@ -178,9 +179,9 @@ Setup or delete based on the **golden source versions** (version.env).
 | Name | Kubernetes | OpenShift | Parameters |
 | --- |  --- |  --- |  --- |
 | **demo**-kubernetes-operators.sh | Yes | No  |  `app` `demo` `reset` |
-| **demo**-kubernetes-operator-application.sh | Yes | `demo` `reset`  |
-| **demo**-kubernetes-operator-database.sh | Yes | `demo`  |
-| **demo**-opershift-operators.sh | No |  Yes  | `app` `demo` `reset` 
+| **demo**-kubernetes-operator-application.sh | Yes |  No  |  `demo` `reset`  |
+| **demo**-kubernetes-operator-database.sh | Yes |  No  | `demo`  |
+| **demo**-opershift-operators.sh | No |  Yes  | `app` `demo` `reset` |
 | **demo**-opershift-operator-application.sh | No | Yes | `demo` `reset`  |
 | **demo**-opershift-operator-database.sh | No | Yes  |  `demo`  |
 
