@@ -53,3 +53,4 @@ scripts/script-automation-openshift.log
 scripts/script-automation-kubernetes.log
 scripts/check_podman.log
 temp.txt
+operator-application/__debug_bin
