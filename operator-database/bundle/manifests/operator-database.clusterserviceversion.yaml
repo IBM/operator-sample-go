@@ -59,6 +59,10 @@ metadata:
         }
       ]
     capabilities: Auto Pilot
+    support: sample.ibm.com
+    createdAt: 2022-05-22 19:40Z
+    repository: https://github.com/IBM/operator-sample-go
+    containerImage: hub.docker.com
     operators.operatorframework.io/builder: operator-sdk-v1.19.0+git
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
   name: operator-database.v0.0.1
@@ -68,6 +72,7 @@ spec:
   customresourcedefinitions:
     owned:
     - displayName: Database Backup
+      description: DatabaseBackup is the Schema for the databasebackup API
       kind: DatabaseBackup
       name: databasebackups.database.sample.third.party
       version: v1alpha1
@@ -77,6 +82,7 @@ spec:
       name: databaseclusters.database.sample.third.party
       version: v1alpha1
     - displayName: Database
+      description: Database is the Schema for the database API
       kind: Database
       name: databases.database.sample.third.party
       version: v1alpha1
@@ -346,7 +352,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/nheidloff/database-operator:v1.0.59
+                image: quay.io/diwakarptiwari/database-operator:v1.0.4
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -422,9 +428,9 @@ spec:
   - database-operator
   links:
   - name: Operator Database
-    url: https://operator-database.domain
+    url: https://github.com/ibm/operator-sample-go
   maturity: alpha
   provider:
-    name: database.sample.third.party
+    name: IBM Build Labs
     url: https://github.com/ibm/operator-sample-go
   version: 0.0.1

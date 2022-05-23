@@ -8,5 +8,5 @@ roleRef:
   name: manager-role
 subjects:
 - kind: ServiceAccount
-  name: operator-application-controller-manager
-  namespace: operators
+  name: operator-database-controller-manager
+  namespace: openshift-operators
