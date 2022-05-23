@@ -264,22 +264,22 @@ setEnvironmentVariables
 echo "************************************"
 echo " Verify prerequisites"
 echo "************************************"
-#verifyPreReqs
+verifyPreReqs
 
 echo "************************************"
 echo " Configure CR samples for the 'database operator'"
 echo "************************************"
-#configureCRs_DatabaseOperator
+configureCRs_DatabaseOperator
 
 echo "************************************"
 echo " Create Database Instance"
 echo "************************************"
-#createDatabaseInstance
+createDatabaseInstance
 
 echo "************************************"
 echo " Verify Database Instance"
 echo "************************************"
-#verifyDatabase
+verifyDatabase
 
 echo "************************************"
 echo " Delete Database Instance"

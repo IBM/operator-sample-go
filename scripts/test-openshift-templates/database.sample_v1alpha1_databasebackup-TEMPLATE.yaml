@@ -6,15 +6,15 @@ metadata:
 spec:
   image: DATABASE_BACKUP_IMAGE
   repos:
-  - name: ibmcos-repo
-    type: ibmcos
-    secretName: ibmcos-repo
-    serviceEndpoint: s3.eu.cloud-object-storage.appdomain.cloud
-    cosRegion: eu-geo
-    bucketNamePrefix: "database-backup-"
+  - name: ibmcos-repo #not relevant to change and not used
+    type: ibmcos #not relevant to change and not used
+    secretName: test-ibmcos-repo # important and will be used to define the access
+    serviceEndpoint: s3.eu.cloud-object-storage.appdomain.cloud #not relevant to change
+    cosRegion: eu-geo #not relevant to change??
+    bucketNamePrefix: "test-database-backup-" # important and will be used
   manualTrigger:
-    time: "2022-04-20T02:59:43.1Z"
-    repo: ibmcos-repo
+    time: "2022-04-20T02:59:43.1Z" #not relevant to change and not used
+    repo: ibmcos-repo #not relevant to change and not used
   scheduledTrigger:
-    schedule: "*/3 * * * *"
-    repo: ibmcos-repo
+    schedule: "*/3 * * * *" # important and will be used to define schedule
+    repo: ibmcos-repo #not relevant to change and not used
