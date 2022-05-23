@@ -219,7 +219,7 @@ function configureCRs_DatabaseOperator () {
     IMAGE_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE" 
     echo $IMAGE_NAME
     sed "s+DATABASE_SERVICE_IMAGE+$IMAGE_NAME+g" $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster-TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
-    cat $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml | grep "$IMAGE_DATABASE_BACKUP"
+    cat $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml | grep "$IMAGE_DATABASE_BACKUP"
 }
 
 function buildDatabaseOperator () {
