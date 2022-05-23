@@ -25,7 +25,7 @@ func (reconciler *ApplicationReconciler) defineClusterRoleBindingOCPWithOLM(appl
 		Subjects: []v1.Subject{{
 			Kind:      "ServiceAccount",
 			Name:      variables.RoleBindingServiceAccountOCP,
-			Namespace: variables.OCPOperatorWithOLMNamespace,
+			Namespace: variables.OCPClusterRoleNamespace,
 		}},
 		RoleRef: v1.RoleRef{
 			APIGroup: "rbac.authorization.k8s.io",
@@ -47,7 +47,7 @@ func (reconciler *ApplicationReconciler) defineClusterRoleBindingOCPWithoutOLM(a
 		Subjects: []v1.Subject{{
 			Kind:      "ServiceAccount",
 			Name:      variables.RoleBindingServiceAccountOCP,
-			Namespace: variables.OCPOperatorWithoutOLMNamespace,
+			Namespace: variables.OCPClusterRoleNamespace,
 		}},
 		RoleRef: v1.RoleRef{
 			APIGroup: "rbac.authorization.k8s.io",
