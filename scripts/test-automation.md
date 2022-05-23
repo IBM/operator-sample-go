@@ -13,8 +13,8 @@
 
 | Operator | Verification | Needed configuration | |
 | --- | --- | --- | --- | 
-| Database | Database was created | TBD | TBD | 
-| Database | Backup on IBM Cloud Object Storage | TBD | TBD | 
-| Application | Application was create | TBD | TBD | 
-| Application | Application scaling| TBD | TBD | 
+| Database | Database was created | Operator installed | TBD | 
+| Database | Backup on IBM Cloud Object Storage | Operator installed, Object Storage Configured, Backup Application was instantiated by the Database operator | TBD | 
+| Application | Application was create | Database Custer Service Version is available, Application was create in version beta | TBD | 
+| Application | Application scaling| Database Custer Service Version is available, Application was create in version beta, Application scaler was instantiated by application operator | TBD | 
 
