@@ -161,7 +161,7 @@ function deleteNamespacesRelatedToDatabaseOperator () {
                     echo "------------------------------------------------------------------------"
                     break
                 elif [[ $j -eq $max_retrys ]]; then
-                    echo "$(date +'%F %H:%M:%S') Please run 'delete-everything-kubernetes.sh' first!"
+                    echo "$(date +'%F %H:%M:%S') Please run 'delete-everything-openshift.sh' first!"
                     echo "$(date +'%F %H:%M:%S') Prereqs aren't ready!"
                     echo "------------------------------------------------------------------------"
                     break            
