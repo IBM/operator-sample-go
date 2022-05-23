@@ -28,8 +28,8 @@ export SCRIPT_DURATION=""
 export start=$(date +%s)
 export LOGFILE_NAME=demo-script-automation-openshift.log
 export SCRIPT_NAME=demo-openshift-operators.sh
-export SCRIPT_DATABASE=demo-openshift-operators-database.sh
-export SCRIPT_APPLICATION=demo-openshift-operators-application.sh
+export SCRIPT_DATABASE=demo-openshift-operator-database.sh
+export SCRIPT_APPLICATION=demo-openshift-operator-application.sh
 
 # **********************************************************************************
 # Functions

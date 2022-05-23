@@ -27,8 +27,8 @@ export SCRIPT_DURATION=""
 export start=$(date +%s)
 export LOGFILE_NAME=demo-script-automation-kubernetes.log
 export SCRIPT_NAME=demo-kubernetes-operators.sh
-export SCRIPT_DATABASE=demo-kubernetes-operators-database.sh
-export SCRIPT_APPLICATION=demo-kubernetes-operators-application.sh
+export SCRIPT_DATABASE=demo-kubernetes-operator-database.sh
+export SCRIPT_APPLICATION=demo-kubernetes-operator-application.sh
 
 # **********************************************************************************
 # Functions
