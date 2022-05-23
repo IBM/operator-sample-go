@@ -30,7 +30,7 @@ func (reconciler *ApplicationReconciler) defineClusterRoleBindingOCPWithOLM(appl
 		RoleRef: v1.RoleRef{
 			APIGroup: "rbac.authorization.k8s.io",
 			Kind:     "ClusterRole",
-			Name:     "prometheus-k8s-role",
+			Name:     variables.ClusterRoleNameOCP,
 		},
 	}
 
@@ -52,7 +52,7 @@ func (reconciler *ApplicationReconciler) defineClusterRoleBindingOCPWithoutOLM(a
 		RoleRef: v1.RoleRef{
 			APIGroup: "rbac.authorization.k8s.io",
 			Kind:     "ClusterRole",
-			Name:     "prometheus-k8s-role",
+			Name:     variables.ClusterRoleNameOCP,
 		},
 	}
 
@@ -64,6 +64,7 @@ func (reconciler *ApplicationReconciler) reconcileClusterRoleBindingOCP(ctx cont
 	log := log.FromContext(ctx)
 	clusterRoleBindingDefinitionWithOLM := reconciler.defineClusterRoleBindingOCPWithOLM(application)
 	clusterRoleBindingDefinitionWithoutOLM := reconciler.defineClusterRoleBindingOCPWithoutOLM(application)
+
 	clusterRoleBinding := &v1.ClusterRoleBinding{}
 
 	err := reconciler.Get(ctx, types.NamespacedName{Name: variables.ClusterRoleBindingNameOCPWithOLM, Namespace: variables.OCPOperatorWithOLMNamespace}, clusterRoleBinding)

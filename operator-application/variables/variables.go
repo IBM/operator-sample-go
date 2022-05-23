@@ -44,7 +44,8 @@ const ValueApplicationResourceNameSpace = "application-beta"
 
 const LabelValue = "application"
 const RoleBindingServiceAccount = "default"
-const RoleBindingServiceAccountOCP = "default"
+const RoleBindingServiceAccountOCP = "prometheus-k8s"
+const RoleBindingServiceAccountOCPWithOLM = "operator-application-controller-manager"
 
 const OCPOperatorWithOLMNamespace = "openshift-operators"
 const OCPOperatorWithoutOLMNamespace = "operator-application-system"

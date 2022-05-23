@@ -137,7 +137,7 @@ func (reconciler *ApplicationReconciler) Reconcile(ctx context.Context, req ctrl
 		return ctrl.Result{}, err
 	}
 
-	// Additional roles for OpenShift only
+	// Additional roles for OpenShift only.
 	if runsOnOpenShift {
 		_, err = reconciler.reconcileClusterRoleOCP(ctx, application)
 		if err != nil {
