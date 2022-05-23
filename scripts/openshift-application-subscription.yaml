@@ -1,12 +1,12 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: operator-database-v0-0-1-sub
+  name: operator-application-v0-0-1-sub
   namespace: openshift-operators
 spec:
   channel: "alpha"
   installPlanApproval: Automatic
-  name: operator-database
-  source: operator-database-catalog
+  name: operator-application
+  source: operator-application-catalog
   sourceNamespace: openshift-operators
-# startingCSV: operator-database.v0.0.1
+# startingCSV: operator-application.v0.0.1
