@@ -28,6 +28,9 @@ export RESET_PODMAN=$4
 export SCRIPT_DURATION=""
 export start=$(date +%s)
 export LOGFILE_NAME=script-automation-openshift.log
+export SCRIPT_NAME=ce-create-operators-openshift.sh
+export SCRIPT_DATABASE=ci-create-operator-database-openshift.sh
+export SCRIPT_APPLICATION=ci-create-operator-application-openshift.sh
 
 # **********************************************************************************
 # Functions
@@ -48,10 +51,10 @@ function customLog () {
 }
 
 function setupDatabase () {
-    bash "$ROOT_FOLDER/scripts/ci-create-operator-database-openshift.sh" $CI_CONFIG $RESET $RESET_PODMAN
+    bash "$ROOT_FOLDER/scripts/$SCRIPT_DATABASE" $CI_CONFIG $RESET $RESET_PODMAN
     if [ $? == "1" ]; then
         echo "*** The setup of the database-operator failed !"
-        echo "*** The script 'ce-create-operators-openshift.sh' ends here!"
+        echo "*** The script $SCRIPT_NAME ends here!"
         TYPE="*** Error"
         MESSAGE="*** The setup of the database-operator failed !"
         customLog "$TYPE" "$MESSAGE"
@@ -60,10 +63,10 @@ function setupDatabase () {
 }
 
 function setupApplication () {
-    bash "$ROOT_FOLDER/scripts/ci-create-operator-application-openshift.sh" $CI_CONFIG $RESET $RESET_PODMAN
+    bash "$ROOT_FOLDER/scripts/$SCRIPT_APPLICATION" $CI_CONFIG $RESET $RESET_PODMAN
         if [ $? == "1" ]; then
         echo "*** The setup of the application-operator failed !"
-        echo "*** The script 'ce-create-operators-openshift.sh' ends here!"
+        echo "*** The script $SCRIPT_NAME ends here!"
         TYPE="*** Error"
         MESSAGE="*** The setup of the application-operator failed !"
         customLog "$TYPE" "$MESSAGE"
@@ -103,7 +106,7 @@ function duration() {
     seconds=$(echo "$end - $start" | bc)
     #echo $seconds' sec'
     export SCRIPT_DURATION=$(awk -v t=$seconds 'BEGIN{t=int(t*1000); printf "%d:%02d:%02d\n", t/3600000, t/60000%60, t/1000%60}')
-    echo "*** Duration Formatted: $SCRIPT_DURATION"
+    echo "*** Duration: $SCRIPT_DURATION"
     
 }
 

@@ -268,7 +268,7 @@ function buildDatabaseOperatorCatalog () {
     cd $ROOT_FOLDER/operator-database
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
     rm -f $ROOT_FOLDER/scripts/temp.log
-    $ROOT_FOLDER/operator-database/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" > $ROOT_FOLDER/scripts/temp.log
+    $ROOT_FOLDER/operator-database/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" &> $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseOperatorCatalog"
     INPUT=$(cat "$ROOT_FOLDER/scripts/temp.log")
     echo $INPUT
@@ -393,6 +393,7 @@ function createDatabaseInstance () {
             do
                 FIND=$i
                 STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
+                kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g'
                 echo "Status: $STATUS_CHECK"
                 STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
                 if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
