@@ -12,6 +12,8 @@ Before running the application operator, the database operator needs to be deplo
 $ cd operator-application
 $ source ../versions.env
 $ make deploy IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
+$ kubectl apply -f config/rbac/role_patch.yaml 
+$ kubectl apply -f config/rbac/role_binding_patch.yaml 
 ```
 
 ### Create an application resource
