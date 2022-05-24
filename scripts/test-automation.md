@@ -23,7 +23,7 @@ writen scripts.
 |  |  |  | 3. Apply yaml for test instance CR resource |  |
 |  |  |  | 4. Verify the instances |  |
 |  |  |  | 5. Delete the test instance |  |
-| Database | Backup on IBM Cloud Object Storage | Operator installed, Object Storage Configured, Backup Application was instantiated by the Database operator | TBD | TBD | No, needs to be defined. |
+| Database | Backup on IBM Cloud Object Storage | Operator installed, Object Storage Configured, Backup Application was instantiated by the Database operator | -- | -- | Will not be automated! |
 | Application | Application was create | Database Custer Service Version is available, Application was create in version beta | TBD |  TBD | No |
 | Application | Application scaling| Database Custer Service Version is available, Application was create in version beta, Application scaler was instantiated by application operator | TBD | No, needs to be defined. |
 
@@ -36,7 +36,7 @@ writen scripts.
 |  |  |  | 3. Apply yaml for test instance CR resource |  |
 |  |  |  | 4. Verify the instances |  |
 |  |  |  | 5. Delete the test instance |  |
-| Database | Backup on IBM Cloud Object Storage | Operator installed, Object Storage Configured, Backup Application was instantiated by the Database operator | TBD | TBD | No, needs to be defined. |
+| Database | Backup on IBM Cloud Object Storage | Operator installed, Object Storage Configured, Backup Application was instantiated by the Database operator | -- | -- | Will not be automated! |
 | Application | Application was create | Database Custer Service Version is available, Application was create in version beta | TBD |  TBD | No |
 | Application | Application scaling| Database Custer Service Version is available, Application was create in version beta, Application scaler was instantiated by application operator | TBD | No, needs to be defined. |
 
