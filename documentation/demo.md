@@ -125,6 +125,7 @@ metadata:
   name: databasecluster-sample
   namespace: database
 spec:
+  image: docker.io/deleeuw/database-service:v1.0.104
   amountPods: 3
 EOF
 ```
