@@ -182,11 +182,11 @@ function deleteInstallPlan () {
             STATUS_CHECK=$(kubectl get installplans -n $namespace | grep "$FIND" | awk '{print $2;}' | sed 's/"//g' | sed 's/,//g')
             INSTALLPLAN=$(kubectl get installplans -n $namespace | grep "$FIND" | awk '{print $1;}' | sed 's/"//g' | sed 's/,//g')
             echo "Status: $STATUS_CHECK"
-            if [ "$STATUS_CHECK" = "$STATUS_SUCCESS" ]; then
+            if [[ "$STATUS_CHECK" == "$STATUS_SUCCESS" ]]; then
                 echo "$(date +'%F %H:%M:%S') $INSTALLPLAN Status: $FIND is found and will be deleted"
                 oc delete installplans $INSTALLPLAN -n $namespace
                 echo "------------------------------------------------------------------------"
-            elif [[ "$STATUS_CHECK" = ""]]; then
+            elif [[ "$STATUS_CHECK" == "" ]]; then
                 echo "$(date +'%F %H:%M:%S') No installplan for: $FIND is found."
                 echo "------------------------------------------------------------------------"
                 break             
