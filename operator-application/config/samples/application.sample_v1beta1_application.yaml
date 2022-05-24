@@ -10,7 +10,7 @@ metadata:
   namespace: application-beta
 spec:
   version: "1.0.0"
-  amountPods: 2
+  amountPods: 1
   databaseName: database
   databaseNamespace: database
   title: movies
