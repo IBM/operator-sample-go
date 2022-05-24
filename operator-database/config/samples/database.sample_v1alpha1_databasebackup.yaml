@@ -16,5 +16,5 @@ spec:
     time: "2022-04-20T02:59:43.1Z"
     repo: ibmcos-repo
   scheduledTrigger:
-    schedule: "*/3 * * * *"
+    schedule: "0 * * * *"
     repo: ibmcos-repo
