@@ -7,7 +7,7 @@ spec:
   displayName: IBM Build Labs Apps Catalog
   publisher: IBM Build Labs
   sourceType: grpc
-  image: quay.io/diwakarptiwari/application-operator-catalog:v1.0.4
+  image: docker.io/deleeuw/application-operator-catalog:v1.0.103
   updateStrategy:
     registryPoll:
       interval: 10m

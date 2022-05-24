@@ -160,6 +160,7 @@ function deletePrometheusConfiguration () {
     oc delete secret prometheus-token-secret -n application-beta
     oc get secret prometheus-token-secret -n openshift-operators
     oc get secret prometheus-token-secret -n application-beta
+    
     TYPE='Info'
     INFO='deletePrometheusConfiguration -> was executed'
     customLog $TYPE $INFO
@@ -368,7 +369,7 @@ function deleteNamespacesRelatedToDatabaseOperator () {
             while :
             do       
             ((j++))
-            STATUS_CHECK=$(kubectl get namespace -n $FIND | grep $FIND | awk '{print $2;}')
+            STATUS_CHECK=$(kubectl get namespace $FIND | grep $FIND | awk '{print $2;}')
             echo "Status: $STATUS_CHECK"
             if [ "$STATUS_CHECK" = "$STATUS_SUCCESS" ]; then
                     echo "$(date +'%F %H:%M:%S') Status: $FIND is deleted"
@@ -380,6 +381,7 @@ function deleteNamespacesRelatedToDatabaseOperator () {
                     echo "------------------------------------------------------------------------"
                     break            
                 else
+                    kubectl get namespace $FIND
                     echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
                     echo "------------------------------------------------------------------------"
                 fi
@@ -412,7 +414,7 @@ function deleteCertManager () {
            ((j++))
            STATUS_CHECK=$(kubectl get namespace -n $FIND | grep $FIND | awk '{print $2;}')
            echo "Status: $STATUS_CHECK"
-           if [ "$STATUS_CHECK" = "$STATUS_SUCCESS" ]; then
+           if [[ "$STATUS_CHECK" == "$STATUS_SUCCESS" ]]; then
                 echo "$(date +'%F %H:%M:%S') Status: $FIND is deleted"
                 echo "------------------------------------------------------------------------"
                 break
@@ -453,6 +455,7 @@ deletePrometheusConfiguration
 
 runCIconfiguation
 runLocalConfiguation
+deleteInstallPlan
 
 echo "************************************"
 echo " Delete cert manager"
