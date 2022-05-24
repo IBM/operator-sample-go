@@ -6,12 +6,13 @@ We will not setup a specific test environment.
 
 #### Setup 
 
-Run the demo scipts to setup the needed enviornment.
+Run the demo scripts to setup the needed enviornment.
 
 ### Test automation
 
-The test cases are related to the demo bash scripts.
-The test automation will be done with bash scripts.
+* The test cases are related to the demo 
+writen scripts.
+* The test automation will be done with bash scripts.
 
 #### Kubernetes
 
