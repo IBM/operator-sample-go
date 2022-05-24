@@ -228,7 +228,9 @@ Let's take a look at the web app now by clicking the route and invoking the web 
 
 The web application also publishes metrics which are collected by Prometheus, which is installed by default on OpenShift.  In particular, our web application publishes how many times the /hello endpoint has been invoked, and the operator uses this to determine if the web application deployment should be scaled up.  This is quite a simple scenario, and to be honest you could achieve the same results with existing k8s capabilities like Horizontal Pod Autoscaler using custom metrics.  However, in our demo we don't use HPA, instead our application operator has created a Cronjob resource which launches a pod to query metrics collected by Prometheus.  If the number of invocations are more than five, our application scaler pod modifies our applications custom resource to define additional replicas, which our operator reconciles.
 
-So let's see it in action.  If we look at the default Prometheus dashboard, we can query the metric exposed by our web application.  Right now it's one, so let's call the /hello endpoint to increase the metric to at least six.
+So let's see it in action.  If we look at the default Prometheus dashboard, we can query the metric exposed by our web application.  Search for ```application_net_heidloff_GreetingResource_countHelloEndpointInvoked_total```.
+
+Right now it's one, so let's call the /hello endpoint to increase the metric to at least six.
 
 <img src="images/demo20.png" />
 
