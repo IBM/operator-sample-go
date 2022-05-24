@@ -11,7 +11,7 @@ echo ""
 echo "Parameter count : $@"
 echo "Parameter zero 'name of the script': $0"
 echo "---------------------------------"
-echo "CI Configuration         : $1"
+echo "Demo Configuration         : $1"
 echo "-----------------------------"
 
 # **************** Global variables
@@ -21,7 +21,7 @@ export NAMESPACE=operators
 export CI_CONFIG=$1
 export VERSIONS_FILE=""
 export APPLICATION_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/application-operator-templates
-export LOGFILE_NAME=script-automation-kubernetes.log
+export LOGFILE_NAME=demo-script-automation-kubernetes.log
 
 
 # **********************************************************************************
@@ -67,7 +67,7 @@ function setEnvironmentVariables () {
         INFO="*** Using following registry: $REGISTRY/$ORG"
         echo $INFO
         customLog "$CI_CONFIG" "$INFO"
-    elif [[ $CI_CONFIG == "ci" ]]; then
+    elif [[ $CI_CONFIG == "demo" ]]; then
         echo "*** Set versions.env file as input"        
         source $ROOT_FOLDER/versions.env
         INFO="*** Using following registry: $REGISTRY/$ORG"
@@ -76,30 +76,14 @@ function setEnvironmentVariables () {
     else 
         echo "*** Please select a valid option to run!"
         echo "*** Use 'local' for your local test."
-        echo "*** Use 'ci' for your the ci test."
+        echo "*** Use 'demo' for your demo test."
         echo "*** Example:"
-        echo "*** sh ci-operator-application-kubernetes.sh local"
+        echo "*** sh $SCRIPT_NAME demo"
         exit 1
     fi
 }
 
 function verifyPreReqs () {
-  echo "************************************"
-  echo " Check if podman is running"
-  echo "************************************"
-
-  podman images &> $ROOT_FOLDER/scripts/check_podman.log
-
-  CHECK=$(cat $ROOT_FOLDER/scripts/check_podman.log | grep 'Cannot connect to Podman' | awk '{print $1;}')
-  echo "*** Podman check: $CHECK"
-
-  if [[ $CHECK == "Cannot" ]]; then
-       echo "*** Podman is not running! The script ends here."
-       rm -f $ROOT_FOLDER/scripts/check_podman.log
-       exit 1
-  else 
-       rm -f $ROOT_FOLDER/scripts/check_podman.log
-  fi
 
   max_retrys=2
   j=0
@@ -136,85 +120,10 @@ function verifyPreReqs () {
     done 
 }
 
-function buildSimpleMicroservice () {
-    cd $ROOT_FOLDER/simple-microservice
-    podman build -t "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" . > $ROOT_FOLDER/scripts/temp.log
-    TYPE="buildSimpleMicroservice"
-    INPUT="$ROOT_FOLDER/scripts/temp.log"
-    logBuild "$TYPE" "$INPUT"
-    rm -f $ROOT_FOLDER/scripts/temp.log
-    podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" 
-}
-
-function buildApplicationScaler () {
-    cd $ROOT_FOLDER/operator-application-scaler
-    podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER" . > $ROOT_FOLDER/scripts/temp.log
-    TYPE="buildApplicationScaler"
-    INPUT="$ROOT_FOLDER/scripts/temp.log"
-    logBuild "$TYPE" "$INPUT"
-    rm -f $ROOT_FOLDER/scripts/temp.log
-    podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER"
-}
-
 function configureCR_SimpleMicroservice () {
     IMAGE_NAME="$REGISTRY/$ORG/$IMAGE_MICROSERVICE"
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
-}
-
-function buildApplicationOperator () {
-    cd $ROOT_FOLDER/operator-application
-    make generate
-    make manifests
-    # Build container
-    # make docker-build IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
-    podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR" . > $ROOT_FOLDER/scripts/temp.log
-    TYPE="buildApplicationOperator"
-    INPUT="$ROOT_FOLDER/scripts/temp.log"
-    logBuild "$TYPE" "$INPUT"
-    rm -f $ROOT_FOLDER/scripts/temp.log
-    # Push container
-    podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
-}
-
-function buildApplicationOperatorBundle () {
-    cd $ROOT_FOLDER/operator-application
-    
-    # Build bundle
-    make bundle IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
-    # Replace CSV and RBAC generate files with customized versions APPLICATION_OPERATOR_IMAGE 
-    APPLICATION_OPERATOR_IMAGE="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
-    sed "s+APPLICATION_OPERATOR_IMAGE+$APPLICATION_OPERATOR_IMAGE+g" $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
-
-    OPERATOR_NAMESPACE=operators
-    sed "s+OPERATOR_NAMESPACE+$OPERATOR_NAMESPACE+g" $APPLICATION_TEMPLATE_FOLDER/operator-application-role_binding_patch_TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
-    cp -nf $APPLICATION_TEMPLATE_FOLDER/operator-application-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-application/config/rbac/role.yaml
-    
-    # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
-    podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" . > $ROOT_FOLDER/scripts/temp.log
-    TYPE="buildApplicationBundleOperator"
-    INPUT="$ROOT_FOLDER/scripts/temp.log"
-    logBuild "$TYPE" "$INPUT"
-    rm -f $ROOT_FOLDER/scripts/temp.log
-    
-    # Push container
-    podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
-}
-
-function buildApplicationOperatorCatalog () {
-    cd $ROOT_FOLDER/operator-application
-    # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
-    $ROOT_FOLDER/operator-application/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" > $ROOT_FOLDER/scripts/temp.log
-    TYPE="buildApplicationOperatorCatalog"
-    INPUT="$(cat $ROOT_FOLDER/scripts/temp.log)"
-    customLog "$TYPE" "$INPUT"
-    rm -f $ROOT_FOLDER/scripts/temp.log
-    podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
 }
 
 function createOLMApplicationOperatorYAMLs () {
@@ -381,36 +290,6 @@ echo "************************************"
 echo " Verify prerequisites"
 echo "************************************"
 verifyPreReqs
-
-echo "************************************"
-echo " Build 'simple microservice'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_MICROSERVICE"
-echo "************************************"
-buildSimpleMicroservice 
-
-echo "************************************"
-echo " Build 'application scaler'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER"
-echo "************************************"
-buildApplicationScaler
-
-echo "************************************"
-echo " Build 'application operator'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
-echo "************************************"
-buildApplicationOperator
-
-echo "************************************"
-echo " Build 'application operator bundle'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
-echo "************************************"
-buildApplicationOperatorBundle
-
-echo "************************************"
-echo " Build 'application operator catalog'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
-echo "************************************"
-buildApplicationOperatorCatalog
 
 echo "************************************"
 echo " Create OLM yamls"

@@ -11,10 +11,12 @@ spec:
   customresourcedefinitions:
     owned:
     - displayName: Application
+      description: Application is the Schema for the Application API
       kind: Application
       name: applications.application.sample.ibm.com
       version: v1beta1
     - displayName: Application
+      description: Application is the Schema for the Application API
       kind: Application
       name: applications.application.sample.ibm.com
       version: v1alpha1
@@ -48,9 +50,9 @@ spec:
   - day2
   links:
   - name: Operator Application
-    url: https://operator-application.domain
+    url: https://github.com/ibm/operator-sample-go
   maturity: alpha
   provider:
-    name: sample.ibm.com
+    name: IBM Build Labs
     url: https://github.com/ibm/operator-sample-go
   version: 0.0.0

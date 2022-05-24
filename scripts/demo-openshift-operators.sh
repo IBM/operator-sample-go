@@ -12,9 +12,8 @@ echo "Parameter count : $@"
 echo "Parameter zero 'name of the script': $0"
 echo "---------------------------------"
 echo "Run configuration        : $1"
-echo "CI Configuration         : $2"
+echo "Demo Configuration       : $2"
 echo "Reset                    : $3"
-echo "Reset Podman             : $4"
 echo "-----------------------------"
 
 # **************** Global variables
@@ -27,15 +26,18 @@ export RESET=$3
 export RESET_PODMAN=$4
 export SCRIPT_DURATION=""
 export start=$(date +%s)
-export LOGFILE_NAME=script-automation-openshift.log
+export LOGFILE_NAME=demo-script-automation-openshift.log
+export SCRIPT_NAME=demo-openshift-operators.sh
+export SCRIPT_DATABASE=demo-openshift-operator-database.sh
+export SCRIPT_APPLICATION=demo-openshift-operator-application.sh
 
 # **********************************************************************************
 # Functions
 # **********************************************************************************
 
 function initLog () {
-    echo "$(date +'%F %H:%M:%S'): Init Script Automation Log" > $ROOT_FOLDER/scripts/$LOGFILE_NAME
-    echo "$(date +'%F %H:%M:%S'): Parameters: [$RUN] [$CI_CONFIG] [$RESET] [$RESET_PODMAN]" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$(date +'%F %H:%M:%S'): Init $SCRIPT_NAME Automation Log" > $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$(date +'%F %H:%M:%S'): Parameters: [$RUN] [$CI_CONFIG] [$RESET]" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
     echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
 }
 
@@ -48,10 +50,10 @@ function customLog () {
 }
 
 function setupDatabase () {
-    bash "$ROOT_FOLDER/scripts/ci-create-operator-database-openshift.sh" $CI_CONFIG $RESET $RESET_PODMAN
+    bash "$ROOT_FOLDER/scripts/$SCRIPT_DATABASE" $CI_CONFIG $RESET
     if [ $? == "1" ]; then
         echo "*** The setup of the database-operator failed !"
-        echo "*** The script 'ce-create-operators-openshift.sh' ends here!"
+        echo "*** The script '$SCRIPT_NAME' ends here!"
         TYPE="*** Error"
         MESSAGE="*** The setup of the database-operator failed !"
         customLog "$TYPE" "$MESSAGE"
@@ -60,10 +62,10 @@ function setupDatabase () {
 }
 
 function setupApplication () {
-    bash "$ROOT_FOLDER/scripts/ci-create-operator-application-openshift.sh" $CI_CONFIG $RESET $RESET_PODMAN
+    bash "$ROOT_FOLDER/scripts/$SCRIPT_APPLICATION" $CI_CONFIG $RESET
         if [ $? == "1" ]; then
         echo "*** The setup of the application-operator failed !"
-        echo "*** The script 'ce-create-operators-openshift.sh' ends here!"
+        echo "*** The script '$SCRIPT_NAME' ends here!"
         TYPE="*** Error"
         MESSAGE="*** The setup of the application-operator failed !"
         customLog "$TYPE" "$MESSAGE"
@@ -90,7 +92,7 @@ function run () {
         echo "*** Use 'database' for the database operator."
         echo "*** Use 'app' for the database and application operator."
         echo "*** Example:"
-        echo "*** sh scripts/ci-create-operators-openshift.sh database local reset"
+        echo "*** sh scripts/$SCRIPT_NAME database demo reset"
         exit 1
     fi
 }
@@ -105,24 +107,6 @@ function duration() {
     export SCRIPT_DURATION=$(awk -v t=$seconds 'BEGIN{t=int(t*1000); printf "%d:%02d:%02d\n", t/3600000, t/60000%60, t/1000%60}')
     echo "*** Duration Formatted: $SCRIPT_DURATION"
     
-}
-
-function tag () {
-    export commit_id=$(git rev-parse --short HEAD)
-    echo "Commint ID: $commit_id"
-    export tag_new="verify_scripts_automation_oc_$commit_id"
-
-    git tag -l | grep "verify_scripts_automation_automation_$commit_id"
-    CHECK_TAG=$(git tag -l | grep "verify_scripts_automation_$commit_id")
-    if [[ $tag_new == $CHECK_TAG ]]; then
-        echo "*** The tag $tag_new exists."
-        echo "*** No tag will be added"
-    else 
-       echo "*** Create tag: $tag_new "
-       loginfo=$(cat $ROOT_FOLDER/scripts/$LOGFILE_NAME)
-       git tag -a $tag_new $commit_id -m "Script configuration: [$RUN] [$CI_CONFIG] [$RESET] [$RESET_PODMAN] - Script duration: [$SCRIPT_DURATION] - $loginfo"
-       git push origin $tag_new
-    fi
 }
 
 # **********************************************************************************
@@ -141,8 +125,5 @@ echo "************************************"
 echo " Calculate duration"
 echo "************************************"
 duration
-echo "************************************"
-echo " Add tag related to current automation "
-echo "************************************"
-tag
+
 

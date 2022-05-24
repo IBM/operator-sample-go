@@ -16,7 +16,7 @@ The documentation is structured in following sections.
 | OS| Version | Tested |
 | --- | ---  |  --- |
 | macOS | 12.3.1 | OK |
-| macOS | 11.2.3 | needs to be verified |
+| macOS | 11.2.3 | OK |
 
 #### Known problems
 
@@ -40,12 +40,16 @@ sh scripts/check-prerequisites.sh
 
 #### b) Setup of the needed executable `bin` files 
 
-Setup of the needed `bin` files (`controller-gen`, `kustomize`,` opm`, `setup-envtest`) for the operator-sdk projects:
+Setup of the needed `bin` files (`controller-gen`, `kustomize`,` opm`, `setup-envtest`) for the operator-sdk projects.
+**The script will create a temp operator sdk project, to create a the bin file and delete that temp project when it was finished.**
+
 
 ```sh
 sh scripts/check-binfiles-for-operator-sdk-projects.sh
 ```
 
+> Note: You need to interact with the script, because when you create the first time a bundle. These are the temp values you can use for the script execution. These are the example values: `'Display name   : myproblemfix'`, `Description    : myproblemfix`, `Provider's name: myproblemfix`, `Any relevant URL:`, `Comma-separated keywords   : myproblemfix`
+`Comma-separated maintainers: myproblemfix@myproblemfix.net`. 
 * Example output:
 
 ```sh
@@ -82,6 +86,7 @@ controller-gen  kustomize       opm             setup-envtest
 | IBM Cloud Services used| Version | Tested |
 | --- | ---  |  --- |
 | [IBM Cloud Kubernetess Service](https://cloud.ibm.com/kubernetes/catalog/create) (on VPC)| v1.23.6+IKS |  OK |
+| [Red Hat OpenShift on IBM Cloud](https://www.ibm.com/cloud/openshift) (on VPC)| 4.10.9_1515 |  OK |
 | [IBM Cloud Object Storage](https://cloud.ibm.com/objectstorage/create) | TBD |  TBD |
 | [IBM Cloud 'Virtual Private Cloud'](https://cloud.ibm.com/vpc-ext/provision/vpc) | TBD |  TBD |
 
@@ -157,12 +162,12 @@ There are five types of scripts:
 
 Installs the required components for Kubernetes or OpenShift.
 
-| Component | Kubernetes | OpenShift **(not implemented yet)** |
+| Component | Kubernetes | OpenShift |
 | --- |  --- |  --- |
 | CertManager | Yes |  Yes |
 | OLM | Yes |  No |
 | Prometheus Operator | Yes |  No |
-| Prometheus Instance | Yes |  No |
+| Prometheus Instance | Yes |  Only configuration |
 
 #### b. **demo**-xxx-yyyy.sh
 
@@ -175,10 +180,26 @@ Setup or delete based on the **golden source versions** (version.env).
 
 * Table overview:
 
-| Name | Kubernetes | OpenShift **(not implemented yet)** |
-| --- |  --- |  --- |
-| **demo**-setup-kubernetes.sh | Yes | No  |
-| **demo**-delete-kubernetes.sh | Yes |  No |
+| Name | Kubernetes | OpenShift | Parameters |
+| --- |  --- |  --- |  --- |
+| **demo**-kubernetes-operators.sh | Yes | No  |  `app` `demo` `reset` |
+| **demo**-kubernetes-operator-application.sh | Yes |  No  |  `demo` `reset`  |
+| **demo**-kubernetes-operator-database.sh | Yes |  No  | `demo`  |
+| **demo**-opershift-operators.sh | No |  Yes  | `app` `demo` `reset` |
+| **demo**-opershift-operator-application.sh | No | Yes | `demo` `reset`  |
+| **demo**-opershift-operator-database.sh | No | Yes  |  `demo`  |
+
+* Setup demo for Kubernetes
+
+```sh
+sh scripts/demo-kubernetes-operators.sh app demo reset 
+```
+
+* Setup demo for OpenShift
+
+```sh
+sh scripts/demo-openshift-operators.sh app demo reset 
+```
 
 #### c.  **ci**-www-xxx-yyy-zzz.sh
 
@@ -194,12 +215,15 @@ Creates all operators or specific operators of the project in Kubernetes or Open
 
 Here is a list of available ci scripts.
 
-| Name | Kubernetes | OpenShift **(not implemented yet)** | Creates Database Operator | Creates Application Operator|
+| Name | Kubernetes | OpenShift | Creates Database Operator | Creates Application Operator|
 | --- |  --- |  --- |  --- |  --- |
-| **ci**-create-operator-database-kubernetes.sh | Yes | No  | Yes  | No  |
-| **ci**-create-operator-application-kubernetes.sh | Yes |  No | No  | Yes  |
-| **ci**-create-operators-kubernetes.sh | Yes |  No | Yes  | Yes  |
-| **ci**-delete-operators-kubernetes.sh | Yes (under construction) |  No | Yes  | Yes  |
+| **ci**-create-operator-database-**kubernetes**.sh | Yes | No  | Yes  | No  |
+| **ci**-create-operator-application-**kubernetes**.sh | Yes |  No | No  | Yes  |
+| **ci**-create-operators-**kubernetes**.sh | Yes |  No | Yes  | Yes  |
+| **ci**-create-operator-database-**openshift**.sh |No | Yes  | Yes  | No  |
+| **ci**-create-operator-application-**openshift**.sh | No |  Yes | No  | Yes  |
+| **ci**-create-operators-**openshift**.sh | No | Yes | Yes  | Yes  |
+
 
 #### d.   **delete-everything**-xxx
 
@@ -269,3 +293,49 @@ sh scripts/ci-create-operators-kubernetes.sh database local reset podman_reset
 #### Example architecture:
 
 ![](../documentation/images/ci-automation-kubernetes-v1.png)
+
+#### b. ci-create-operators-openshift.sh
+
+That scripts creates the operators in Kubernetes and has following parameter options.
+
+* OpenShifft
+
+| Parameter combination | versions.env  |  versions_local.env | delete all and setup prerequisites | creates `operator database` | creates `operator application` | reset podman |
+| --- |  --- | --- | --- |  --- | --- | --- |
+| `database` `local` |  no | yes | no | yes | no | no |
+| `database` `local` `reset` |  no | yes |yes | yes | no | no |
+| `database` `local` `reset` `podman_reset` |  no | yes |yes | yes | no | yes |
+| `app` `local` |  no | yes | no | yes | yes | no |
+| `app` `local` `reset` |  no | yes |yes | yes | yes | no |
+| `app` `local` `reset` `podman_reset` |  no | yes |yes | yes | yes | yes |
+
+* First parameter: ('database' or 'app')
+
+    * Use 'database' for setup the database operator only
+    * Use 'app' for setup the database and application operator.
+
+* Second parameter: ('local' or 'ci')
+
+    * Use 'local' for using the `versions_local.env` file as input for the container tags.
+
+    * Use 'ci' for using the `versions.env` file as input for the container tags. **ONLY FOR GOLDEN SOURCE!**
+
+* Third parameter: ('reset')
+
+    * Use 'reset' to deinstall the operators and prereq and reinstall them.
+
+* Fourth parameter: ('podman_reset')
+
+    * Use 'podman_reset' to delete podman vm, create a new podman vm with size of 15, and start podman.
+
+
+#### Example invokation:
+
+* `database` - The script does create all container images related to the `database-operator`
+* `local` - The script uses `versions_local.env` as input for the environment variables.
+* `reset` - Deletes all Kubernetes components related to the example:  `cert-manager`, `prometheus-configuration`, `database-operator` and ` application-operator`
+`podman_reset` - Reset the podman vm by deleting the default-vm and create one with the size of 15 gig and start podman.
+
+```sh
+sh scripts/ci-create-operators-openshift.sh database local reset podman_reset
+```
