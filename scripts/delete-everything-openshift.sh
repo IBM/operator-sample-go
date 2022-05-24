@@ -44,7 +44,7 @@ function runCIconfiguation () {
         echo " Delete microservice application ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteMicroserviceApplicationInstance
 
@@ -52,7 +52,7 @@ function runCIconfiguation () {
         echo " Delete database operator ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteDatabaseOperator 
 
@@ -60,7 +60,7 @@ function runCIconfiguation () {
         echo " Delete OLM deployments ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteOLMdeployment
 
@@ -68,7 +68,7 @@ function runCIconfiguation () {
         echo " Delete database instance ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteDatabaseInstance
 
@@ -76,7 +76,7 @@ function runCIconfiguation () {
         echo " Delete namespaces related to application operator ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteNamespacesRelatedToApplicationOperator
 
@@ -84,7 +84,7 @@ function runCIconfiguation () {
         echo " Delete database application ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteNamespacesRelatedToDatabaseOperator
     fi 
@@ -108,7 +108,7 @@ function runLocalConfiguation () {
         echo " Delete microservice application ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteMicroserviceApplicationInstance
 
@@ -116,7 +116,7 @@ function runLocalConfiguation () {
         echo " Delete database operator ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteDatabaseOperator 
 
@@ -124,7 +124,7 @@ function runLocalConfiguation () {
         echo " Delete OLM deployments ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteOLMdeployment
 
@@ -132,7 +132,7 @@ function runLocalConfiguation () {
         echo " Delete database instance ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteDatabaseInstance
 
@@ -140,7 +140,7 @@ function runLocalConfiguation () {
         echo " Delete namespaces related to application operator ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteNamespacesRelatedToApplicationOperator
 
@@ -148,7 +148,7 @@ function runLocalConfiguation () {
         echo " Delete database application ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
-        INFO="Config: ($CONFIGURATION)"
+        INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteNamespacesRelatedToDatabaseOperator
     fi 
@@ -170,7 +170,6 @@ function deleteInstallPlan () {
   array=("operator-database.v0.0.1" "operator-application.v0.0.1")
   namespace="openshift-operators"
   oc get installplans -n $namespace
-  export STATUS_SUCCESS="tru"
   for i in "${array[@]}"
     do 
         echo ""
@@ -179,32 +178,31 @@ function deleteInstallPlan () {
         while :
         do
             FIND=$i
-            STATUS_CHECK=$(kubectl get installplans -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
+            STATUS_SUCCESS="$FIND"
+            STATUS_CHECK=$(kubectl get installplans -n $namespace | grep "$FIND" | awk '{print $2;}' | sed 's/"//g' | sed 's/,//g')
             INSTALLPLAN=$(kubectl get installplans -n $namespace | grep "$FIND" | awk '{print $1;}' | sed 's/"//g' | sed 's/,//g')
             echo "Status: $STATUS_CHECK"
-            STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
-            if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
-                echo "$(date +'%F %H:%M:%S') Status: $FIND is found"
+            if [ "$STATUS_CHECK" = "$STATUS_SUCCESS" ]; then
+                echo "$(date +'%F %H:%M:%S') $INSTALLPLAN Status: $FIND is found and will be deleted"
                 oc delete installplans $INSTALLPLAN -n $namespace
                 echo "------------------------------------------------------------------------"
+            elif [[ "$STATUS_CHECK" = ""]]; then
+                echo "$(date +'%F %H:%M:%S') No installplan for: $FIND is found."
+                echo "------------------------------------------------------------------------"
+                break             
             elif [[ $j -eq $max_retrys ]]; then
-                echo "$(date +'%F %H:%M:%S') Please run `install-required-kubernetes-components.sh`first!"
-                echo "$(date +'%F %H:%M:%S') Prereqs aren't ready!"
+                echo "$(date +'%F %H:%M:%S') Error during the deletion of the installplans"
+                echo "$(date +'%F %H:%M:%S') Please verify the your system!"
                 echo "------------------------------------------------------------------------"
                 break               
             else
-                echo "$(date +'%F %H:%M:%S') Status: $FIND: ($INSTALLPLAN) Status: ($STATUS_CHECK)"
+                echo "$(date +'%F %H:%M:%S') $FIND Status: ($STATUS_CHECK)"
                 echo "------------------------------------------------------------------------"
             fi
             sleep 3
         done
     done 
 
-    oc delete -f $ROOT_FOLDER/prometheus/openshift/
-    oc delete secret prometheus-token-secret -n openshift-operators
-    oc delete secret prometheus-token-secret -n application-beta
-    oc get secret prometheus-token-secret -n openshift-operators
-    oc get secret prometheus-token-secret -n application-beta
     TYPE='Info'
     INFO='deleteInstallPlan -> was executed'
     customLog $TYPE $INFO

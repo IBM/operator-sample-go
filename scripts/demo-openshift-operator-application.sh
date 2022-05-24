@@ -316,10 +316,10 @@ function verifyApplication() {
         done
     TYPE="*** verify application - Application operator"
     sleep 2
-    kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello > $ROOT_FOLDER/scripts/temp.log
+    kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl http://localhost:8081/hello &> $ROOT_FOLDER/scripts/temp.log
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
     customLog "$TYPE" "$INFO"
-    kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager > $ROOT_FOLDER/scripts/temp.log
+    kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager &> $ROOT_FOLDER/scripts/temp.log
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
     customLog "$TYPE" "$INFO"
 }
