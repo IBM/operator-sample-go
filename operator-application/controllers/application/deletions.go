@@ -21,7 +21,7 @@ func (reconciler *ApplicationReconciler) finalizeApplication(ctx context.Context
 			return nil
 		}
 	}
-	return fmt.Errorf("Database not deleted yet")
+	return fmt.Errorf("database not deleted yet")
 }
 
 func (reconciler *ApplicationReconciler) addFinalizer(ctx context.Context, application *applicationsamplev1beta1.Application) (ctrl.Result, error) {

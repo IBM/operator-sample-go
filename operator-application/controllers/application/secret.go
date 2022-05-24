@@ -40,15 +40,16 @@ func (reconciler *ApplicationReconciler) reconcileSecret(ctx context.Context, ap
 			log.Info("Secret resource " + variables.SecretName + " not found. Creating or re-creating secret")
 			err = reconciler.Create(ctx, secretDefinition)
 			if err != nil {
-				log.Info("Failed to create secret resource. Re-running reconcile.")
+				log.Info("failed to create secret resource. re-running reconcile.")
 				return ctrl.Result{}, err
 			}
 		} else {
-			log.Info("Failed to get secret resource " + variables.SecretName + ". Re-running reconcile.")
+			log.Info("failed to get secret resource " + variables.SecretName + ". re-running reconcile.")
 			return ctrl.Result{}, err
 		}
 	} else {
 		// Note: For simplication purposes secrets are not updated - see deployment section
+		log.Info("")
 	}
 	return ctrl.Result{}, nil
 }

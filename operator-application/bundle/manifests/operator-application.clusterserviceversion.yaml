@@ -92,9 +92,69 @@ spec:
       clusterPermissions:
       - rules:
         - apiGroups:
+          - ""
+          resources:
+          - endpoints
+          - pods
+          - services
+          - nodes
+          - secrets
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterroles
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterrolebindings
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
           - application.sample.ibm.com
           resources:
           - applications
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - cronjobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - jobs
           verbs:
           - create
           - delete
@@ -117,6 +177,10 @@ spec:
           - get
           - patch
           - update
+          - create
+          - delete
+          - list
+          - watch
         - apiGroups:
           - application.sample.ibm.com
           resources:
@@ -252,7 +316,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: quay.io/diwakarptiwari/application-operator:v1.0.4
+                image: docker.io/deleeuw/application-operator:v1.0.103
                 livenessProbe:
                   httpGet:
                     path: /healthz

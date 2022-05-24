@@ -62,6 +62,7 @@ func (reconciler *ApplicationReconciler) reconcileService(ctx context.Context, a
 		}
 	} else {
 		// Note: For simplication purposes secrets are not updated - see deployment section
+		log.Info("")
 	}
 	return ctrl.Result{}, nil
 }
