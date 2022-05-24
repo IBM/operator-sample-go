@@ -5,9 +5,10 @@
 The documentation is structured in following sections.
 
 1. Technical environment
-2. The script automation
-3. Types of scripts
-4. Script parameters
+2. Setup your environment
+3. The script automation
+4. Types of scripts
+5. Script parameters
 
 ### 1. Technical environment
 
@@ -28,6 +29,8 @@ Table of verifications
 | Application (microservice) | Kubernetes (1.23.6_1527) | VPC | us-south | Validated | Validated | `DockerHub` |  Problems | Can't be pulled from DockerHub. Solution delete repo on DockerHub and recreate it. |
 | Application | OpenShift |  VPC | us-south | Validated | Validated | `DockerHub` and `Quay`|  Problems | Instance of `operators.coreos.com` can't be deleted. |
 | Application | OpenShift |  VPC | us-south | Validated | Validated | `DockerHub` and `Quay`|  Problems | Operator instance can't be created when using the automation script. |
+
+### 2. Setup your environment
 
 #### a) Verification of the prerequisites
 
@@ -90,8 +93,40 @@ controller-gen  kustomize       opm             setup-envtest
 | [IBM Cloud Object Storage](https://cloud.ibm.com/objectstorage/create) | TBD |  TBD |
 | [IBM Cloud 'Virtual Private Cloud'](https://cloud.ibm.com/vpc-ext/provision/vpc) | TBD |  TBD |
 
+#### d) Setup the `version.env` and `version_local.env`
 
-### 2. The script automation
+If you want to run the samples without modifications, nothing needs to be changed.
+
+If you want to change them, replace `REGISTRY` and `ORG` with your registry account and change the version numbers in `versions_local.env` file. 
+
+* Create a `version_local.env` file based on the template.
+
+```sh
+cat versions_local.env-template > versions_local.env
+```
+
+* Open the `versions_local.env` in Visual Studio Code
+
+```sh
+code versions_local.env
+```
+
+* Change the values to your needs
+
+```sh
+export REGISTRY='quay.io'
+export ORG='tsuedbroecker'
+export COMMON_TAG='v1.0.36'
+```
+
+* Open a terminal in the project and use the `versions_local.env` as input for your environment variables
+
+```sh
+source versions_local.env
+podman login $REGISTRY
+```
+
+### 3. The script automation
 
 The following image shoew a simplified system overview of the system we are going to setup with the automation scripts.
 
@@ -143,7 +178,7 @@ The current script automation does following:
 
 10. Setup of the needed `bin` directory of the operator-sdk projects. (`controller-gen`,`kustomize`, `opm`,`setup-envtest`)
 
-### 3. Types of scripts
+### 4. Types of scripts
 
 There are five types of scripts:
 
@@ -239,7 +274,7 @@ Verifies, if the tools and the frameworks mentioned above are installed.
 
 Verifies the setup of the needed `bin` files (`controller-gen`, `kustomize`,` opm`, `setup-envtest`) for the operator-sdk projects.
 
-### 4. Script parameters
+### 5. Script parameters
 
 > 🔴 IMPORTANT: The order of the parameters is hard coded!
 
