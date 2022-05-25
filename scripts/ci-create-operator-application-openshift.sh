@@ -254,12 +254,22 @@ function buildApplicationOperatorBundle () {
 
 function buildApplicationOperatorCatalog () {
     cd $ROOT_FOLDER/operator-application
+    # Backup Kustomize
+    cp -nf $ROOT_FOLDER/operator-application/config/manager/kustomization.yaml $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP 
+
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
     $ROOT_FOLDER/operator-application/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" &> $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationOperatorCatalog"
     INPUT="$(cat $ROOT_FOLDER/scripts/temp.log)"
     customLog "$TYPE" "$INPUT"
     rm -f $ROOT_FOLDER/scripts/temp.log
+
+    # Put back backup files and delete backup, when "local" was used
+    if [[ $CI_CONFIG == "local" ]]; then
+      cp -nf  $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP $ROOT_FOLDER/operator-application/config/manager/kustomization.yaml
+    fi
+    rm -f $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP
+
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
 }

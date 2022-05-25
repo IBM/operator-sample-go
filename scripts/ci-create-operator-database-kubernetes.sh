@@ -332,10 +332,11 @@ function buildDatabaseOperatorBundle () {
       cp -nf $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion.yaml-BACKUP $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
       cp -nf $DATABASE_TEMPLATE_FOLDER/role.yaml-backup $ROOT_FOLDER/operator-database/config/rbac/role.yaml
       cp -nf $DATABASE_TEMPLATE_FOLDER/role_binding.yaml-backup $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
-      rm -f $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion.yaml-BACKUP
-      rm -f $DATABASE_TEMPLATE_FOLDER/role.yaml-backup
-      rm -f $DATABASE_TEMPLATE_FOLDER/role_binding.yaml-backup
     fi
+    rm -f $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion.yaml-BACKUP
+    rm -f $DATABASE_TEMPLATE_FOLDER/role.yaml-backup
+    rm -f $DATABASE_TEMPLATE_FOLDER/role_binding.yaml-backup
+
 
     # Push container
     podman login $REGISTRY
@@ -344,6 +345,10 @@ function buildDatabaseOperatorBundle () {
 
 function buildDatabaseOperatorCatalog () {
     cd $ROOT_FOLDER/operator-database
+
+    # Backup Kustomize
+    cp -nf  $ROOT_FOLDER/operator-database/config/manager/kustomization.yaml $DATABASE_TEMPLATE_FOLDER/kustomization.yaml-BACKUP
+
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
     rm -f $ROOT_FOLDER/scripts/temp.log
     $ROOT_FOLDER/operator-database/bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" &> $ROOT_FOLDER/scripts/temp.log
@@ -352,6 +357,13 @@ function buildDatabaseOperatorCatalog () {
     echo $INPUT
     customLog "$TYPE" "$INPUT"
     rm -f $ROOT_FOLDER/scripts/temp.log
+
+    # Put back backup files and delete backup, when "local" was used
+    if [[ $CI_CONFIG == "local" ]]; then
+      cp -nf  $DATABASE_TEMPLATE_FOLDER/kustomization.yaml-BACKUP $ROOT_FOLDER/operator-database/config/manager/kustomization.yaml
+    fi
+    rm -f $DATABASE_TEMPLATE_FOLDER/kustomization.yaml-BACKUP
+
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" 
 }
@@ -497,9 +509,9 @@ function createDatabaseInstance () {
     if [[ $CI_CONFIG == "local" ]]; then
       cp -nf $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml 
       cp -nf $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
-      rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP
-      rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup
     fi
+    rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP
+    rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup
 }
 
 function verifyDatabase() {
