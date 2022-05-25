@@ -66,10 +66,10 @@ $ kubectl delete -f olm/catalogsource-openshift.yaml
 
 ### Build and push new bundle image
 
-Change 'REGISTRY', 'ORG' and image version in versions.env.
+Create versions_local.env and change 'REGISTRY', 'ORG' and image version.
 
 ```
-$ source ../versions.env
+$ source ../versions_local.env
 $ make bundle IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 $ podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
@@ -77,9 +77,10 @@ $ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
 
 ### Build and push new catalog image
 
-Change 'REGISTRY', 'ORG' and image version in versions.env.
+Create versions_local.env and change 'REGISTRY', 'ORG' and image version.
 
 ```
+$ source ../versions_local.env
 $ ./bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
 $ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
 ```

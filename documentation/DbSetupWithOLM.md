@@ -48,6 +48,7 @@ $ kubectl get installplans install-xxxxx -n $NAMESPACE -oyaml
 $ kubectl get operators operator-database.$NAMESPACE -n $NAMESPACE -oyaml
 $ kubectl create ns database   
 $ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
+$ kubectl apply -f config/samples/database.sample_v1alpha1_databasecluster
 $ kubectl get databases/database -n database -oyaml
 $ kubectl get databases.database.sample.third.party/database -n database -oyaml
 ```
@@ -55,6 +56,7 @@ $ kubectl get databases.database.sample.third.party/database -n database -oyaml
 ### Delete all resources
 
 ```
+$ kubectl delete -f config/samples/database.sample_v1alpha1_databasecluster
 $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
 $ kubectl delete -f olm/subscription.yaml
 $ kubectl delete -f olm/catalogsource.yaml
@@ -64,21 +66,20 @@ $ kubectl delete -f olm/catalogsource-openshift.yaml
 
 ### Build and push new operator image
 
-Change 'REGISTRY', 'ORG' and image version in versions.env.
+Create versions_local.env and change 'REGISTRY', 'ORG' and image version.
 
 ```
-$ code ../versions.env
-$ source ../versions.env
+$ source ../versions_local.env
 $ podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 ```
 
 ### Build and push new bundle image
 
-Change 'REGISTRY', 'ORG' and image version in versions.env.
+Create versions_local.env and change 'REGISTRY', 'ORG' and image version.
 
 ```
-$ source ../versions.env
+$ source ../versions_local.env
 $ make bundle IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 $ podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
@@ -86,9 +87,10 @@ $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
 
 ### Build and push new catalog image
 
-Change 'REGISTRY', 'ORG' and image version in versions.env.
+Create versions_local.env and change 'REGISTRY', 'ORG' and image version.
 
 ```
+$ source ../versions_local.env
 $ ./bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
 ```

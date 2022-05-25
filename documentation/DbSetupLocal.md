@@ -15,11 +15,13 @@ From a second terminal run this command:
 
 ```
 $ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
+$ kubectl apply -f config/samples/database.sample_v1alpha1_databasecluster
 ```
 
 ### Delete all resources
 
 ```
+$ kubectl delete -f config/samples/database.sample_v1alpha1_databasecluster
 $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
 $ make uninstall
 ```

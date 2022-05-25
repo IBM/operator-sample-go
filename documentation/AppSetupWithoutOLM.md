@@ -40,11 +40,10 @@ $ make undeploy IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 
 ### Build and push new image
 
-Change 'REGISTRY', 'ORG' and image version in versions.env.
+Create versions_local.env and change 'REGISTRY', 'ORG' and image version.
 
 ```
-$ code ../versions.env
-$ source ../versions.env
+$ source ../versions_local.env
 $ podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 ```
