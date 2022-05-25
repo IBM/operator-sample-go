@@ -1,9 +1,0 @@
-namespace/application-beta labeled
-clusterrole.rbac.authorization.k8s.io/prometheus-k8s-role created
-clusterrolebinding.rbac.authorization.k8s.io/prometheus-k8s-rolebinding-olm created
-clusterrole.rbac.authorization.k8s.io/application-scaler-role created
-clusterrolebinding.rbac.authorization.k8s.io/application-scaler-rolebinding created
-router-metrics-certs-default                                   kubernetes.io/tls                     2      20d
-/Users/thomassuedbroecker/Downloads/dev/operator-sample-go/scripts/temp/tls.crt
-/Users/thomassuedbroecker/Downloads/dev/operator-sample-go/scripts/temp/tls.key
-error: key name for file path /Users/thomassuedbroecker/Downloads/dev/operator-sample-go/scripts/temp/tls.crt missing
