@@ -59,6 +59,9 @@ function setupDatabase () {
         MESSAGE="*** The setup of the database-operator failed !"
         customLog "$TYPE" "$MESSAGE"
         exit 1
+    else
+        rm -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
+        rm -f $ROOT_FOLDER/scripts/openshift-database-subsciption.yaml 
     fi
 }
 
@@ -74,8 +77,6 @@ function setupApplication () {
     else
         rm -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
         rm -f $ROOT_FOLDER/scripts/openshift-application-subsciption.yaml
-        rm -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
-        rm -f $ROOT_FOLDER/scripts/openshift-database-subsciption.yaml 
     fi
 }
 

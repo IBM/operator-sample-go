@@ -185,6 +185,10 @@ function buildApplicationScaler () {
 }
 
 function configureCR_SimpleMicroservice () {
+    # Backup CR files
+    cp $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml 
+    cp $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml
+
     oc new-project application-alpha 
     oc new-project application-beta
     IMAGE_NAME="$REGISTRY/$ORG/$IMAGE_MICROSERVICE"
@@ -211,6 +215,11 @@ function buildApplicationOperator () {
 function buildApplicationOperatorBundle () {
     cd $ROOT_FOLDER/operator-application
     
+    # Backup existing CVS and Roles
+    cp -nf  $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP
+    cp -nf  $ROOT_FOLDER/operator-application/config/rbac/role.yaml $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup
+    cp -nf  $ROOT_FOLDER/operator-application/config/rbac/role_binding.yaml $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup
+ 
     # Build bundle
     make bundle IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
     # Replace CSV and RBAC generate files with customized versions APPLICATION_OPERATOR_IMAGE 
@@ -228,6 +237,16 @@ function buildApplicationOperatorBundle () {
     logBuild "$TYPE" "$INPUT"
     rm -f $ROOT_FOLDER/scripts/temp.log
     
+    # Put back backup files and delete backup, when "local" was used
+    if [[ $CI == "local" ]]; then
+      cp -nf  $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
+      cp -nf  $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup $ROOT_FOLDER/operator-application/config/rbac/role.yaml
+      cp -nf  $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup $ROOT_FOLDER/operator-application/config/rbac/role_binding.yaml
+      rm -f $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP
+      rm -f $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup
+      rm -f $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup
+    fi
+
     # Push container
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
@@ -354,6 +373,13 @@ function createApplicationInstance () {
     kubectl get pods -n application-beta | grep "application"
     #kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     #kubectl get pods -n application-alpha | grep "application"
+    
+    if [[ $CI == "local" ]]; then
+      cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
+      cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
+      rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml
+      rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml
+    fi
 }
 
 function verifyApplication() {

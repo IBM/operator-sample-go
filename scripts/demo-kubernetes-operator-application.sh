@@ -121,6 +121,10 @@ function verifyPreReqs () {
 }
 
 function configureCR_SimpleMicroservice () {
+    # Backup CR files
+    cp $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml 
+    cp $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml
+   
     IMAGE_NAME="$REGISTRY/$ORG/$IMAGE_MICROSERVICE"
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
@@ -226,6 +230,11 @@ function createApplicationInstance () {
     kubectl get pods -n operators | grep "application"
     kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
     kubectl get pods -n operators | grep "application-beta"
+
+    cp $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
+    cp $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
+    rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml
+    rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml
 }
 
 function verifyApplication() {

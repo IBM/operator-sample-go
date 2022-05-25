@@ -144,7 +144,11 @@ function verifyPreReqs () {
 }
 
 function configureCRs_DatabaseOperator () {
-    
+
+    # Backup CR files
+    cp $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP
+    cp $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup
+   
     #Backup
     IMAGE_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
     echo $IMAGE_NAME
@@ -157,6 +161,12 @@ function configureCRs_DatabaseOperator () {
     echo $IMAGE_NAME
     sed "s+DATABASE_SERVICE_IMAGE+$IMAGE_NAME+g" $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster-TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
     cat $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml | grep "$IMAGE_DATABASE_BACKUP"
+    
+    # Put back backup files and delete backup
+    cp $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml 
+    cp $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
+    rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP
+    rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup
 }
 
 function createOLMDatabaseOperatorYAMLs () {

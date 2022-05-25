@@ -264,7 +264,11 @@ function buildDatabaseBackup () {
 }
 
 function configureCRs_DatabaseOperator () {
-    
+
+    # Backup CR files
+    cp -nf $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP
+    cp -nf $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup
+ 
     #Backup
     IMAGE_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
     echo $IMAGE_NAME
@@ -299,23 +303,40 @@ function buildDatabaseOperator () {
 
 function buildDatabaseOperatorBundle () {
     cd $ROOT_FOLDER/operator-database
+    
+    # Backup existing CVS and Roles
+    cp -nf $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion.yaml-BACKUP
+    cp -nf $ROOT_FOLDER/operator-database/config/rbac/role.yaml $DATABASE_TEMPLATE_FOLDER/role.yaml-backup
+    cp -nf $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml $DATABASE_TEMPLATE_FOLDER/role_binding.yaml-backup
+    
     # Build bundle
     make bundle IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
-    
+     
     # Replace CSV and RBAC generate files with customized versions
     DATABASE_OPERATOR_IMAGE="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
     sed "s+DATABASE_OPERATOR_IMAGE+$DATABASE_OPERATOR_IMAGE+g" $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion-TEMPLATE.yaml > $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
     OPERATOR_NAMESPACE=operators
     sed "s+OPERATOR_NAMESPACE+$OPERATOR_NAMESPACE+g" $DATABASE_TEMPLATE_FOLDER/operator-database-role_binding_patch_TEMPLATE.yaml > $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
     cp -nf $DATABASE_TEMPLATE_FOLDER/operator-database-role_patch_TEMPLATE.yaml $ROOT_FOLDER/operator-database/config/rbac/role.yaml
-    # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
-    
+    # make bundle-build BUNDLE_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"  
     rm -f $ROOT_FOLDER/scripts/temp.log
+ 
+    # Build image
     podman build -f bundle.Dockerfile -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildDatabaseOperatorBundle"
     logBuild "$TYPE" "$ROOT_FOLDER/scripts/temp.log"
     rm -f "$ROOT_FOLDER/scripts/temp.log"
-    
+
+    # Put back backup files and delete backup, when "local" was used
+    if [[ $CI == "local" ]]; then
+      cp -nf $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion.yaml-BACKUP $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
+      cp -nf $DATABASE_TEMPLATE_FOLDER/role.yaml-backup $ROOT_FOLDER/operator-database/config/rbac/role.yaml
+      cp -nf $DATABASE_TEMPLATE_FOLDER/role_binding.yaml-backup $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
+      rm -f $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion.yaml-BACKUP
+      rm -f $DATABASE_TEMPLATE_FOLDER/role.yaml-backup
+      rm -f $DATABASE_TEMPLATE_FOLDER/role_binding.yaml-backup
+    fi
+
     # Push container
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
@@ -471,6 +492,14 @@ function createDatabaseInstance () {
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
     echo $INFO
     customLog "$TYPE" "$INFO" 
+
+    # Put back backup files and delete backup, when "local" was used
+    if [[ $CI == "local" ]]; then
+      cp -nf $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml 
+      cp -nf $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
+      rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP
+      rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup
+    fi
 }
 
 function verifyDatabase() {
