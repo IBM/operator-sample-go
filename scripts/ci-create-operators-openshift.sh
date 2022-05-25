@@ -64,13 +64,18 @@ function setupDatabase () {
 
 function setupApplication () {
     bash "$ROOT_FOLDER/scripts/$SCRIPT_APPLICATION" $CI_CONFIG $RESET $RESET_PODMAN
-        if [ $? == "1" ]; then
+    if [ $? == "1" ]; then
         echo "*** The setup of the application-operator failed !"
         echo "*** The script $SCRIPT_NAME ends here!"
         TYPE="*** Error"
         MESSAGE="*** The setup of the application-operator failed !"
         customLog "$TYPE" "$MESSAGE"
         exit 1
+    else
+        rm -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
+        rm -f $ROOT_FOLDER/scripts/openshift-application-subsciption.yaml
+        rm -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
+        rm -f $ROOT_FOLDER/scripts/openshift-database-subsciption.yaml 
     fi
 }
 
