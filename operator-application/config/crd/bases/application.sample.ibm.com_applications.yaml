@@ -18,7 +18,6 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Application is the Schema for the application API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -143,7 +142,6 @@ spec:
   - name: v1beta1
     schema:
       openAPIV3Schema:
-        description: Application is the Schema for the application API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation

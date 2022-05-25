@@ -11,12 +11,10 @@ spec:
   customresourcedefinitions:
     owned:
     - displayName: Application
-      description: Application is the Schema for the Application API
       kind: Application
       name: applications.application.sample.ibm.com
       version: v1beta1
     - displayName: Application
-      description: Application is the Schema for the Application API
       kind: Application
       name: applications.application.sample.ibm.com
       version: v1alpha1

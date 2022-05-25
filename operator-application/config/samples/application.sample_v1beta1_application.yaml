@@ -14,4 +14,4 @@ spec:
   databaseName: database
   databaseNamespace: database
   title: movies
-  image: quay.io/diwakarptiwari/new-microservice:v1.0.4
+  image: docker.io/nheidloff/simplemicroservice:v1.0.106

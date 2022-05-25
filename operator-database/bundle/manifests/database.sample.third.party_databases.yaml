@@ -17,7 +17,6 @@ spec:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Database is is the Schema for the database API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -32,7 +31,6 @@ spec:
           metadata:
             type: object
           spec:
-            description: Database  defines the desired state of Database
             properties:
               certificate:
                 type: string
@@ -44,7 +42,6 @@ spec:
                 type: string
             type: object
           status:
-            description: Database  defines the desired state of Database
             type: object
         type: object
     served: true

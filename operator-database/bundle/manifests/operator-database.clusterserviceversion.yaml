@@ -352,7 +352,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: quay.io/diwakarptiwari/database-operator:v1.0.4
+                image: docker.io/nheidloff/database-operator:v1.0.106
                 livenessProbe:
                   httpGet:
                     path: /healthz

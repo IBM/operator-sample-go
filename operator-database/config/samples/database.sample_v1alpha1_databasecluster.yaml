@@ -9,5 +9,5 @@ metadata:
   name: databasecluster-sample
   namespace: database
 spec:
-  image: quay.io/diwakarptiwari/database-service:v1.0.4
+  image: docker.io/nheidloff/database-service:v1.0.106
   amountPods: 2
