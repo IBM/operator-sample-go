@@ -297,8 +297,8 @@ function deleteNamespacesRelatedToApplicationOperator () {
                     echo "------------------------------------------------------------------------"
                     break
                 elif [[ $j -eq $max_retrys ]]; then
-                    echo "$(date +'%F %H:%M:%S') Please run 'delete-everything-kubernetes.sh' first!"
-                    echo "$(date +'%F %H:%M:%S') Prereqs aren't ready!"
+                    echo "$(date +'%F %H:%M:%S') Error during the deletion!"
+                    echo "$(date +'%F %H:%M:%S') Please verify your cluster and the existing operator installation!"
                     echo "------------------------------------------------------------------------"
                     break            
                 else

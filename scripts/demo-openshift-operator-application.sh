@@ -35,12 +35,11 @@ function configurePrometheusOpenShiftForSimpleApplication () {
    oc label namespace application-beta openshift.io/cluster-monitoring="true"
    oc apply -f $ROOT_FOLDER/prometheus/openshift/
    
-
    mkdir "$ROOT_FOLDER/scripts/$TEMP_FOLDER"
    
    oc get secrets -n openshift-ingress | grep "router-metrics-certs-default"
    oc extract secret/router-metrics-certs-default --to="$ROOT_FOLDER/scripts/$TEMP_FOLDER" -n openshift-ingress
-   kubectl create secret generic prometheus-cert-secret --from-file=="$ROOT_FOLDER/scripts/$TEMP_FOLDER/tls.crt" -n application-beta
+   kubectl create secret generic prometheus-cert-secret --from-file="$ROOT_FOLDER/scripts/$TEMP_FOLDER/tls.crt" -n application-beta
    
    oc sa get-token -n openshift-monitoring prometheus-k8s > "$ROOT_FOLDER/scripts/$TEMP_FOLDER/token.txt"
    kubectl create secret generic prometheus-token-secret --from-file="$ROOT_FOLDER/scripts/$TEMP_FOLDER/token.txt" -n openshift-operators
