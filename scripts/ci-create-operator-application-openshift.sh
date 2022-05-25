@@ -238,7 +238,7 @@ function buildApplicationOperatorBundle () {
     rm -f $ROOT_FOLDER/scripts/temp.log
     
     # Put back backup files and delete backup, when "local" was used
-    if [[ $CI == "local" ]]; then
+    if [[ $CI_CONFIG == "local" ]]; then
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup $ROOT_FOLDER/operator-application/config/rbac/role.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup $ROOT_FOLDER/operator-application/config/rbac/role_binding.yaml
@@ -374,7 +374,7 @@ function createApplicationInstance () {
     #kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     #kubectl get pods -n application-alpha | grep "application"
     
-    if [[ $CI == "local" ]]; then
+    if [[ $CI_CONFIG == "local" ]]; then
       echo "Delete back-up files."
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml

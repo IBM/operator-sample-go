@@ -328,7 +328,7 @@ function buildDatabaseOperatorBundle () {
     rm -f "$ROOT_FOLDER/scripts/temp.log"
 
     # Put back backup files and delete backup, when "local" was used
-    if [[ $CI == "local" ]]; then
+    if [[ $CI_CONFIG == "local" ]]; then
       cp -nf $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion.yaml-BACKUP $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
       cp -nf $DATABASE_TEMPLATE_FOLDER/role.yaml-backup $ROOT_FOLDER/operator-database/config/rbac/role.yaml
       cp -nf $DATABASE_TEMPLATE_FOLDER/role_binding.yaml-backup $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
@@ -494,7 +494,7 @@ function createDatabaseInstance () {
     customLog "$TYPE" "$INFO" 
 
     # Put back backup files and delete backup, when "local" was used
-    if [[ $CI == "local" ]]; then
+    if [[ $CI_CONFIG == "local" ]]; then
       cp -nf $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml 
       cp -nf $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
       rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP
