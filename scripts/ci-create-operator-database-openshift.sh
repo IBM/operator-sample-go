@@ -271,6 +271,7 @@ function buildDatabaseOperatorBundle () {
 
     # Put back backup files and delete backup, when "local" was used
     if [[ $CI == "local" ]]; then
+      echo "Delete back-up files."
       cp -nf $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion.yaml-BACKUP $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
       cp -nf $DATABASE_TEMPLATE_FOLDER/role.yaml-backup $ROOT_FOLDER/operator-database/config/rbac/role.yaml
       cp -nf $DATABASE_TEMPLATE_FOLDER/role_binding.yaml-backup $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml

@@ -60,6 +60,7 @@ function setupDatabase () {
         customLog "$TYPE" "$MESSAGE"
         exit 1
     else
+        echo "Delete back-up files."
         rm -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
         rm -f $ROOT_FOLDER/scripts/openshift-database-subsciption.yaml 
     fi

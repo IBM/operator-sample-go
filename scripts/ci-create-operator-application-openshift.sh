@@ -375,6 +375,7 @@ function createApplicationInstance () {
     #kubectl get pods -n application-alpha | grep "application"
     
     if [[ $CI == "local" ]]; then
+      echo "Delete back-up files."
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
       rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml

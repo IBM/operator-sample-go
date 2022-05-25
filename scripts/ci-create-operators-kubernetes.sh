@@ -57,6 +57,7 @@ function setupDatabase () {
         customLog "$TYPE" "$MESSAGE"
         exit 1
     else
+        echo "Delete back-up files."
         rm -f $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
         rm -f $ROOT_FOLDER/scripts/kubernetes-database-subsciption.yaml 
     fi
@@ -72,6 +73,7 @@ function setupApplication () {
         customLog "$TYPE" "$MESSAGE"
         exit 1
     else
+        echo "Delete back-up files."
         rm -f $ROOT_FOLDER/scripts/kubernetes-application-catalogsource.yaml
         rm -f $ROOT_FOLDER/scripts/kubernetes-application-subsciption.yaml
     fi
