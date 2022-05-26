@@ -201,6 +201,7 @@ function verifyPreReqs () {
 }
 
 function buildDatabaseService () {
+    startTimer
     cd $ROOT_FOLDER/database-service
     rm -f $ROOT_FOLDER/scripts/temp.log
     podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE" . > $ROOT_FOLDER/scripts/temp.log
@@ -209,9 +210,11 @@ function buildDatabaseService () {
     rm -f "$ROOT_FOLDER/scripts/temp.log"
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
+    endTimer
 }
 
 function buildDatabaseBackup () {
+    startTimer
     cd $ROOT_FOLDER/operator-database-backup
     rm -f $ROOT_FOLDER/scripts/temp.log
     podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP" . > $ROOT_FOLDER/scripts/temp.log
@@ -220,6 +223,7 @@ function buildDatabaseBackup () {
     rm -f "$ROOT_FOLDER/scripts/temp.log"
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
+    endTimer
 }
 
 function configureCRs_DatabaseOperator () {
@@ -243,10 +247,10 @@ function configureCRs_DatabaseOperator () {
 }
 
 function buildDatabaseOperator () {
+    startTimer
     cd $ROOT_FOLDER/operator-database
     
     # Backup Kustomize
-    cp -nf $ROOT_FOLDER/operator-database/config/manager/kustomization.yaml $DATABASE_TEMPLATE_FOLDER/kustomization.yaml-BACKUP
     cp -nf $ROOT_FOLDER/operator-database/config/rbac/role.yaml $DATABASE_TEMPLATE_FOLDER/role.yaml-BACKUP 
 
     make generate
@@ -266,14 +270,14 @@ function buildDatabaseOperator () {
 
     # Put back backup files and delete backup, when "local" was used
     if [[ $CI_CONFIG == "local" ]]; then
-      cp -nf $DATABASE_TEMPLATE_FOLDER/kustomization.yaml-BACKUP $ROOT_FOLDER/operator-database/config/manager/kustomization.yaml
       cp -nf $DATABASE_TEMPLATE_FOLDER/role.yaml-BACKUP $ROOT_FOLDER/operator-database/config/rbac/role.yaml
     fi
-    rm -f $DATABASE_TEMPLATE_FOLDER/kustomization.yaml-BACKUP
     rm -f $DATABASE_TEMPLATE_FOLDER/role.yaml-BACKUP
+    endTimer
 }
 
 function buildDatabaseOperatorBundle () {
+    startTimer
     cd $ROOT_FOLDER/operator-database
 
     # Backup existing CVS and Roles
@@ -315,9 +319,12 @@ function buildDatabaseOperatorBundle () {
     # Push container
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
+    
+    endTimer
 }
 
 function buildDatabaseOperatorCatalog () {
+    startTimer
     cd $ROOT_FOLDER/operator-database
 
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
@@ -331,7 +338,8 @@ function buildDatabaseOperatorCatalog () {
     rm -f $ROOT_FOLDER/scripts/temp.log
 
     podman login $REGISTRY
-    podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" 
+    podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
+    endTimer
 }
 
 function createOLMDatabaseOperatorYAMLs () {
@@ -341,6 +349,7 @@ function createOLMDatabaseOperatorYAMLs () {
 }
 
 function deployDatabaseOperatorOLM () {
+    startTimer
     kubectl create -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml -n $NAMESPACE
     kubectl create -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml -n $NAMESPACE
 
@@ -429,9 +438,11 @@ function deployDatabaseOperatorOLM () {
                 sleep 3
             done
         done
+    endTimer
 }
 
 function createDatabaseInstance () {
+    startTimer
     kubectl create ns database   
     kubectl create -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_database.yaml
     kubectl create -f $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
@@ -480,6 +491,7 @@ function createDatabaseInstance () {
       rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP
       rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup
     fi
+    endTimer
 }
 
 function verifyDatabase() {

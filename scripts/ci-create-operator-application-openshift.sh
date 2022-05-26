@@ -215,6 +215,7 @@ function configureCR_SimpleMicroservice () {
 }
 
 function buildApplicationOperator () {
+    startTimer
     cd $ROOT_FOLDER/operator-application
 
     # Backup Kustomize
@@ -237,9 +238,11 @@ function buildApplicationOperator () {
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP $ROOT_FOLDER/operator-application/config/rbac/role.yaml
     fi
     rm -f $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP
+    endTimer
 }
 
 function buildApplicationOperatorBundle () {
+    startTimer
     cd $ROOT_FOLDER/operator-application
     
     # Backup existing CVS and Roles
@@ -280,9 +283,11 @@ function buildApplicationOperatorBundle () {
     # Push container
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
+    endTimer
 }
 
 function buildApplicationOperatorCatalog () {
+    startTimer
     cd $ROOT_FOLDER/operator-application
 
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
@@ -294,6 +299,7 @@ function buildApplicationOperatorCatalog () {
 
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
+    endTimer
 }
 
 function createOLMApplicationOperatorYAMLs () {
@@ -303,6 +309,7 @@ function createOLMApplicationOperatorYAMLs () {
 }
 
 function deployApplicationOperatorOLM () {
+    startTimer
     # create catalog
     kubectl create -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
     kubectl get catalogsource operator-application-catalog -n $NAMESPACE -oyaml
@@ -396,9 +403,11 @@ function deployApplicationOperatorOLM () {
                 sleep 3
             done
         done
+    endTimer
 }
 
 function createApplicationInstance () {
+    startTimer
     echo "*** create application instances"
     kubectl get pods -n openshift-operators | grep "application"
     kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml -n application-beta
@@ -410,9 +419,11 @@ function createApplicationInstance () {
       echo "Delete back-up files."
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
-      rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml
-      rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml
     fi
+    rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml
+    rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml
+
+    endTimer
 }
 
 function verifyApplication() {
