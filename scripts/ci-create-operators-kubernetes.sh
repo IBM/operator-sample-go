@@ -47,6 +47,22 @@ function customLog () {
     echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
 }
 
+function startTimer() {
+   export timerstart=$(date +%s)
+   echo "*** Timer start: $timerstart"
+   customLog "Timer start" "Start: [$timerstart]"
+}
+
+function endTimer() {
+
+    timerend=$(date +%s)
+    seconds=$(echo "$timerend - $timerstart" | bc)
+    TIMER=$(awk -v t=$seconds 'BEGIN{t=int(t*1000); printf "%d:%02d:%02d\n", t/3600000, t/60000%60, t/1000%60}')
+    echo "*** Timer duration: $TIMER"
+    customLog "Timer" "Duration [$TIMER]"
+    
+}
+
 function setupDatabase () {
     bash "$ROOT_FOLDER/scripts/ci-create-operator-database-kubernetes.sh" $CI_CONFIG $RESET $RESET_PODMAN
     if [ $? == "1" ]; then
