@@ -200,8 +200,7 @@ function buildApplicationOperator () {
     cd $ROOT_FOLDER/operator-application
 
     # Backup Kustomize
-    cp -nf $ROOT_FOLDER/operator-application/config/manager/kustomization.yaml $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP 
-    cp -nf $ROOT_FOLDER/operator-application/config/rbac/role.yaml $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP 
+   cp -nf $ROOT_FOLDER/operator-application/config/rbac/role.yaml $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP 
  
     make generate
     make manifests
@@ -217,10 +216,8 @@ function buildApplicationOperator () {
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 
     if [[ $CI_CONFIG == "local" ]]; then
-      cp -nf  $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP $ROOT_FOLDER/operator-application/config/manager/kustomization.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP $ROOT_FOLDER/operator-application/config/rbac/role.yaml
     fi
-    rm -f $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP
     rm -f $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP
 }
 
@@ -231,7 +228,8 @@ function buildApplicationOperatorBundle () {
     cp -nf  $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP
     cp -nf  $ROOT_FOLDER/operator-application/config/rbac/role.yaml $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup
     cp -nf  $ROOT_FOLDER/operator-application/config/rbac/role_binding.yaml $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup
- 
+    cp -nf  $ROOT_FOLDER/operator-application/config/manager/kustomization.yaml $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP 
+
     # Build bundle
     make bundle IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
     # Replace CSV and RBAC generate files with customized versions APPLICATION_OPERATOR_IMAGE 
@@ -251,13 +249,15 @@ function buildApplicationOperatorBundle () {
     
     # Put back backup files and delete backup, when "local" was used
     if [[ $CI_CONFIG == "local" ]]; then
+      cp -nf  $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP $ROOT_FOLDER/operator-application/config/manager/kustomization.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup $ROOT_FOLDER/operator-application/config/rbac/role.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup $ROOT_FOLDER/operator-application/config/rbac/role_binding.yaml
-      rm -f $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP
-      rm -f $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup
-      rm -f $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup
     fi
+    rm -f $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP
+    rm -f $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup
+    rm -f $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup
+    rm -f $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP
 
     # Push container
     podman login $REGISTRY

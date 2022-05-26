@@ -172,7 +172,6 @@ function buildApplicationOperator () {
     cd $ROOT_FOLDER/operator-application
     
     # Backup Kustomize
-    cp -nf $ROOT_FOLDER/operator-application/config/manager/kustomization.yaml $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP 
     cp -nf $ROOT_FOLDER/operator-application/config/rbac/role.yaml $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP 
     
     make generate
@@ -190,10 +189,8 @@ function buildApplicationOperator () {
     
     # Put back backup files and delete backup, when "local" was used
     if [[ $CI_CONFIG == "local" ]]; then
-      cp -nf  $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP $ROOT_FOLDER/operator-application/config/manager/kustomization.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP $ROOT_FOLDER/operator-application/config/rbac/role.yaml
     fi
-    rm -f $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP
     rm -f $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP
 
 }
@@ -201,10 +198,11 @@ function buildApplicationOperator () {
 function buildApplicationOperatorBundle () {
     cd $ROOT_FOLDER/operator-application
     
-    # Backup existing CVS and Roles
+    # Backup existing CVS, kustomization and Roles
     cp -nf  $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP
     cp -nf  $ROOT_FOLDER/operator-application/config/rbac/role.yaml $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup
     cp -nf  $ROOT_FOLDER/operator-application/config/rbac/role_binding.yaml $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup
+    cp -nf  $ROOT_FOLDER/operator-application/config/manager/kustomization.yaml $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP 
  
     # Build bundle
     make bundle IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"

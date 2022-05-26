@@ -264,7 +264,8 @@ function buildDatabaseOperatorBundle () {
     cp -nf $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion.yaml-BACKUP
     cp -nf $ROOT_FOLDER/operator-database/config/rbac/role.yaml $DATABASE_TEMPLATE_FOLDER/role.yaml-backup
     cp -nf $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml $DATABASE_TEMPLATE_FOLDER/role_binding.yaml-backup
-    
+    cp -nf $ROOT_FOLDER/operator-database/config/manager/kustomization.yaml $DATABASE_TEMPLATE_FOLDER/kustomization.yaml-BACKUP
+
     # Build bundle
     make bundle IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
     
@@ -288,10 +289,12 @@ function buildDatabaseOperatorBundle () {
       cp -nf $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion.yaml-BACKUP $ROOT_FOLDER/operator-database/bundle/manifests/operator-database.clusterserviceversion.yaml
       cp -nf $DATABASE_TEMPLATE_FOLDER/role.yaml-backup $ROOT_FOLDER/operator-database/config/rbac/role.yaml
       cp -nf $DATABASE_TEMPLATE_FOLDER/role_binding.yaml-backup $ROOT_FOLDER/operator-database/config/rbac/role_binding.yaml
+      cp -nf $DATABASE_TEMPLATE_FOLDER/kustomization.yaml-BACKUP $ROOT_FOLDER/operator-database/config/manager/kustomization.yaml
     fi
     rm -f $DATABASE_TEMPLATE_FOLDER/operator-database.clusterserviceversion.yaml-BACKUP
     rm -f $DATABASE_TEMPLATE_FOLDER/role.yaml-backup
     rm -f $DATABASE_TEMPLATE_FOLDER/role_binding.yaml-backup
+    rm -f $DATABASE_TEMPLATE_FOLDER/kustomization.yaml-BACKUP
  
     # Push container
     podman login $REGISTRY
