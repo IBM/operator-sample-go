@@ -59,6 +59,22 @@ function logInit () {
     customLog "$TYPE" "$INFO"
 }
 
+function startTimer() {
+   export timerstart=$(date +%s)
+   echo "*** Timer start: $timerstart"
+   customLog "Timer start" "Start: [$timerstart]"
+}
+
+function endTimer() {
+
+    timerend=$(date +%s)
+    seconds=$(echo "$timerend - $timerstart" | bc)
+    TIMER=$(awk -v t=$seconds 'BEGIN{t=int(t*1000); printf "%d:%02d:%02d\n", t/3600000, t/60000%60, t/1000%60}')
+    echo "*** Timer duration: $TIMER"
+    customLog "Timer" "Duration [$TIMER]"
+    
+}
+
 function setEnvironmentVariables () {
  
     if [[ $CI_CONFIG == "local" ]]; then
@@ -137,6 +153,7 @@ function verifyPreReqs () {
 }
 
 function buildSimpleMicroservice () {
+    startTimer
     cd $ROOT_FOLDER/simple-microservice
     podman build -t "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildSimpleMicroservice"
@@ -145,9 +162,11 @@ function buildSimpleMicroservice () {
     rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_MICROSERVICE" 
+    endTimer
 }
 
 function buildApplicationScaler () {
+    startTimer
     cd $ROOT_FOLDER/operator-application-scaler
     podman build -t "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER" . > $ROOT_FOLDER/scripts/temp.log
     TYPE="buildApplicationScaler"
@@ -156,6 +175,7 @@ function buildApplicationScaler () {
     rm -f $ROOT_FOLDER/scripts/temp.log
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER"
+    endTimer
 }
 
 function configureCR_SimpleMicroservice () {
@@ -169,6 +189,7 @@ function configureCR_SimpleMicroservice () {
 }
 
 function buildApplicationOperator () {
+    startTimer
     cd $ROOT_FOLDER/operator-application
     
     # Backup Kustomize
@@ -192,10 +213,11 @@ function buildApplicationOperator () {
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP $ROOT_FOLDER/operator-application/config/rbac/role.yaml
     fi
     rm -f $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP
-
+    endTimer
 }
 
 function buildApplicationOperatorBundle () {
+    startTimer
     cd $ROOT_FOLDER/operator-application
     
     # Backup existing CVS, kustomization and Roles
@@ -234,7 +256,8 @@ function buildApplicationOperatorBundle () {
     # Push container
     podman login $REGISTRY
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
-
+    
+    endTimer
 }
 
 function buildApplicationOperatorCatalog () {
