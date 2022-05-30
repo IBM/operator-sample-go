@@ -185,7 +185,7 @@ function verifyPrometheusInstance () {
 echo "************************************"
 echo " Verify deletion"
 echo "************************************"
-# verifyDeletion
+verifyDeletion
 
 echo "************************************"
 echo " Install cert manager"
