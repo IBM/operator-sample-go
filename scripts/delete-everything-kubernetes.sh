@@ -47,10 +47,9 @@ function deleteOLMdeployment () {
 }
 
 function deleteNamespacesRelatedToApplicationOperator () {
-    kubectl delete namespace application-alpha
-    kubectl delete namespace application-beta
-    kubectl delete -f all --all -n operator-application-system
-    kubectl delete namespace operator-application-system
+    kubectl delete -f namespace application-alpha
+    kubectl delete -f namespace application-beta
+    kubectl delete -f namespace operator-application-system
     #echo "Press any key to move on"
     #read input
 }
@@ -58,6 +57,7 @@ function deleteNamespacesRelatedToApplicationOperator () {
 function deleteDatabaseInstance () {
     cd $ROOT_FOLDER/operator-database
     kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
+    kubectl delete -f namespace database
     #echo "Press any key to move on"
     #read input
 }
