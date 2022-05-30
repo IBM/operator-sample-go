@@ -346,14 +346,14 @@ function deleteDatabaseOperator () {
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
 
     namespace=openshift-operators
-    kubectl delete customresourcedefinition databasebackups.database.sample.third.party -n $namespace
-    kubectl delete customresourcedefinition databases.database.sample.third.party -n $namespace
-    kubectl delete customresourcedefinition databaseclusters.database.sample.third.party -n $namespace
-    kubectl delete operators.operators.coreos.com operator-database.openshift-operators
+    kubectl delete -f customresourcedefinition databasebackups.database.sample.third.party -n $namespace
+    kubectl delete -f customresourcedefinition databases.database.sample.third.party -n $namespace
+    kubectl delete -f customresourcedefinition databaseclusters.database.sample.third.party -n $namespace
+    kubectl delete -f operators.operators.coreos.com operator-database.openshift-operators
 
-    kubectl delete deployment operator-database-controller-manager -n $namespace
-    kubectl delete clusterserviceversion operator-database.v0.0.1 
-    kubectl delete clusterrole operator-database-metrics-reader
+    kubectl delete -f deployment operator-database-controller-manager -n $namespace
+    kubectl delete -f clusterserviceversion operator-database.v0.0.1 
+    kubectl delete -f clusterrole operator-database-metrics-reader
 
     TYPE='Info'
     INFO='deleteDatabaseInstance -> was executed'
@@ -364,7 +364,7 @@ function deleteDatabaseOperator () {
 }
 
 function deleteNamespacesRelatedToDatabaseOperator () {
-    oc delete project database
+    oc delete -f project database
 
     export max_retrys=9
     array=("database")
