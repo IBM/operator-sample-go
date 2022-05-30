@@ -300,7 +300,7 @@ function deleteNamespacesRelatedToApplicationOperator () {
             while :
             do       
             ((j++))
-            STATUS_CHECK=$(kubectl get namespace -n $FIND | grep $FIND | awk '{print $2;}')
+            STATUS_CHECK=$(kubectl get namespace $FIND | grep $FIND | awk '{print $2;}')
             echo "Status: $STATUS_CHECK"
             if [ "$STATUS_CHECK" = "$STATUS_SUCCESS" ]; then
                     echo "$(date +'%F %H:%M:%S') Status: $FIND is deleted"
@@ -422,7 +422,7 @@ function deleteCertManager () {
         while :
         do       
            ((j++))
-           STATUS_CHECK=$(kubectl get namespace -n $FIND | grep $FIND | awk '{print $2;}')
+           STATUS_CHECK=$(kubectl get namespace $FIND | grep $FIND | awk '{print $2;}')
            echo "Status: $STATUS_CHECK"
            if [[ "$STATUS_CHECK" == "$STATUS_SUCCESS" ]]; then
                 echo "$(date +'%F %H:%M:%S') Status: $FIND is deleted"
