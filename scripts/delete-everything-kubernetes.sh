@@ -49,7 +49,7 @@ function deleteOLMdeployment () {
 function deleteNamespacesRelatedToApplicationOperator () {
     kubectl delete namespace application-alpha
     kubectl delete namespace application-beta
-    kubectl delete all --all -n operator-application-system
+    kubectl delete -f all --all -n operator-application-system
     kubectl delete namespace operator-application-system
     #echo "Press any key to move on"
     #read input
@@ -72,22 +72,23 @@ function deleteDatabaseOperator () {
     kubectl delete -f $ROOT_FOLDER/operator-database/olm/catalogsource.yaml 
     kubectl delete -f $ROOT_FOLDER/scripts/catalogsource.yaml
 
-    kubectl delete customresourcedefinition databasebackups.database.sample.third.party -n operators
-    kubectl delete customresourcedefinition databases.database.sample.third.party -n operators
-    kubectl delete customresourcedefinition databaseclusters.database.sample.third.party -n operators
+    kubectl delete -f customresourcedefinition databasebackups.database.sample.third.party -n operators
+    kubectl delete -f customresourcedefinition databases.database.sample.third.party -n operators
+    kubectl delete -f customresourcedefinition databaseclusters.database.sample.third.party -n operators
 
-    kubectl delete deployment operator-database-controller-manager -n operators
-    kubectl delete clusterserviceversion operator-database.v0.0.1 
-    kubectl delete clusterrole operator-database-metrics-reader
+    kubectl delete -f deployment operator-database-controller-manager -n operators
+    kubectl delete -f clusterserviceversion operator-database.v0.0.1 
+    kubectl delete -f clusterrole operator-database-metrics-reader
+    kubectl delete -f namespace database
     
     #echo "Press any key to move on"
     #read input
 }
 
 function deleteNamespacesRelatedToDatabaseOperator () {
-    kubectl delete namespace database
-    kubectl delete all --all -n operator-database-system
-    kubectl delete namespace operator-database-system
+    kubectl delete -f namespace database
+    kubectl delete -f all --all -n operator-database-system
+    kubectl delete -f namespace operator-database-system
     #echo "Press any key to move on"
     #read input
 }
@@ -97,17 +98,17 @@ function deletePrometheus () {
      
     kubectl delete -f prometheus/kubernetes/instance
     kubectl delete -f prometheus/kubernetes/operator
-    kubectl delete customresourcedefinition alertmanagerconfigs.monitoring.coreos.com
+    kubectl delete -f customresourcedefinition alertmanagerconfigs.monitoring.coreos.com
 
     # delete crds
-    kubectl delete customresourcedefinition podmonitors.monitoring.coreos.com
-    kubectl delete customresourcedefinition servicemonitors.monitoring.coreos.com
-    kubectl delete customresourcedefinition thanosrulers.monitoring.coreos.com
-    kubectl delete customresourcedefinition prometheusrules.monitoring.coreos.com
-    kubectl delete customresourcedefinition prometheuses.monitoring.coreos.com
-    kubectl delete customresourcedefinition probes.monitoring.coreos.com
-    kubectl delete customresourcedefinition alertmanagers.monitoring.coreos.com
-    kubectl delete customresourcedefinition podmonitors.monitoring.coreos.com
+    kubectl delete -f customresourcedefinition podmonitors.monitoring.coreos.com
+    kubectl delete -f customresourcedefinition servicemonitors.monitoring.coreos.com
+    kubectl delete -f customresourcedefinition thanosrulers.monitoring.coreos.com
+    kubectl delete -f customresourcedefinition prometheusrules.monitoring.coreos.com
+    kubectl delete -f customresourcedefinition prometheuses.monitoring.coreos.com
+    kubectl delete -f customresourcedefinition probes.monitoring.coreos.com
+    kubectl delete -f customresourcedefinition alertmanagers.monitoring.coreos.com
+    kubectl delete -f customresourcedefinition podmonitors.monitoring.coreos.com
     
     #echo "Press any key to move on"
     #read input
@@ -136,15 +137,15 @@ function deleteCertManager () {
         while :
         do       
            ((j++))
-           STATUS_CHECK=$(kubectl get namespace -n $FIND | grep $FIND | awk '{print $2;}')
+           STATUS_CHECK=$(kubectl get namespace $FIND | grep $FIND | awk '{print $2;}')
            echo "Status: $STATUS_CHECK"
            if [ "$STATUS_CHECK" = "$STATUS_SUCCESS" ]; then
                 echo "$(date +'%F %H:%M:%S') Status: $FIND is deleted"
                 echo "------------------------------------------------------------------------"
                 break
             elif [[ $j -eq $max_retrys ]]; then
-                echo "$(date +'%F %H:%M:%S') Please run 'delete-everything-kubernetes.sh' first!"
-                echo "$(date +'%F %H:%M:%S') Prereqs aren't ready!"
+                echo "$(date +'%F %H:%M:%S') Please rerun the 'delete-everything-kubernetes.sh' first!"
+                echo "$(date +'%F %H:%M:%S') Installation can't be cleaned!"
                 echo "------------------------------------------------------------------------"
                 break            
             else
