@@ -488,9 +488,10 @@ function createDatabaseInstance () {
     if [[ $CI_CONFIG == "local" ]]; then
       cp -nf  $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasebackup.yaml 
       cp -nf  $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup $ROOT_FOLDER/operator-database/config/samples/database.sample_v1alpha1_databasecluster.yaml
-      rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP
-      rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup
     fi
+    rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasebackup.yaml-BACKUP
+    rm -f $DATABASE_TEMPLATE_FOLDER/database.sample_v1alpha1_databasecluster.yaml-backup
+
     endTimer
 }
 
