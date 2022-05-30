@@ -240,10 +240,10 @@ function deleteOLMdeployment () {
     kubectl get catalogsource -n $namespace
     kubectl get subscription -n $namespace
 
-    kubectl delete subscriptions operator-application-v0-0-1-sub -n $namespace  
-    kubectl delete catalogsource operator-application-catalog -n $namespace 
+    kubectl delete -f subscriptions operator-application-v0-0-1-sub -n $namespace  
+    kubectl delete -f catalogsource operator-application-catalog -n $namespace 
 
-    oc delete clusterserviceversion operator-application.v0.0.1 -n $namespace
+    oc delete -f clusterserviceversion operator-application.v0.0.1 -n $namespace
     oc get clusterserviceversion | grep operator-application.v0.0.1 -n $namespace
 
     # Database
@@ -251,15 +251,15 @@ function deleteOLMdeployment () {
     sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/openshift-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
     cp -nf $DATABASE_TEMPLATE_FOLDER/openshift-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-database-subscription.yaml 
   
-    kubectl delete subscriptions operator-database-v0-0-1-sub -n $namespace  
-    kubectl delete catalogsource operator-database-catalog -n $namespace
+    kubectl delete -f subscriptions operator-database-v0-0-1-sub -n $namespace  
+    kubectl delete -f catalogsource operator-database-catalog -n $namespace
     rm -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
     rm -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
      
     kubectl get catalogsource -n $namespace
     kubectl get subscription -n$namespace
 
-    oc delete clusterserviceversion operator-database.v0.0.1 -n $namespace
+    oc delete -f clusterserviceversion operator-database.v0.0.1 -n $namespace
     oc get clusterserviceversion | grep operator-database.v0.0.1 -n $namespace
 
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
@@ -284,8 +284,8 @@ function deleteOLMdeployment () {
 }
 
 function deleteNamespacesRelatedToApplicationOperator () {
-    oc delete project application-alpha
-    oc delete project application-beta
+    oc delete -f project application-alpha
+    oc delete -f project application-beta
 
     export max_retrys=9
     array=("application-alpha" "application-beta")
