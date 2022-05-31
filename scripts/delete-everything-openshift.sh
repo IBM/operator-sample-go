@@ -49,6 +49,14 @@ function runCIconfiguation () {
         deleteMicroserviceApplicationInstance
 
         echo "************************************"
+        echo " Delete database instance ($CONFIGURATION)"
+        echo "************************************"
+        TYPE='Configuration'
+        INFO="Config:($CONFIGURATION)"
+        customLog $TYPE $INFO
+        deleteDatabaseInstance
+
+        echo "************************************"
         echo " Delete database operator ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
@@ -63,14 +71,6 @@ function runCIconfiguation () {
         INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteOLMdeployment
-
-        echo "************************************"
-        echo " Delete database instance ($CONFIGURATION)"
-        echo "************************************"
-        TYPE='Configuration'
-        INFO="Config:($CONFIGURATION)"
-        customLog $TYPE $INFO
-        deleteDatabaseInstance
 
         echo "************************************"
         echo " Delete namespaces related to application operator ($CONFIGURATION)"
@@ -113,6 +113,14 @@ function runLocalConfiguation () {
         deleteMicroserviceApplicationInstance
 
         echo "************************************"
+        echo " Delete database instance ($CONFIGURATION)"
+        echo "************************************"
+        TYPE='Configuration'
+        INFO="Config:($CONFIGURATION)"
+        customLog $TYPE $INFO
+        deleteDatabaseInstance
+
+        echo "************************************"
         echo " Delete database operator ($CONFIGURATION)"
         echo "************************************"
         TYPE='Configuration'
@@ -127,14 +135,6 @@ function runLocalConfiguation () {
         INFO="Config:($CONFIGURATION)"
         customLog $TYPE $INFO
         deleteOLMdeployment
-
-        echo "************************************"
-        echo " Delete database instance ($CONFIGURATION)"
-        echo "************************************"
-        TYPE='Configuration'
-        INFO="Config:($CONFIGURATION)"
-        customLog $TYPE $INFO
-        deleteDatabaseInstance
 
         echo "************************************"
         echo " Delete namespaces related to application operator ($CONFIGURATION)"
@@ -331,6 +331,9 @@ function deleteDatabaseInstance () {
     namespace=database
     cd $ROOT_FOLDER/operator-database
     kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
+    kubectl delete -f config/samples/database.sample_v1alpha1_databasebackup.yaml
+    kubectl delete -f config/samples/database.sample_v1alpha1_databasecluster.yaml
+
     kubectl get databasecluster database -n $namespace
 
     TYPE='Info'
