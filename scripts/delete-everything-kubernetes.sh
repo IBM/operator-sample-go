@@ -57,7 +57,9 @@ function deleteNamespacesRelatedToApplicationOperator () {
 function deleteDatabaseInstance () {
     cd $ROOT_FOLDER/operator-database
     kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
-    kubectl delete -f namespace database
+    kubectl delete -f config/samples/database.sample_v1alpha1_databasebackup.yaml
+    kubectl delete -f config/samples/database.sample_v1alpha1_databasecluster.yaml
+    kubectl delete --force namespace database
     #echo "Press any key to move on"
     #read input
 }
@@ -72,23 +74,23 @@ function deleteDatabaseOperator () {
     kubectl delete -f $ROOT_FOLDER/operator-database/olm/catalogsource.yaml 
     kubectl delete -f $ROOT_FOLDER/scripts/catalogsource.yaml
 
-    kubectl delete -f customresourcedefinition databasebackups.database.sample.third.party -n operators
-    kubectl delete -f customresourcedefinition databases.database.sample.third.party -n operators
-    kubectl delete -f customresourcedefinition databaseclusters.database.sample.third.party -n operators
+    kubectl delete --force customresourcedefinition databasebackups.database.sample.third.party -n operators
+    kubectl delete --force customresourcedefinition databases.database.sample.third.party -n operators
+    kubectl delete --force customresourcedefinition databaseclusters.database.sample.third.party -n operators
 
-    kubectl delete -f deployment operator-database-controller-manager -n operators
-    kubectl delete -f clusterserviceversion operator-database.v0.0.1 
-    kubectl delete -f clusterrole operator-database-metrics-reader
-    kubectl delete -f namespace database
+    kubectl delete --force deployment operator-database-controller-manager -n operators
+    kubectl delete --force clusterserviceversion operator-database.v0.0.1 
+    kubectl delete --force clusterrole operator-database-metrics-reader
+    kubectl delete --force namespace database
     
     #echo "Press any key to move on"
     #read input
 }
 
 function deleteNamespacesRelatedToDatabaseOperator () {
-    kubectl delete -f namespace database
+    kubectl delete --force namespace database
     kubectl delete -f all --all -n operator-database-system
-    kubectl delete -f namespace operator-database-system
+    kubectl delete --force namespace operator-database-system
     #echo "Press any key to move on"
     #read input
 }
@@ -98,17 +100,17 @@ function deletePrometheus () {
      
     kubectl delete -f prometheus/kubernetes/instance
     kubectl delete -f prometheus/kubernetes/operator
-    kubectl delete -f customresourcedefinition alertmanagerconfigs.monitoring.coreos.com
+    kubectl delete --force customresourcedefinition alertmanagerconfigs.monitoring.coreos.com
 
     # delete crds
-    kubectl delete -f customresourcedefinition podmonitors.monitoring.coreos.com
-    kubectl delete -f customresourcedefinition servicemonitors.monitoring.coreos.com
-    kubectl delete -f customresourcedefinition thanosrulers.monitoring.coreos.com
-    kubectl delete -f customresourcedefinition prometheusrules.monitoring.coreos.com
-    kubectl delete -f customresourcedefinition prometheuses.monitoring.coreos.com
-    kubectl delete -f customresourcedefinition probes.monitoring.coreos.com
-    kubectl delete -f customresourcedefinition alertmanagers.monitoring.coreos.com
-    kubectl delete -f customresourcedefinition podmonitors.monitoring.coreos.com
+    kubectl delete --force customresourcedefinition podmonitors.monitoring.coreos.com
+    kubectl delete --force customresourcedefinition servicemonitors.monitoring.coreos.com
+    kubectl delete --force customresourcedefinition thanosrulers.monitoring.coreos.com
+    kubectl delete --force customresourcedefinition prometheusrules.monitoring.coreos.com
+    kubectl delete --force customresourcedefinition prometheuses.monitoring.coreos.com
+    kubectl delete --force customresourcedefinition probes.monitoring.coreos.com
+    kubectl delete --force customresourcedefinition alertmanagers.monitoring.coreos.com
+    kubectl delete --force customresourcedefinition podmonitors.monitoring.coreos.com
     
     #echo "Press any key to move on"
     #read input

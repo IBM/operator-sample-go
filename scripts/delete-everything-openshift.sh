@@ -240,10 +240,11 @@ function deleteOLMdeployment () {
     kubectl get catalogsource -n $namespace
     kubectl get subscription -n $namespace
 
-    kubectl delete -f subscriptions operator-application-v0-0-1-sub -n $namespace  
-    kubectl delete -f catalogsource operator-application-catalog -n $namespace 
-
-    oc delete -f clusterserviceversion operator-application.v0.0.1 -n $namespace
+    kubectl delete --force subscriptions operator-application-v0-0-1-sub -n $namespace  
+    kubectl delete --force catalogsource operator-application-catalog -n $namespace 
+    
+    oc get clusterserviceversion -all-namespaces
+    deleteApplicationOperatorCSVs
     oc get clusterserviceversion | grep operator-application.v0.0.1 -n $namespace
 
     # Database
@@ -251,15 +252,15 @@ function deleteOLMdeployment () {
     sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/openshift-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
     cp -nf $DATABASE_TEMPLATE_FOLDER/openshift-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-database-subscription.yaml 
   
-    kubectl delete -f subscriptions operator-database-v0-0-1-sub -n $namespace  
-    kubectl delete -f catalogsource operator-database-catalog -n $namespace
+    kubectl delete --force subscriptions operator-database-v0-0-1-sub -n $namespace  
+    kubectl delete --force catalogsource operator-database-catalog -n $namespace
     rm -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
     rm -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
      
     kubectl get catalogsource -n $namespace
     kubectl get subscription -n$namespace
 
-    oc delete -f clusterserviceversion operator-database.v0.0.1 -n $namespace
+    oc delete --force clusterserviceversion operator-database.v0.0.1 -n $namespace
     oc get clusterserviceversion | grep operator-database.v0.0.1 -n $namespace
 
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
@@ -277,15 +278,14 @@ function deleteOLMdeployment () {
     rm -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
     rm -f $ROOT_FOLDER/scripts/openshift-database-subsciption.yaml 
 
-
     #kubectl delete installplans -n openshift-operators --all
     #echo "Press any key to move on"
     #read input
 }
 
 function deleteNamespacesRelatedToApplicationOperator () {
-    oc delete -f project application-alpha
-    oc delete -f project application-beta
+    oc delete --force project application-alpha
+    oc delete --force project application-beta
 
     export max_retrys=9
     array=("application-alpha" "application-beta")
@@ -343,19 +343,98 @@ function deleteDatabaseInstance () {
     #read input
 }
 
+function deleteDatabaseOperatorCSVs() {
+
+  array=("operator-database.v0.0.1")
+  export STATUS_SUCCESS=""
+  for i in "${array[@]}"
+    do 
+        echo ""
+        echo "------------------------------------------------------------------------"
+        echo "Check $i"
+        export FIND=$i
+        while :
+        do               
+           STATUS_CHECK=$(kubectl get clusterserviceversion --all-namespaces | grep $FIND | awk '{print $1;}' |  head -n 1 )
+           echo "*** Status: $STATUS_CHECK"
+           if [[ "$STATUS_CHECK" == "$STATUS_SUCCESS" ]]; then
+                echo "$(date +'%F %H:%M:%S') Status: $FIND is deleted"
+                echo "------------------------------------------------------------------------"
+                break           
+            else
+                NAMESPACE="$STATUS_CHECK"
+                echo "*** Namespace: $NAMESPACE"
+                echo "*** Find: $FIND"
+                STATUS_CHECK=$(kubectl get clusterserviceversion "$FIND" -n "$NAMESPACE" | grep "$FIND" | awk '{print $1;}')
+                echo "*** Status check: $STATUS_CHECK"
+                if [[ "$STATUS_CHECK" == "$FIND" ]]; then
+                    kubectl -n $NAMESPACE delete clusterserviceversion $FIND
+                    echo "$(date +'%F %H:%M:%S') Status: $NAMESPACE($FIND) is deleted"
+                    echo "------------------------------------------------------------------------"
+                else 
+                   echo "$(date +'%F %H:%M:%S') Error: Status: $NAMESPACE($FIND)"
+                   echo "Can't delete $FIND in $NAMESPACE!"
+                   echo "------------------------------------------------------------------------"
+                fi
+            fi
+            sleep 2
+        done
+    done
+
+}
+
+function deleteApplicationOperatorCSVs() {
+  kubectl get pod -n openshift-operators
+  array=("operator-application.v0.0.1")
+  export STATUS_SUCCESS=""
+  for i in "${array[@]}"
+    do 
+        echo ""
+        echo "------------------------------------------------------------------------"
+        echo "Check $i"
+        export FIND=$i
+        while :
+        do               
+           STATUS_CHECK=$(kubectl get clusterserviceversion --all-namespaces | grep $FIND | awk '{print $1;}' |  head -n 1 )
+           echo "*** Status: $STATUS_CHECK"
+           if [[ "$STATUS_CHECK" == "$STATUS_SUCCESS" ]]; then
+                echo "$(date +'%F %H:%M:%S') Status: $FIND is deleted"
+                echo "------------------------------------------------------------------------"
+                break           
+            else
+                NAMESPACE="$STATUS_CHECK"
+                echo "*** Namespace: $NAMESPACE"
+                echo "*** Find: $FIND"
+                STATUS_CHECK=$(kubectl get clusterserviceversion "$FIND" -n "$NAMESPACE" | grep "$FIND" | awk '{print $1;}')
+                echo "*** Status check: $STATUS_CHECK"
+                if [[ "$STATUS_CHECK" == "$FIND" ]]; then
+                    kubectl -n $NAMESPACE delete clusterserviceversion $FIND
+                    echo "$(date +'%F %H:%M:%S') Status: $NAMESPACE($FIND) is deleted"
+                    echo "------------------------------------------------------------------------"
+                else 
+                   echo "$(date +'%F %H:%M:%S') Error: Status: $NAMESPACE($FIND)"
+                   echo "Can't delete $FIND in $NAMESPACE!"
+                   echo "------------------------------------------------------------------------"
+                fi
+            fi
+            sleep 2
+        done
+    done
+}
+
 function deleteDatabaseOperator () {
      
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml 
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
 
     namespace=openshift-operators
-    kubectl delete -f customresourcedefinition databasebackups.database.sample.third.party -n $namespace
-    kubectl delete -f customresourcedefinition databases.database.sample.third.party -n $namespace
-    kubectl delete -f customresourcedefinition databaseclusters.database.sample.third.party -n $namespace
-    kubectl delete -f operators.operators.coreos.com operator-database.openshift-operators
+    kubectl delete --force customresourcedefinition databasebackups.database.sample.third.party -n $namespace
+    kubectl delete --force customresourcedefinition databases.database.sample.third.party -n $namespace
+    kubectl delete --force customresourcedefinition databaseclusters.database.sample.third.party -n $namespace
+    kubectl delete --force operators.operators.coreos.com operator-database.openshift-operators
 
     kubectl delete -f deployment operator-database-controller-manager -n $namespace
-    kubectl delete -f clusterserviceversion operator-database.v0.0.1 
+    deleteDatabaseOperatorCSVs 
     kubectl delete -f clusterrole operator-database-metrics-reader
 
     TYPE='Info'
