@@ -11,7 +11,7 @@ Each TestCase is linked to the TestCase documentation.
 
 | TestCase | Tested | Status | Notes | Owner |
 | --- | --- | --- | --- | --- |
-| [1. Test Case setup all on **Kubernetes** without OLM manual](https://ibm.box.com/s/bo25ocn1mjpm7j61ehmglawda7f0plmw) |  |  |  | SB |
+| [1. Test Case setup all on **Kubernetes** without OLM manual](https://ibm.box.com/s/bo25ocn1mjpm7j61ehmglawda7f0plmw) |  |  | Issues: [56](https://github.com/IBM/operator-sample-go/issues/56), [57](https://github.com/IBM/operator-sample-go/issues/57), [59](https://github.com/IBM/operator-sample-go/issues/59),[62](https://github.com/IBM/operator-sample-go/issues/62) | SB |
 | [2. Test Case setup all on **Kubernetes** with OLM manual](https://ibm.box.com/s/drm296zjnw10i0g04fli0rdt9vo610ui) |  |  |  | SB |
 | [3. Test Case all **Kubernetes** locally manual](https://ibm.box.com/s/jzkvohw5fprvpiggqsubymlp1al1c0r7) |  |  |  | DT |
 | [4. Test Case setup all on **OpenShift** without OLM manual](https://ibm.box.com/s/e8ckkneiysrztg4foy4ek268pb5z5h31) |  |  |  | AA |
