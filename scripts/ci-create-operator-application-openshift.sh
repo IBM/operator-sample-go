@@ -85,13 +85,13 @@ function logInit () {
     customLog "$TYPE" "$INFO"
 }
 
-function startTimer() {
+function startTimer () {
    export timerstart=$(date +%s)
    echo "*** Timer start: [$timerstart]"
    customLog "Timer start" "Start: [$timerstart]"
 }
 
-function endTimer() {
+function endTimer () {
 
     timerend=$(date +%s)
     seconds=$(echo "$timerend - $timerstart" | bc)

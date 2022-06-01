@@ -59,13 +59,13 @@ function logInit () {
     customLog "$TYPE" "$INFO"
 }
 
-function startTimer() {
+function startTimer () {
    export timerstart=$(date +%s)
    echo "*** Timer start: [$timerstart]"
    customLog "Timer start" "Start: [$timerstart]"
 }
 
-function endTimer() {
+function endTimer () {
 
     timerend=$(date +%s)
     seconds=$(echo "$timerend - $timerstart" | bc)
@@ -275,18 +275,55 @@ function buildApplicationOperatorCatalog () {
 }
 
 function createOLMApplicationOperatorYAMLs () {
+
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
     sed "s+APPLICATION_CATALOG_IMAGE+$CATALOG_NAME+g" $APPLICATION_TEMPLATE_FOLDER/kubernetes-application-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/kubernetes-application-catalogsource.yaml
-    cp -nf $DATABASE_TEMPLATE_FOLDER/kubernetes-application-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/kubernetes-application-subscription.yaml 
+    cp -nf $APPLICATION_TEMPLATE_FOLDER/kubernetes-application-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/kubernetes-application-subscription.yaml 
+
 }
 
 function deployApplicationOperatorOLM () {
     
     kubectl create -f $ROOT_FOLDER/scripts/kubernetes-application-catalogsource.yaml
     kubectl create -f $ROOT_FOLDER/scripts/kubernetes-application-subscription.yaml
+ 
+    kubectl get catalogsource operator-application-catalog -n $NAMESPACE -oyaml > $ROOT_FOLDER/scripts/temp.log
+    TYPE="OLM ApplicationOperatorCatalog"
+    INPUT="$(cat $ROOT_FOLDER/scripts/temp.log)"
+    customLog "$TYPE" "$INPUT"
+    
+    kubectl get subscriptions operator-application-v0-0-1-sub -n $NAMESPACE -oyaml > $ROOT_FOLDER/scripts/temp.log
+    TYPE="OLM ApplicationOperatorSubscription"
+    INPUT="$(cat $ROOT_FOLDER/scripts/temp.log)"
+    customLog "$TYPE" "$INPUT"
+    rm $ROOT_FOLDER/scripts/temp.log
+  
+    array=("operator-application-catalog")
+    namespace=operators
+    export STATUS_SUCCESS="Running"
+    for i in "${array[@]}"
+        do 
+            echo ""
+            echo "------------------------------------------------------------------------"
+            echo "Check $i"
+            while :
+            do
+                FIND=$i
+                STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
+                echo "Status: $STATUS_CHECK"
+                STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
+                if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
+                    echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
+                    echo "------------------------------------------------------------------------"
+                    break
+                else
+                    echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
+                    echo "------------------------------------------------------------------------"
+                fi
+                sleep 3
+            done
+        done
 
-    kubectl get catalogsource operator-application-catalog -n $NAMESPACE -oyaml
-    kubectl get subscriptions operator-application-v0-0-1-sub -n $NAMESPACE -oyaml
     kubectl get installplans -n $NAMESPACE
     kubectl get pods -n $NAMESPACE
     kubectl get all -n $NAMESPACE

@@ -50,13 +50,13 @@ function customLog () {
     echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
 }
 
-function startTimer() {
+function startTimer () {
    export timerstart=$(date +%s)
    echo "*** Timer start: [$timerstart]"
    customLog "Timer start" "Start: [$timerstart]"
 }
 
-function endTimer() {
+function endTimer () {
 
     timerend=$(date +%s)
     seconds=$(echo "$timerend - $timerstart" | bc)

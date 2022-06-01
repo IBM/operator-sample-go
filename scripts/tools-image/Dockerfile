@@ -34,6 +34,11 @@ RUN apt-get update && apt-get install -y apt-transport-https \
     && apt-get update \
     && apt-get --assume-yes install kubectl
 
+# *********** openshift oc *************** 
+RUN wget https://mirror.openshift.com/pub/openshift-v4/clients/oc/4.6/linux/oc.tar.gz \
+    && tar -zxvf oc.tar.gz \
+    && mv oc /usr/local/bin/oc 
+
 # *********** IBM Cloud CLI *********** 
 RUN  curl -fsSL https://clis.cloud.ibm.com/install/linux | sh \
      && ibmcloud plugin install container-service \
@@ -57,4 +62,7 @@ RUN && apt-get --assume-yes install golang \
 # installer -pkg go1.17.6.darwin-amd64.pkg -target \
 #     && go version \
 #    && operator-sdk version
+
+
+
 
