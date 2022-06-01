@@ -334,8 +334,10 @@ function deployApplicationOperatorOLM () {
                 if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
                     echo "$(date +'%F %H:%M:%S') Status: $search($STATUS_CHECK)"
                     echo "------------------------------------------------------------------------"
+                    kubectl get $search -n $namespace
                     break
                 else
+                    kubectl get $search -n $namespace
                     echo "$(date +'%F %H:%M:%S') Status: $search($STATUS_CHECK)"
                     echo "------------------------------------------------------------------------"
                 fi
