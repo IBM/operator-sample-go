@@ -6,6 +6,6 @@ metadata:
 spec:
   channel: "alpha"
   installPlanApproval: Automatic
-  name: operator-database
-  source: operator-database-catalog
+  name: operator-application
+  source: operator-application-catalog
   sourceNamespace: operators

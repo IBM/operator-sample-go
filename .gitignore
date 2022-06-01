@@ -59,3 +59,4 @@ scripts/demo-script-automation-openshift.log
 scripts/test-database-script-openshift.log
 scripts/test-database-script-openshift.log
 scripts/delete-all-openshift.log
+versions.env-baskup

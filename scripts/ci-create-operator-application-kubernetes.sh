@@ -61,7 +61,7 @@ function logInit () {
 
 function startTimer() {
    export timerstart=$(date +%s)
-   echo "*** Timer start: $timerstart"
+   echo "*** Timer start: [$timerstart]"
    customLog "Timer start" "Start: [$timerstart]"
 }
 
@@ -70,8 +70,8 @@ function endTimer() {
     timerend=$(date +%s)
     seconds=$(echo "$timerend - $timerstart" | bc)
     TIMER=$(awk -v t=$seconds 'BEGIN{t=int(t*1000); printf "%d:%02d:%02d\n", t/3600000, t/60000%60, t/1000%60}')
-    echo "*** Timer duration: $TIMER"
-    customLog "Timer" "Duration [$TIMER]"
+    echo "*** Timer end - duration: [$TIMER]"
+    customLog "Timer end" "Timer duration [$TIMER]"
     
 }
 
@@ -248,10 +248,10 @@ function buildApplicationOperatorBundle () {
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup $ROOT_FOLDER/operator-application/config/rbac/role.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup $ROOT_FOLDER/operator-application/config/rbac/role_binding.yaml
-      rm -f $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP
-      rm -f $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup
-      rm -f $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup
     fi
+    rm -f $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP
+    rm -f $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup
+    rm -f $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup
     
     # Push container
     podman login $REGISTRY
@@ -281,6 +281,7 @@ function createOLMApplicationOperatorYAMLs () {
 }
 
 function deployApplicationOperatorOLM () {
+    
     kubectl create -f $ROOT_FOLDER/scripts/kubernetes-application-catalogsource.yaml
     kubectl create -f $ROOT_FOLDER/scripts/kubernetes-application-subscription.yaml
 
@@ -380,9 +381,9 @@ function createApplicationInstance () {
     if [[ $CI_CONFIG == "local" ]]; then
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
-      rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml
-      rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml
     fi
+    rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml
+    rm -f $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml
 }
 
 function verifyApplication() {

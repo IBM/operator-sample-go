@@ -74,9 +74,9 @@ function startTimer() {
 function endTimer() {
 
     timerend=$(date +%s)
-    seconds=$(echo "$timerend - [$timerstart]" | bc)
+    seconds=$(echo "$timerend - $timerstart" | bc)
     TIMER=$(awk -v t=$seconds 'BEGIN{t=int(t*1000); printf "%d:%02d:%02d\n", t/3600000, t/60000%60, t/1000%60}')
-    echo "*** Timer duration: [$TIMER]"
+    echo "*** Timer end - duration: [$TIMER]"
     customLog "Timer end" "Timer duration [$TIMER]"
     
 }
