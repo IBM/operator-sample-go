@@ -138,7 +138,7 @@ function tag () {
     echo "Commint ID: $commit_id"
     echo "Date: $(date +'%Y-%m-%d_%H-%M')"
     export tag_date=$(date +'%Y-%m-%d_%H-%M')
-    export tag_new="verify_scripts_automation_kub_$(echo $tag_date)_$(echo $commit_id)"
+    export tag_new="verify_scripts_automation_openshift_$(echo $tag_date)_$(echo $commit_id)"
     
     git tag -l | grep "$tag_new"
     CHECK_TAG=$(git tag -l | grep "$tag_new")
