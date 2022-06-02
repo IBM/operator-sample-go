@@ -3,22 +3,22 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: application-manager-role
-rules:        
+  name: manager-role
+rules:
 - apiGroups:
   - ""
   resources:
-  - endpoints
-  - pods
-  - services
-  - nodes
-  - secrets
+  - clusterrolebindings
   verbs:
+  - create
+  - delete
   - get
   - list
+  - patch
+  - update
   - watch
 - apiGroups:
-  - rbac.authorization.k8s.io
+  - ""
   resources:
   - clusterroles
   verbs:
@@ -30,9 +30,45 @@ rules:
   - update
   - watch
 - apiGroups:
-  - rbac.authorization.k8s.io
+  - ""
   resources:
-  - clusterrolebindings
+  - cronjobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - jobs
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - services
   verbs:
   - create
   - delete
@@ -45,30 +81,6 @@ rules:
   - application.sample.ibm.com
   resources:
   - applications
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - batch
-  resources:
-  - cronjobs
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - batch
-  resources:
-  - jobs
   verbs:
   - create
   - delete
@@ -91,46 +103,6 @@ rules:
   - get
   - patch
   - update
-  - create
-  - delete
-  - list
-  - watch
-- apiGroups:
-  - application.sample.ibm.com
-  resources:
-  - applications/metadata
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - services
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
 - apiGroups:
   - apps
   resources:
@@ -163,27 +135,3 @@ rules:
   - patch
   - update
   - watch
-- apiGroups:
-  - monitoring.coreos.com
-  resources:
-  - servicemonitors
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - authentication.k8s.io
-  resources:
-  - tokenreviews
-  verbs:
-  - create
-- apiGroups:
-  - authorization.k8s.io
-  resources:
-  - subjectaccessreviews
-  verbs:
-  - create

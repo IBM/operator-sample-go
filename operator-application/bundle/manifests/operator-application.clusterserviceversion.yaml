@@ -310,7 +310,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/nheidloff/application-operator:v1.0.113
+                image: docker.io/nheidloff/application-operator:v1.0.114
                 livenessProbe:
                   httpGet:
                     path: /healthz
