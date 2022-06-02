@@ -61,9 +61,7 @@ spec:
   displayName: Application Operator
   description: |-
     # IBM Build Labs Application Operator
-
     ## Introduction
-
     The IBM Build Labs operators provide Day 1 and Day 2 capabilities for a sample two tier 
     application.  
     
@@ -73,15 +71,11 @@ spec:
     >**/hello** - Renders a Hello greeting to the names persisted in the corresponding database.
     
     ## Day 1 capabilities create the following resources:
-
     * Deployment, Pods, Service
     * Database (a Custom Resource reconciled by another operator which creates the schema)
-
     ## Day 2 capabilities:
-
     * Auto scaling pods according to how many times the /hello endpoint is invoked
     
-
     ## Note
     This sample is based on an [Operator Reference Architecture](https://github.com/IBM/operator-sample-go) from IBM Build Labs.
   icon:
@@ -92,9 +86,69 @@ spec:
       clusterPermissions:
       - rules:
         - apiGroups:
+          - ""
+          resources:
+          - endpoints
+          - pods
+          - services
+          - nodes
+          - secrets
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterroles
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - clusterrolebindings
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
           - application.sample.ibm.com
           resources:
           - applications
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - cronjobs
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - batch
+          resources:
+          - jobs
           verbs:
           - create
           - delete
@@ -117,6 +171,10 @@ spec:
           - get
           - patch
           - update
+          - create
+          - delete
+          - list
+          - watch
         - apiGroups:
           - application.sample.ibm.com
           resources:
@@ -252,7 +310,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/nheidloff/application-operator:v1.0.106
+                image: docker.io/nheidloff/application-operator:v1.0.113
                 livenessProbe:
                   httpGet:
                     path: /healthz
