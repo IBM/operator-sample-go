@@ -122,7 +122,7 @@ function installOLM () {
             FIND=$i
             STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
             echo "Status: ($STATUS_CHECK)"
-            STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
+            STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS | head -n 1)
             if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
                 echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
                 echo "------------------------------------------------------------------------"
