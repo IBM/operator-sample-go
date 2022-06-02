@@ -236,6 +236,7 @@ function buildApplicationOperator () {
     podman push "$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
 
     if [[ $CI_CONFIG == "local" ]]; then
+      echo "*** restore to back-up files"
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP $ROOT_FOLDER/operator-application/config/rbac/role.yaml
     fi
     rm -f $APPLICATION_TEMPLATE_FOLDER/role.yaml-BACKUP
@@ -272,6 +273,7 @@ function buildApplicationOperatorBundle () {
     
     # Put back backup files and delete backup, when "local" was used
     if [[ $CI_CONFIG == "local" ]]; then
+      echo "*** restore to back-up files."
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP $ROOT_FOLDER/operator-application/config/manager/kustomization.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP $ROOT_FOLDER/operator-application/bundle/manifests/operator-application.clusterserviceversion.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup $ROOT_FOLDER/operator-application/config/rbac/role.yaml
@@ -425,6 +427,7 @@ function createApplicationInstance () {
     startTimer
 
     echo "*** create application instances"
+    echo "*** $ROOT_FOLDER"
     kubectl get pods -n openshift-operators | grep "application"
     kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml -n application-beta
     kubectl get pods -n application-beta | grep "application"
@@ -432,7 +435,7 @@ function createApplicationInstance () {
     #kubectl get pods -n application-alpha | grep "application"
     
     if [[ $CI_CONFIG == "local" ]]; then
-      echo "Delete back-up files."
+      echo "*** restore to back-up files."
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
       cp -nf  $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
     fi
@@ -467,8 +470,11 @@ function verifyApplication() {
             do
                 FIND=$i
                 STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
-                echo "Status: $STATUS_CHECK"
+                echo "*** Status: $STATUS_CHECK"
+                echo "*** Get pods $namespace"
                 kubectl get pods -n $namespace
+                echo "*** Get applications in $namespace"
+                kubectl get application -n $namespace
                 STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
                 if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
                     echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"

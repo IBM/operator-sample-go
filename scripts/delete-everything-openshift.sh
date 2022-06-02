@@ -223,6 +223,9 @@ function deleteMicroserviceApplicationInstance () {
     kubectl get application -n application-beta
     kubectl get application -n application-alpha
 
+    kubectl get pods -n application-beta
+    kubectl get pods -n application-alpha
+
     TYPE='Info'
     INFO='deleteMicroserviceApplicationInstance -> was executed'
     customLog $TYPE $INFO
@@ -241,12 +244,8 @@ function deleteOLMdeployment () {
    
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml -n $namespace
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml -n $namespace
-    
-    rm -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
-    rm -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
- 
-    kubectl get catalogsource -n $namespace
-    kubectl get subscription -n $namespace
+     
+    oc get catalogsource --all-namespaces
     oc get subscription --all-namespaces
     
     echo "*** delete subscription and catalogsource application"
@@ -257,6 +256,9 @@ function deleteOLMdeployment () {
     deleteApplicationOperatorCSVs
     oc get clusterserviceversion | grep operator-application.v0.0.1 -n $namespace
 
+    rm -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
+    rm -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
+
     # Database
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
     sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/openshift-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
@@ -264,16 +266,10 @@ function deleteOLMdeployment () {
     
     echo "*** delete subscription and catalogsource database"
     kubectl delete --force subscriptions operator-database-v0-0-1-sub -n $namespace  
-    kubectl delete --force catalogsource operator-database-catalog -n $namespace
-    rm -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
-    rm -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
-     
-    kubectl get catalogsource -n $namespace
-    kubectl get subscription -n $namespace
+    kubectl delete --force catalogsource operator-database-catalog -n $namespace 
 
-    oc delete subscription operator-database-v0-0-1-sub -n $namespace
-    oc delete subscription operator-database-v0-0-1-sub -n $namespace
     oc get subscription --all-namespaces
+    oc get catalogsource --all-namespaces
 
     echo "*** delete clusterserviceversion database"
     oc delete --force clusterserviceversion operator-database.v0.0.1 -n $namespace
