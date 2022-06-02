@@ -252,6 +252,7 @@ function buildApplicationOperatorBundle () {
     rm -f $APPLICATION_TEMPLATE_FOLDER/operator-application.clusterserviceversion.yaml-BACKUP
     rm -f $APPLICATION_TEMPLATE_FOLDER/role.yaml-backup
     rm -f $APPLICATION_TEMPLATE_FOLDER/role_binding.yaml-backup
+    rm $APPLICATION_TEMPLATE_FOLDER/kustomization.yaml-BACKUP
     
     # Push container
     podman login $REGISTRY
