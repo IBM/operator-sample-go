@@ -247,6 +247,7 @@ function deleteOLMdeployment () {
  
     kubectl get catalogsource -n $namespace
     kubectl get subscription -n $namespace
+    oc get subscription --all-namespaces
     
     echo "*** delete subscription and catalogsource application"
     kubectl delete --force subscriptions operator-application-v0-0-1-sub -n $namespace  
@@ -268,11 +269,18 @@ function deleteOLMdeployment () {
     rm -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
      
     kubectl get catalogsource -n $namespace
-    kubectl get subscription -n$namespace
+    kubectl get subscription -n $namespace
+
+    oc delete subscription operator-database-v0-0-1-sub -n $namespace
+    oc delete subscription operator-database-v0-0-1-sub -n $namespace
+    oc get subscription --all-namespaces
 
     echo "*** delete clusterserviceversion database"
     oc delete --force clusterserviceversion operator-database.v0.0.1 -n $namespace
     oc get clusterserviceversion | grep operator-database.v0.0.1 -n $namespace
+
+    echo "*** delete cluster service versions"
+    deleteDatabaseOperatorCSVs 
 
     echo "*** delete subscription and catalogsource database"
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
@@ -457,9 +465,6 @@ function deleteDatabaseOperator () {
     kubectl delete --force deployment operator-database-controller-manager -n $namespace
     echo "*** delete deployment"
     kubectl delete --force clusterrole operator-database-metrics-reader
-    
-    echo "*** delete cluster service versions"
-    deleteDatabaseOperatorCSVs 
     
     TYPE='Info'
     INFO='deleteDatabaseInstance -> was executed'
