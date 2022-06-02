@@ -62,3 +62,4 @@ scripts/delete-all-openshift.log
 versions.env-baskup
 scripts/delete-all-kubernetes.log
 scripts/install-required-kubernetes.log
+scripts/application-operator-templates/kustomization.yaml-BACKUP

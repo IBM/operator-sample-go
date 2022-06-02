@@ -209,6 +209,7 @@ function configureCR_SimpleMicroservice () {
 
     oc new-project application-alpha 
     oc new-project application-beta
+
     IMAGE_NAME="$REGISTRY/$ORG/$IMAGE_MICROSERVICE"
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
@@ -243,6 +244,7 @@ function buildApplicationOperator () {
 
 function buildApplicationOperatorBundle () {
     startTimer
+    
     cd $ROOT_FOLDER/operator-application
     
     # Backup existing CVS and Roles
@@ -288,6 +290,7 @@ function buildApplicationOperatorBundle () {
 
 function buildApplicationOperatorCatalog () {
     startTimer
+    
     cd $ROOT_FOLDER/operator-application
 
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
@@ -303,13 +306,21 @@ function buildApplicationOperatorCatalog () {
 }
 
 function createOLMApplicationOperatorYAMLs () {
+    TYPE='function'
+    INFO="createOLMApplicationOperatorYAMLs"
+    customLog $TYPE $INFO
+
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
     sed "s+APPLICATION_CATALOG_IMAGE+$CATALOG_NAME+g" $APPLICATION_TEMPLATE_FOLDER/openshift-application-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
     cp -nf $APPLICATION_TEMPLATE_FOLDER/openshift-application-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-application-subscription.yaml 
 }
 
 function deployApplicationOperatorOLM () {
+    TYPE='function'
+    INFO="deployApplicationOperatorOLM"
+    customLog $TYPE $INFO
     startTimer
+    
     # create catalog
     kubectl create -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
     kubectl get catalogsource operator-application-catalog -n $NAMESPACE -oyaml
@@ -407,7 +418,12 @@ function deployApplicationOperatorOLM () {
 }
 
 function createApplicationInstance () {
+
+    TYPE='function'
+    INFO="createApplicationInstance"
+    customLog $TYPE $INFO
     startTimer
+
     echo "*** create application instances"
     kubectl get pods -n openshift-operators | grep "application"
     kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml -n application-beta
@@ -452,6 +468,7 @@ function verifyApplication() {
                 FIND=$i
                 STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
                 echo "Status: $STATUS_CHECK"
+                kubectl get pods -n $namespace
                 STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
                 if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
                     echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
