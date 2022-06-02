@@ -3,12 +3,32 @@
 # **************** Global variables
 
 export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
+export LOGFILE_NAME="install-required-kubernetes.log"
+export SCRIPTNAME="install-required-kubernetes.sh"
 
 # **********************************************************************************
 # Functions
 # **********************************************************************************
 
+function initLog () {
+    echo "$(date +'%F %H:%M:%S'): Init Script Automation Log" > $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$(date +'%F %H:%M:%S'): $SCRIPTNAME" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/"$LOGFILE_NAME"
+}
+
+function customLog () {
+    LOG_TYPE="$1"
+    LOG_MESSAGE="$2"
+    echo "$(date +'%F %H:%M:%S'): $LOG_TYPE" >> $ROOT_FOLDER/scripts/"$LOGFILE_NAME"
+    echo "$LOG_MESSAGE" >> $ROOT_FOLDER/scripts/"$LOGFILE_NAME"
+    echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/"$LOGFILE_NAME"
+}
+
 function verifyDeletion () {
+
+  TYPE='function'
+  INFO="verifyDeletion"
+  customLog $TYPE $INFO
   
   export max_retrys=2
   j=0
@@ -45,6 +65,11 @@ function verifyDeletion () {
 }
 
 function installCertManager () {
+
+  TYPE='function'
+  INFO="installCertManager"
+  customLog $TYPE $INFO
+
   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
   kubectl get pods -n cert-manager
 
@@ -75,6 +100,11 @@ function installCertManager () {
 }
 
 function installOLM () {
+
+  TYPE='function'
+  INFO="installOLM"
+  customLog $TYPE $INFO
+
   curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.20.0/install.sh | bash -s v0.20.0
   kubectl get pods -n operators
   kubectl get pods -n olm
@@ -107,6 +137,11 @@ function installOLM () {
 }
 
 function installPrometheusOperator () {
+  
+  TYPE='function'
+  INFO="installPrometheusOperator"
+  customLog $TYPE $INFO
+
   kubectl create -f $ROOT_FOLDER/prometheus/kubernetes/operator/
   kubectl get pods -n monitoring | grep 'prom'
 
@@ -138,6 +173,10 @@ function installPrometheusOperator () {
 }
 
 function createPrometheusInstance () {
+
+  TYPE='function'
+  INFO="createPrometheusInstance"
+  customLog $TYPE $INFO
     
   kubectl create -f $ROOT_FOLDER/prometheus/kubernetes/instance
 
@@ -174,6 +213,11 @@ function createPrometheusInstance () {
 }
 
 function verifyPrometheusInstance () {
+    
+   TYPE='function'
+   INFO="verifyPrometheusInstance"
+   customLog $TYPE $INFO
+
    kubectl get service -n monitoring
    #kubectl port-forward service/prometheus-instance -n monitoring 9090
 }
@@ -181,6 +225,8 @@ function verifyPrometheusInstance () {
 # **********************************************************************************
 # Execution
 # **********************************************************************************
+
+initLog
 
 echo "************************************"
 echo " Verify deletion"
