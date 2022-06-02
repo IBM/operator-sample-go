@@ -3,12 +3,28 @@
 # **************** Global variables
 
 export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
+export LOGFILE_NAME="delete-all-kubernetes.log"
+export SCRIPTNAME="delete-everything-kubernetes.sh"
 
 # **********************************************************************************
 # Functions
 # **********************************************************************************
 
-function setEnvironmentVariables () {
+function initLog () {
+    echo "$(date +'%F %H:%M:%S'): Init Script Automation Log" > $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$(date +'%F %H:%M:%S'): $SCRIPTNAME" >> $ROOT_FOLDER/scripts/$LOGFILE_NAME
+    echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/"$LOGFILE_NAME"
+}
+
+function customLog () {
+    LOG_TYPE="$1"
+    LOG_MESSAGE="$2"
+    echo "$(date +'%F %H:%M:%S'): $LOG_TYPE" >> $ROOT_FOLDER/scripts/"$LOGFILE_NAME"
+    echo "$LOG_MESSAGE" >> $ROOT_FOLDER/scripts/"$LOGFILE_NAME"
+    echo "$(date +'%F %H:%M:%S'): ********************************************************" >> $ROOT_FOLDER/scripts/"$LOGFILE_NAME"
+}
+
+function setEnvironmentVariablesCI () {
     source $ROOT_FOLDER/versions.env
 }
 
@@ -17,19 +33,29 @@ function setEnvironmentVariablesLocal () {
 }
 
 function deleteMicroserviceApplicationInstance () { 
+    
+    TYPE='function'
+    INFO="deleteMicroserviceApplicationInstance"
+    customLog $TYPE $INFO
+    
     cd $ROOT_FOLDER/operator-application
     kubectl delete -f config/samples/application.sample_v1beta1_application.yaml
     kubectl delete -f config/samples/application.sample_v1alpha1_application.yaml
 
-    kubectl delete customresourcedefinition applications.application.sample.ibm.com
-    kubectl delete deployment operator-application-controller-manager -n operators
-    kubectl delete clusterserviceversion operator-application.v0.0.1
+    kubectl delete --force customresourcedefinition applications.application.sample.ibm.com
+    kubectl delete --force deployment operator-application-controller-manager -n operators
+    kubectl delete --force clusterserviceversion operator-application.v0.0.1
  
     #echo "Press any key to move on"
     #read input
 }
 
 function deleteApplicationOperator () {
+    
+    TYPE='function'
+    INFO="deleteApplicationOperator"
+    customLog $TYPE $INFO
+
     make undeploy IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
     operator-sdk cleanup operator-application -n operators --delete-all
     #echo "Press any key to move on"
@@ -37,24 +63,39 @@ function deleteApplicationOperator () {
 }
 
 function deleteOLMdeployment () {
-    kubectl delete catalogsource operator-application-catalog -n operators 
-    kubectl delete subscriptions operator-application-v0-0-1-sub -n operators 
-    kubectl delete csv operator-application.v0.0.1 -n operators
-    kubectl delete operators operator-application.operators -n operators
-    kubectl delete installplans -n operators --all
+
+    TYPE='function'
+    INFO="deleteOLMdeployment"
+    customLog $TYPE $INFO
+
+    kubectl delete  --force catalogsource operator-application-catalog -n operators 
+    kubectl delete  --force subscriptions operator-application-v0-0-1-sub -n operators 
+    kubectl delete  --force csv operator-application.v0.0.1 -n operators
+    kubectl delete  --force operators operator-application.operators -n operators
+
     #echo "Press any key to move on"
     #read input
 }
 
 function deleteNamespacesRelatedToApplicationOperator () {
-    kubectl delete -f namespace application-alpha
-    kubectl delete -f namespace application-beta
-    kubectl delete -f namespace operator-application-system
+
+    TYPE='function'
+    INFO="deleteOLMdeployment"
+    customLog $TYPE $INFO
+
+    kubectl delete --force namespace application-alpha
+    kubectl delete --force namespace application-beta
+    kubectl delete --force namespace operator-application-system
     #echo "Press any key to move on"
     #read input
 }
 
 function deleteDatabaseInstance () {
+
+    TYPE='function'
+    INFO="deleteDatabaseInstance"
+    customLog $TYPE $INFO
+
     cd $ROOT_FOLDER/operator-database
     kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
     kubectl delete -f config/samples/database.sample_v1alpha1_databasebackup.yaml
@@ -65,6 +106,11 @@ function deleteDatabaseInstance () {
 }
 
 function deleteDatabaseOperator () {
+
+    TYPE='function'
+    INFO="deleteDatabaseOperator"
+    customLog $TYPE $INFO
+
     make undeploy IMG="$REGISTRY/$ORG/$IMAGE_DATBASE_OPERATOR"
     operator-sdk cleanup operator-database -n operators --delete-all   
     
@@ -88,14 +134,23 @@ function deleteDatabaseOperator () {
 }
 
 function deleteNamespacesRelatedToDatabaseOperator () {
+
+    TYPE='function'
+    INFO="deleteNamespacesRelatedToDatabaseOperator"
+    customLog $TYPE $INFO
+
     kubectl delete --force namespace database
-    kubectl delete -f all --all -n operator-database-system
     kubectl delete --force namespace operator-database-system
     #echo "Press any key to move on"
     #read input
 }
 
 function deletePrometheus () {
+
+    TYPE='function'
+    INFO="deletePrometheus"
+    customLog $TYPE $INFO
+
     cd $ROOT_FOLDER
      
     kubectl delete -f prometheus/kubernetes/instance
@@ -117,6 +172,11 @@ function deletePrometheus () {
 }
 
 function deleteOLM () {
+    
+    TYPE='function'
+    INFO="deleteOLM"
+    customLog $TYPE $INFO
+    
     operator-sdk olm uninstall
     
     #echo "Press any key to move on"
@@ -124,6 +184,11 @@ function deleteOLM () {
 }
 
 function deleteCertManager () {
+
+  TYPE='function'
+  INFO="deleteOLM"
+  customLog $TYPE $INFO
+
   kubectl delete -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
     
   export max_retrys=9
@@ -165,10 +230,12 @@ function deleteCertManager () {
 # Execution
 # **********************************************************************************
 
+initLog
+
 echo "************************************"
 echo " Set environment"
 echo "************************************"
-setEnvironmentVariables
+setEnvironmentVariablesCI
 
 echo "************************************"
 echo " Delete microservice application"
