@@ -143,7 +143,7 @@ The current script automation does following:
 
 2. It creates a temp `github tag` related to the last commit **before** the automation was started.
 
-3. It creates a `script-automation.log` file which will not be load to the git repo.
+3. It creates various logs `script-automation.log` these files which will not be load to the git repo.
 
 4. Resets the cluster environment:
 
@@ -177,6 +177,8 @@ The current script automation does following:
 9. It verifies the pre-requisites.
 
 10. Setup of the needed `bin` directory of the operator-sdk projects. (`controller-gen`,`kustomize`, `opm`,`setup-envtest`)
+
+11. Resto
 
 ### 4. Types of scripts
 
