@@ -8,10 +8,12 @@
 4. podman
 5. Only if IBM Cloud is used: [ibmcloud](https://cloud.ibm.com/docs/cli?topic=cli-install-ibmcloud-cli)
 
-Verify your prerequisites with following script:
+Verify your prerequisites with (scripts/check-prerequisites.sh) script (the repository needs to be cloned first):
 
 ```sh
-sh scripts/check-prerequisites.sh
+$ git clone https://github.com/ibm/operator-sample-go.git
+$ cd operator-sample-go
+$ sh scripts/check-prerequisites.sh
 ```
 
 ### 1.1. Operator SDK
@@ -39,10 +41,11 @@ $ operator-sdk version
 $ go version
 ```
 
-### 2. Repo
+### 2. Editing the code with Visual Studio Code
+
+Verify your path, and if needed go to the folder where the code is cloned;
 
 ```
-$ git clone https://github.com/ibm/operator-sample-go.git
 $ cd operator-sample-go
 $ code .
 ```

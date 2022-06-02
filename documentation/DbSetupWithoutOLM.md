@@ -4,7 +4,7 @@
 
 ### Deploy database operator
 
-```
+```shell
 $ cd operator-database
 $ source ../versions.env
 $ make deploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
@@ -14,17 +14,17 @@ $ kubectl apply -f config/rbac/role_binding_patch.yaml
 
 From a terminal run this command:
 
-```
+```shell
 $ kubectl create namespace database
 $ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
-$ kubectl apply -f config/samples/database.sample_v1alpha1_databasecluster
+$ kubectl apply -f config/samples/database.sample_v1alpha1_databasecluster.yaml
 $ kubectl get databases/database -n database -oyaml
 ```
 
 ### Delete all resources
 
-```
-$ kubectl delete -f config/samples/database.sample_v1alpha1_databasecluster
+```shell
+$ kubectl delete -f config/samples/database.sample_v1alpha1_databasecluster.yaml
 $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
 $ make undeploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 ```
@@ -33,7 +33,9 @@ $ make undeploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 
 Create versions_local.env and change 'REGISTRY', 'ORG' and image version.
 
-```
+```shell
+$ cp ../versions.env ../versions_local.env
+(fill appropriate values for 'REGISTRY' & 'ORG')
 $ source ../versions_local.env
 $ podman build -t "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR" .
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"

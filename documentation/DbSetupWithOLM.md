@@ -48,7 +48,7 @@ $ kubectl get installplans install-xxxxx -n $NAMESPACE -oyaml
 $ kubectl get operators operator-database.$NAMESPACE -n $NAMESPACE -oyaml
 $ kubectl create ns database   
 $ kubectl apply -f config/samples/database.sample_v1alpha1_database.yaml
-$ kubectl apply -f config/samples/database.sample_v1alpha1_databasecluster
+$ kubectl apply -f config/samples/database.sample_v1alpha1_databasecluster.yaml
 $ kubectl get databases/database -n database -oyaml
 $ kubectl get databases.database.sample.third.party/database -n database -oyaml
 ```
@@ -56,7 +56,7 @@ $ kubectl get databases.database.sample.third.party/database -n database -oyaml
 ### Delete all resources
 
 ```
-$ kubectl delete -f config/samples/database.sample_v1alpha1_databasecluster
+$ kubectl delete -f config/samples/database.sample_v1alpha1_databasecluster.yaml
 $ kubectl delete -f config/samples/database.sample_v1alpha1_database.yaml
 $ kubectl delete -f olm/subscription.yaml
 $ kubectl delete -f olm/catalogsource.yaml
