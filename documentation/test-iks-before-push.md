@@ -1,6 +1,6 @@
 ## Flow of ci-create-operators-kubernetes.sh
 
-```
+```shell
 sh scripts/install-required-kubernetes-components.sh 
 
 Build database operator images
@@ -25,7 +25,7 @@ Auto scalability
 
 Expected output:
 
-```
+```shell
 kubectl get applications.application.sample.ibm.com/application -n application-beta -oyaml
 ...
 status:
@@ -53,12 +53,12 @@ status:
   schemaCreated: false
 ```
 
-```
+```shell
 kubectl exec -n application-beta $(kubectl get pods -n application-beta | awk '/application-deployment-microservice/ {print $1;exit}') --container application-microservice -- curl -s http://localhost:8081/hello
 Hello World and hello Adam%
 ```
 
-```
+```shell
 kubectl get applications.v1alpha1.application.sample.ibm.com/application -n application-beta -oyaml | grep -A6 -e "spec:" -e "apiVersion: application.sample.ibm.com/"
 apiVersion: application.sample.ibm.com/v1alpha1
 kind: Application
