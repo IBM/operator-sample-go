@@ -133,7 +133,7 @@ function configureCR_SimpleMicroservice () {
 function createOLMApplicationOperatorYAMLs () {
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
     sed "s+APPLICATION_CATALOG_IMAGE+$CATALOG_NAME+g" $APPLICATION_TEMPLATE_FOLDER/kubernetes-application-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/kubernetes-application-catalogsource.yaml
-    cp -nf $DATABASE_TEMPLATE_FOLDER/kubernetes-application-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/kubernetes-application-subscription.yaml 
+    cp -nf $APPLICATION_TEMPLATE_FOLDER/kubernetes-application-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/kubernetes-application-subscription.yaml 
 }
 
 function deployApplicationOperatorOLM () {
