@@ -78,6 +78,7 @@ These steps allow the default Prometheus instance on OpenShift to monitor the re
 
 ```
 $ oc label namespace application-beta openshift.io/cluster-monitoring="true"
+$ cd operator-application
 $ kubectl apply -f prometheus/role-openshift.yaml
 $ oc get secrets -n openshift-ingress
 ```
@@ -92,6 +93,7 @@ kubectl create secret generic prometheus-token-secret --from-file=/tmp/token.txt
 For both OpenShift and Kubernetes:
 
 ```
+$ cd operator-application
 $ kubectl apply -f prometheus/role-all.yaml
 ```
 
