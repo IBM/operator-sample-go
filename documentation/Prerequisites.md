@@ -85,6 +85,7 @@ OpenShift comes with certain components preinstalled which is why there are two 
 ```
 $ sh scripts/install-required-kubernetes-components.sh
 ```
+Note: Incase of "Operators deployed without OLM" , the above script will install OLM even though it is not required. It is required to run the above script for all the use cases inorder to install other required components such as cert-manager and Prometheus because it is commonly written script for all the use cases. 
 
 **OpenShift**
 
