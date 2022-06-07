@@ -115,22 +115,15 @@ Let’s try it.  In this first part of the demo we'll focus on the database.
 
 To make the operator spring into life, we need to create some resources with a ‘kind’ that correlates to the CRD definitions the operators have already installed to the cluster.  These resources can be created manually via the operator’s UI, or you can create from a yaml file as most Kubernetes administrators would do.  Let’s apply the following yamls:
 
-* The database cluster itself.  Note the kind is a custom resource, defined by our Database operator, and the fields are specific to our database application.  We don’t need to create lots of kuberenetes resources ourselves, the DatabaseCluster kind provides an abstraction.  We only need to give the database cluster a name, and define how many pods we want (1 leader, 2 followers in this case):
+* The database cluster itself.  Note the kind is a custom resource, defined by our Database operator, and the fields are specific to our database application.  We don’t need to create lots of kuberenetes resources ourselves, the DatabaseCluster kind provides an abstraction.  We only need to give the database cluster a name, and define how many pods we want (1 leader, 1 follower in this case):
+
 
 ```
-cat <<EOF | oc apply -f -
-apiVersion: database.sample.third.party/v1alpha1
-kind: DatabaseCluster
-metadata:
-  name: databasecluster-sample
-  namespace: database
-spec:
-  image: docker.io/nheidloff/database-service:v1.0.62
-  amountPods: 3
-EOF
+cd operator-database
+oc apply -f config/samples/database.sample_v1alpha1_databasecluster.yaml
 ```
 
-Now we have a database cluster which has populated itself with some default data, so we can test it right away.  Let’s test the database by calling its endpoint to return the data (from within the container's terminal as the endpoint is not externally exposed):
+Now we have a database cluster which has populated itself with some default data, so we can test it right away.  Let’s test the database by calling its endpoint to return the data (from within the container's terminal in the database namespace, as the endpoint is not externally exposed):
 
 ```
 curl -s http://localhost:8089/persons
@@ -144,28 +137,8 @@ curl -s http://localhost:8089/persons
 What if we wanted to use an operator to automate the day 2 task of scheduling a backup, to copy the current data to Cloud Object Storage?  Instead of creating a script or runbook to be executed by a human, we can create a backup CR, which the database operator will process by creating a cron job which launches another ‘backup’ container on a schedule.  The backup container reads from the database cluster, connects to cloud object storage and performs the backup.  Let’s create the backup CR.  As you can see, it has optional properties to create either a manual backup, or create a scheduled backup, putting the data in the list of repos (COS in this case).
 
 ```
-cat <<EOF | oc apply -f -
-apiVersion: database.sample.third.party/v1alpha1
-kind: DatabaseBackup
-metadata:
-  name: databasebackup-manual
-  namespace: database
-spec:
-  image: docker.io/nheidloff/operator-database-backup:v1.0.46
-  repos:
-  - name: ibmcos-repo
-    type: ibmcos
-    secretName: ibmcos-repo
-    serviceEndpoint: s3.eu.cloud-object-storage.appdomain.cloud
-    cosRegion: eu-geo
-    bucketNamePrefix: "database-backup-"
-  manualTrigger:
-    time: "2022-04-20T02:59:43.1Z"
-    repo: ibmcos-repo
-  scheduledTrigger:
-    schedule: "0 * * * *"
-    repo: ibmcos-repo
-EOF
+cd operator-database
+oc apply -f config/samples/database.sample_v1alpha1_databasebackup.yaml
 ```
 
 Once the CR has been processed by the operator, you’ll see it created a CronJob which launches a Job (a pod which runs to completion), every hour minutes.  Alternatively, you can trigger the job manually:
@@ -193,27 +166,15 @@ The data can be downloaded.
 
 ## Work in progress
 
-To test the auto scaler capabilities, let's first install and test our frontend application.
+To test the auto scaler capabilities, let's first install and test our frontend application.  First install the Application operator via OperatorHub.
 
 As with the database, its CR provides an abstraction, and it will take care of creating Kuberenetes resources to deploy a web app pod (providing a single API endpoint), and even use the database CR to create some data in our database cluster.
 
-```
-cat <<EOF | oc apply -f -
-apiVersion: application.sample.ibm.com/v1beta1
-kind: Application
-metadata:
-  name: application
-  namespace: application-beta
-spec:
-  version: "1.0.0"
-  amountPods: 1
-  databaseName: database
-  databaseNamespace: database
-  title: people
-  image: docker.io/nheidloff/simple-microservice:v1.0.46
-EOF
-```
 
+```
+cd operator-application
+oc apply -f config/samples/application.sample_v1beta1_application.yaml
+```
 
 After a few minutes you will see the application operator has created several components:
 
@@ -229,9 +190,11 @@ Let's take a look at the web app now by clicking the route and invoking the web 
 
 The web application also publishes metrics which are collected by Prometheus, which is installed by default on OpenShift.  In particular, our web application publishes how many times the /hello endpoint has been invoked, and the operator uses this to determine if the web application deployment should be scaled up.  This is quite a simple scenario, and to be honest you could achieve the same results with existing k8s capabilities like Horizontal Pod Autoscaler using custom metrics.  However, in our demo we don't use HPA, instead our application operator has created a Cronjob resource which launches a pod to query metrics collected by Prometheus.  If the number of invocations are more than five, our application scaler pod modifies our applications custom resource to define additional replicas, which our operator reconciles.
 
-So let's see it in action.  If we look at the default Prometheus dashboard, we can query the metric exposed by our web application.  Search for ```application_net_heidloff_GreetingResource_countHelloEndpointInvoked_total```.
+So let's see it in action.  If we look at the default Prometheus dashboard, we can query the metric exposed by our web application.  The Prometheus dashboard can be found embedded in OpenShift Console menu ```Developer->Observe->application-beta->Metrics (then Custom Query in search box```
 
-Right now it's one, so let's call the /hello endpoint to increase the metric to at least six.
+Search for ```application_net_heidloff_GreetingResource_countHelloEndpointInvoked_total```.
+
+Right now it's zero, so let's call the /hello endpoint to increase the metric to at least six.
 
 <img src="images/demo20.png" />
 
@@ -244,7 +207,7 @@ Before we look at the application scaler pod, let's verify how many pods are spe
 <img src="images/demo22.png" />
 <img src="images/demo23.png" />
 
-We can now either wait for the application scaler pof to trigger automatically on schedule, or better still, force it to trigger now.  
+We can now either wait for the application scaler pod to trigger automatically on schedule, or better still, force it to trigger now.  
 
 ```
 kubectl create job --from=cronjob/application-scaler manuallytriggered -n application-beta
