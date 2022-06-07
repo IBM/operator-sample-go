@@ -11,7 +11,7 @@ Use this section as a guide to give a live demo of the operator-sample-go asset 
 ## Setup
 
 * First install the [prerequistes](Prerequisites.md)
-* Install all demo components using the provided [script](../scripts/README.md)
+* Install all demo components using the provided [script](../scripts/README.md), use command ```sh scripts/demo-openshift-operators.sh app demo reset``` 
 * Create a Cloud Object Storage (COS) Bucket and add Secrets for accessing it. [Setup Cloud Object Storage](cos.md)
 * Create a Route to the /hello enpoint for the microservice pod in application-beta
 
