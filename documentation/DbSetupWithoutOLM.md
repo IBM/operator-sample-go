@@ -6,7 +6,7 @@
 
 ```shell
 $ cd operator-database
-$ source ../versions.env
+$ source ../versions_local.env
 $ make deploy IMG="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 $ kubectl apply -f config/rbac/role_patch.yaml 
 $ kubectl apply -f config/rbac/role_binding_patch.yaml 
