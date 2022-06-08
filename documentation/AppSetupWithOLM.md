@@ -114,7 +114,7 @@ Locate the default TLS secret with type 'kubernetes.io/tls', e.g. 'deleeuw-ocp-c
 oc extract secret/<default TLS secret for your cluster> --to=/tmp -n openshift-ingress
 kubectl create secret generic prometheus-cert-secret --from-file=/tmp/tls.crt -n application-beta
 oc sa get-token -n openshift-monitoring prometheus-k8s > /tmp/token.txt
-kubectl create secret generic prometheus-token-secret --from-file=/tmp/token.txt -n openshift-operators
+kubectl create secret generic prometheus-token-secret --from-file=/tmp/token.txt -n application-beta
 ```
 
 For both OpenShift and Kubernetes:

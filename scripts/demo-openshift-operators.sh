@@ -58,6 +58,10 @@ function setupDatabase () {
         MESSAGE="*** The setup of the database-operator failed !"
         customLog "$TYPE" "$MESSAGE"
         exit 1
+    else
+        echo "Delete back-up files."
+        rm -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
+        rm -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml 
     fi
 }
 
@@ -70,6 +74,10 @@ function setupApplication () {
         MESSAGE="*** The setup of the application-operator failed !"
         customLog "$TYPE" "$MESSAGE"
         exit 1
+    else 
+        echo "Delete back-up files."
+        rm -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
+        rm -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
     fi
 }
 

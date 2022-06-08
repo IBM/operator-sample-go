@@ -92,6 +92,7 @@ function setupApplication () {
         customLog "$TYPE" "$MESSAGE"
         exit 1
     else
+        echo "Delete back-up files."
         rm -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
         rm -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
     fi

@@ -48,7 +48,7 @@ function configurePrometheusOpenShiftForSimpleApplication () {
    kubectl create secret generic prometheus-cert-secret --from-file=="$ROOT_FOLDER/scripts/$TEMP_FOLDER/tls.crt" -n application-beta
    
    oc sa get-token -n openshift-monitoring prometheus-k8s > "$ROOT_FOLDER/scripts/$TEMP_FOLDER/token.txt"
-   kubectl create secret generic prometheus-token-secret --from-file="$ROOT_FOLDER/scripts/$TEMP_FOLDER/token.txt" -n openshift-operators
+   kubectl create secret generic prometheus-token-secret --from-file="$ROOT_FOLDER/scripts/$TEMP_FOLDER/token.txt" -n application-beta
    
    rm -f -r "$ROOT_FOLDER/scripts/$TEMP_FOLDER"
 
