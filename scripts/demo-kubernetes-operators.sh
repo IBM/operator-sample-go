@@ -57,18 +57,26 @@ function setupDatabase () {
         MESSAGE="*** The setup of the database-operator failed !"
         customLog "$TYPE" "$MESSAGE"
         exit 1
+    else
+        echo "Delete back-up files."
+        rm -f $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
+        rm -f $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml 
     fi
 }
 
 function setupApplication () {
     bash "$ROOT_FOLDER/scripts/$SCRIPT_APPLICATION" $CI_CONFIG $RESET
-        if [ $? == "1" ]; then
+    if [ $? == "1" ]; then
         echo "*** The setup of the applicatior-operator failed !"
         echo "*** The script '$SCRIPT_APPLICATION' ends here!"
         TYPE="*** Error"
         MESSAGE="*** The setup of the applicatior-operator failed !"
         customLog "$TYPE" "$MESSAGE"
         exit 1
+    else 
+        echo "Delete back-up files."
+        rm -f $ROOT_FOLDER/scripts/kubernetes-application-catalogsource.yaml
+        rm -f $ROOT_FOLDER/scripts/kubernetes-application-subscription.yaml
     fi
 }
 
