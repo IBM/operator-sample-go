@@ -87,7 +87,7 @@ $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
 
 ### Build and push new catalog image
 
- ### Setup of the needed executable bin files
+### a) Setup of the needed executable bin files
  
    Setup of the needed bin files (controller-gen, kustomize, opm, setup-envtest) for the operator-sdk projects. The script will create a temp operator sdk project, to create a the bin file and delete that temp project when it was finished.
    
@@ -95,8 +95,7 @@ $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
    sh scripts/check-binfiles-for-operator-sdk-projects.sh
    ```
  
- Note: You need to interact with the script, because when you create the first time a bundle. These are the temp values you can use for the script execution. These are the example values: 'Display name : myproblemfix', Description : myproblemfix, Provider's name: myproblemfix, Any relevant URL:, Comma-separated keywords : myproblemfix Comma-separated maintainers: myproblemfix@myproblemfix.net.
-Create versions_local.env and change 'REGISTRY', 'ORG' and image version.
+  > Note: You need to interact with the script, because when you create the first time a bundle. These are the temp values you can use for the script execution. These are the example values: `'Display name   : myproblemfix'`, `Description    : myproblemfix`, `Provider's name: myproblemfix`, `Any relevant URL:`, `Comma-separated keywords   : myproblemfix` `Comma-separated maintainers: myproblemfix@myproblemfix.net`. 
 
 Example output:
 ```
@@ -106,13 +105,15 @@ controller-gen  kustomize       opm             setup-envtest
 controller-gen  kustomize       opm             setup-envtest
 ```
 
+### b) Build and push
+
 ```
 $ source ../versions_local.env
 $ ./bin/opm index add --build-tool podman --mode semver --tag "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" --bundles "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
 $ podman push "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
 ```
 
-Define "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" in olm/catalogsource.yaml and/or olm/catalogsource-openshift.yaml and invoke the commands above to apply catalog source and subscription.
+> Note: Define "$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG" in olm/catalogsource.yaml and/or olm/catalogsource-openshift.yaml and invoke the commands above to apply catalog source and subscription.
 
 ### Alternative
 
