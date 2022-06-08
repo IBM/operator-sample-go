@@ -8,5 +8,5 @@ spec:
   installPlanApproval: Automatic
   name: operator-application
   source: operator-application-catalog
-  sourceNamespace: openshift-operators
+  sourceNamespace: openshift-marketplace
 # startingCSV: operator-application.v0.0.1
