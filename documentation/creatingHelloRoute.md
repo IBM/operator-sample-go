@@ -1,6 +1,10 @@
 # Creating Route in Openshift 
-This guide refers to creating a simple route in Openshift that expose ''application-service-microservice'' in application-beta namespace to a public endpoint.  Before you can create the route, you must deploy the Application operator and create the sample Application Custom Resource:
+This guide refers to creating a simple route in Openshift that expose ''application-service-microservice'' in application-beta namespace to a public endpoint.  Before you can create and test the route, you must have deployed the Application and DatabaseCluster Custom Resources.
 
+```
+cd operator-database
+oc apply -f config/samples/database.sample_v1alpha1_databasecluster.yaml
+```
 ```
 cd operator-application
 oc apply -f config/samples/application.sample_v1beta1_application.yaml
