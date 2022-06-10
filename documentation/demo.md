@@ -18,7 +18,8 @@ Use this section as a guide to give a live demo of the operator-sample-go asset 
 **Note that after following the install setps, you will need to reverse some of the deployment steps as they are intended to be performed live in the demo script below.**
 
 * Uninstall both operators (but leave Catalog sources), using OpenShift Console menu ```Installed Operators```
-* Delete all CR instances: Application, Database, Databasecluster, Databasebackup (if present), using using OpenShift Console menu ```Administration->CustomResourceDefinitions```
+* Delete all CR instances (if present): Application, Database, Databasecluster, Databasebackup, using using OpenShift Console menu ```Administration->CustomResourceDefinitions```
+* Delete all CRDs: Application, Database, Databasecluster, Databasebackup, using using OpenShift Console menu ```Administration->CustomResourceDefinitions```
 
 ## Introduction to our sample operators
 
