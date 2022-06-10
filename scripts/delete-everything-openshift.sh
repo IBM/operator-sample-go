@@ -160,9 +160,9 @@ function deletePrometheusConfiguration () {
     oc delete -f $ROOT_FOLDER/prometheus/openshift/
 
     echo "*** delete secrets"
-    oc delete --force secret prometheus-token-secret -n openshift-operators
     oc delete --force secret prometheus-token-secret -n application-beta
-    oc get secret prometheus-token-secret -n openshift-operators
+    oc delete --force secret prometheus-token-secret -n application-beta
+    oc get secret prometheus-token-secret -n application-beta
     oc get secret prometheus-token-secret -n application-beta
     
     TYPE='Info'
