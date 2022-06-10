@@ -322,20 +322,23 @@ function deployApplicationOperatorOLM () {
     INFO="deployApplicationOperatorOLM"
     customLog $TYPE $INFO
     startTimer
-    
-    # create catalog
-    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
-    kubectl get catalogsource operator-application-catalog -n $NAMESPACE -oyaml
 
-     # create subscription
+    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml 
     kubectl create -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
-    kubectl get subscriptions operator-application-v0-0-1-sub -n $NAMESPACE -oyaml
-    
-    kubectl get pods -n $NAMESPACE
-    kubectl get all -n $NAMESPACE
+
+    namespace=openshift-marketplace
+    kubectl get catalogsource operator-application-catalog -n $namespace -oyaml
+    kubectl get pods -n $namespace
+    kubectl get all -n $namespace
+
+    namespace=openshift-operators
+    kubectl get subscriptions operator-application-v0-0-1-sub -n $namespace -oyaml
+    kubectl get installplans -n $namespace
+    kubectl get pods -n $namespace
+    kubectl get all -n $namespace
 
     array=("operator-application-catalog")
-    namespace=openshift-operators
+    namespace=openshift-marketplace
     export STATUS_SUCCESS="Running"
     for i in "${array[@]}"
         do 
@@ -359,8 +362,9 @@ function deployApplicationOperatorOLM () {
                 sleep 3
             done
         done
-    kubectl get pods -n $NAMESPACE
-    kubectl get all -n $NAMESPACE
+    namespace=openshift-marketplace
+    kubectl get pods -n $namespace
+    kubectl get all -n $namespace
     
     array=("operator-application.v0.0.1")
     namespace=openshift-operators
@@ -388,8 +392,10 @@ function deployApplicationOperatorOLM () {
             done
         done
      
-    kubectl get pods -n $NAMESPACE
-    kubectl get all -n $NAMESPACE
+    namespace=openshift-operators
+    kubectl get pods -n $namespace
+    kubectl get all -n $namespace
+    
 
     array=("operator-application-controller-manager" )
     namespace=openshift-operators

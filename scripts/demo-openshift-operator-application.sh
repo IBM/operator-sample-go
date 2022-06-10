@@ -156,18 +156,23 @@ function createOLMApplicationOperatorYAMLs () {
 
 function deployApplicationOperatorOLM () {
     # create catalog
+    namespace=openshift-marketplace
     kubectl create -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
-    kubectl get catalogsource operator-application-catalog -n $NAMESPACE -oyaml
+    kubectl get catalogsource operator-application-catalog -n $namespace -oyaml
 
-     # create subscription
+    kubectl get pods -n $namespace
+    kubectl get all -n $namespace
+
+    # create subscription
+    namespace=openshift-operators
     kubectl create -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
-    kubectl get subscriptions operator-application-v0-0-1-sub -n $NAMESPACE -oyaml
+    kubectl get subscriptions operator-application-v0-0-1-sub -n $namespace -oyaml
     
-    kubectl get pods -n $NAMESPACE
-    kubectl get all -n $NAMESPACE
+    kubectl get pods -n $namespace
+    kubectl get all -n $namespace
 
     array=("operator-application-catalog")
-    namespace=openshift-operators
+    namespace=openshift-marketplace
     export STATUS_SUCCESS="Running"
     for i in "${array[@]}"
         do 
@@ -195,8 +200,8 @@ function deployApplicationOperatorOLM () {
                 sleep 3
             done
         done
-    kubectl get pods -n $NAMESPACE
-    kubectl get all -n $NAMESPACE
+    kubectl get pods -n $namespace
+    kubectl get all -n $namespace
     
     array=("operator-application.v0.0.1")
     namespace=openshift-operators
@@ -224,8 +229,8 @@ function deployApplicationOperatorOLM () {
             done
         done
      
-    kubectl get pods -n $NAMESPACE
-    kubectl get all -n $NAMESPACE
+    kubectl get pods -n $namespace
+    kubectl get all -n $namespace
 
     array=("operator-application-controller-manager" )
     namespace=openshift-operators

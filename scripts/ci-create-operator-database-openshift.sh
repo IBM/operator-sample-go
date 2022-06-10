@@ -350,17 +350,27 @@ function createOLMDatabaseOperatorYAMLs () {
 
 function deployDatabaseOperatorOLM () {
     startTimer
-    kubectl create -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml -n $NAMESPACE
-    kubectl create -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml -n $NAMESPACE
+    TYPE="deployDatabaseOperatorOLM"
+    INPUT="Start to deploy the DatabaseOperator"
+    echo $INPUT
+    customLog "$TYPE" "$INPUT"
 
-    kubectl get catalogsource operator-database-catalog -n $NAMESPACE -oyaml
-    kubectl get subscriptions operator-database-v0-0-1-sub -n $NAMESPACE -oyaml
-    kubectl get installplans -n $NAMESPACE
-    kubectl get pods -n $NAMESPACE
-    kubectl get all -n $NAMESPACE
+    kubectl create -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml 
+    kubectl create -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
+
+    namespace=openshift-marketplace
+    kubectl get catalogsource operator-database-catalog -n $namespace -oyaml
+    kubectl get pods -n $namespace
+    kubectl get all -n $namespace
+
+    namespace=openshift-operators
+    kubectl get subscriptions operator-database-v0-0-1-sub -n $namespace -oyaml
+    kubectl get installplans -n $namespace
+    kubectl get pods -n $namespace
+    kubectl get all -n $namespace
 
     array=("operator-database-catalog")
-    namespace=openshift-operators
+    namespace=openshift-marketplace
     export STATUS_SUCCESS="Running"
     for i in "${array[@]}"
         do 
