@@ -20,4 +20,4 @@ Each TestCase is linked to the TestCase documentation.
 | [7. TestCase-07 - **Automation** - **Kubernetes**  - CI](https://ibm.box.com/s/e1v7241vxynhn3vfw55sbtx7qs13w549) | done | OK | [issue list](https://github.com/IBM/operator-sample-go/issues?q=label%3Atestcase07+) | NH |
 | [8. TestCase-08 - **Automation** - **OpenShift**  - CI](https://ibm.box.com/s/e1v7241vxynhn3vfw55sbtx7qs13w549) | done | OK | [issue list](https://github.com/IBM/operator-sample-go/issues?q=label%3Atestcase08+) | NH |
 | [9. TestCase-09 - **Automation** - **Kubernetes**  - Demo](https://ibm.box.com/s/fg4ejoq459fdyzjz7pz7i1jve6c7maib) | done | OK | [issue list](https://github.com/IBM/operator-sample-go/issues?q=label%3Atestcase09+) | DT |
-| [10. TestCase-10 - **Automation** - **OpenShift** - Demo](https://ibm.box.com/s/qauu1ju1ss889pa084bs6seeh3nqk1ny) |  in progress | PENDING | [issue list](https://github.com/IBM/operator-sample-go/issues?q=label%3Atestcase10+) | AL |
+| [10. TestCase-10 - **Automation** - **OpenShift** - Demo](https://ibm.box.com/s/qauu1ju1ss889pa084bs6seeh3nqk1ny) |  done | OK | [issue list](https://github.com/IBM/operator-sample-go/issues?q=label%3Atestcase10+) | AL |
