@@ -259,6 +259,11 @@ function deleteOLMdeployment () {
     
     oc get clusterserviceversion -all-namespaces
     #deleteApplicationOperatorCSVs
+    namespace=openshift-operators 
+    oc delete --force clusterserviceversion operator-application.v0.0.1 -n $namespace
+    oc get clusterserviceversion | grep operator-application.v0.0.1 -n $namespace
+    namespace=openshift-marketplace
+    oc delete --force clusterserviceversion operator-application.v0.0.1 -n $namespace
     oc get clusterserviceversion | grep operator-application.v0.0.1 -n $namespace
 
     rm -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
@@ -283,9 +288,12 @@ function deleteOLMdeployment () {
     namespace=openshift-operators 
     oc delete --force clusterserviceversion operator-database.v0.0.1 -n $namespace
     oc get clusterserviceversion | grep operator-database.v0.0.1 -n $namespace
+    namespace=openshift-marketplace
+    oc delete --force clusterserviceversion operator-database.v0.0.1 -n $namespace
+    oc get clusterserviceversion | grep operator-database.v0.0.1 -n $namespace
 
     echo "*** delete cluster service versions"
-    deleteDatabaseOperatorCSVs 
+    #deleteDatabaseOperatorCSVs 
 
     echo "*** delete subscription and catalogsource database"
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
@@ -469,6 +477,7 @@ function deleteDatabaseOperator () {
     kubectl delete --force operators.operators.coreos.com operator-database.openshift-operators
 
     echo "*** delete deployment in namespace: $namespace"
+    namespace=openshift-operators
     kubectl delete --force deployment operator-database-controller-manager -n $namespace
     echo "*** delete deployment"
     kubectl delete --force clusterrole operator-database-metrics-reader
@@ -585,7 +594,7 @@ deletePrometheusConfiguration
 
 runCIconfiguation
 runLocalConfiguation
-#deleteInstallPlan
+deleteInstallPlan
 
 echo "************************************"
 echo " Delete cert manager"
