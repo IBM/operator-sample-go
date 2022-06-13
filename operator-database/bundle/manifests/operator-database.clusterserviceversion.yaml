@@ -352,7 +352,7 @@ spec:
                 - --leader-elect
                 command:
                 - /manager
-                image: docker.io/nheidloff/database-operator:v1.0.114
+                image: docker.io/nheidloff/database-operator:v1.0.117
                 livenessProbe:
                   httpGet:
                     path: /healthz
