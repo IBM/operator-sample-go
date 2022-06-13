@@ -144,6 +144,11 @@ function configureCR_SimpleMicroservice () {
     oc new-project application-alpha 
     oc new-project application-beta
     IMAGE_NAME="$REGISTRY/$ORG/$IMAGE_MICROSERVICE"
+
+    # Backup CR files
+    cp $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml 
+    cp $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml
+
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
 }
@@ -261,11 +266,16 @@ function deployApplicationOperatorOLM () {
 
 function createApplicationInstance () {
     echo "*** create application instances"
+    
     kubectl get pods -n openshift-operators | grep "application"
     kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml -n application-beta
     kubectl get pods -n application-beta | grep "application"
     #kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     #kubectl get pods -n application-alpha | grep "application"
+
+    cp $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
+    cp $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
+
 }
 
 function verifyApplication() {
@@ -348,36 +358,6 @@ echo "************************************"
 verifyPreReqs
 
 echo "************************************"
-echo " Build 'simple microservice'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_MICROSERVICE"
-echo "************************************"
-buildSimpleMicroservice 
-
-echo "************************************"
-echo " Build 'application scaler'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_SCALER"
-echo "************************************"
-buildApplicationScaler
-
-echo "************************************"
-echo " Build 'application operator'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR"
-echo "************************************"
-buildApplicationOperator
-
-echo "************************************"
-echo " Build 'application operator bundle'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
-echo "************************************"
-buildApplicationOperatorBundle
-
-echo "************************************"
-echo " Build 'application operator catalog'"
-echo " Push image to $REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG"
-echo "************************************"
-buildApplicationOperatorCatalog
-
-echo "************************************"
 echo " Create OLM yamls"
 echo "************************************"
 createOLMApplicationOperatorYAMLs
@@ -393,14 +373,14 @@ echo "************************************"
 configureCR_SimpleMicroservice
 
 echo "************************************"
-echo " Create Application Instance"
-echo "************************************"
-createApplicationInstance
-
-echo "************************************"
 echo " Configure Prometheus instance"
 echo "************************************"
 configurePrometheusOpenShiftForSimpleApplication
+
+echo "************************************"
+echo " Create Application Instance"
+echo "************************************"
+createApplicationInstance
 
 echo "************************************"
 echo " Verify Application Instance"
