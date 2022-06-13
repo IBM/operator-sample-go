@@ -574,7 +574,7 @@ deletePrometheusConfiguration
 
 runCIconfiguation
 runLocalConfiguation
-deleteInstallPlan
+#deleteInstallPlan
 
 echo "************************************"
 echo " Delete cert manager"
