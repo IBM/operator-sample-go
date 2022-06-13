@@ -163,7 +163,7 @@ function deletePrometheusConfiguration () {
     oc delete --force secret prometheus-token-secret -n application-beta
     oc delete --force secret prometheus-token-secret -n application-beta
     oc get secret prometheus-token-secret -n application-beta
-    oc get secret prometheus-token-secret -n application-beta
+    oc get secret prometheus-cert-secret -n application-beta
     
     TYPE='Info'
     INFO='deletePrometheusConfiguration -> was executed'
