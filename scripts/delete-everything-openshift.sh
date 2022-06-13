@@ -161,7 +161,7 @@ function deletePrometheusConfiguration () {
 
     echo "*** delete secrets"
     oc delete --force secret prometheus-token-secret -n application-beta
-    oc delete --force secret prometheus-token-secret -n application-beta
+    oc delete --force secret prometheus-cert-secret -n application-beta
     oc get secret prometheus-token-secret -n application-beta
     oc get secret prometheus-cert-secret -n application-beta
     
