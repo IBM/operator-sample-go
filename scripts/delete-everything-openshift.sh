@@ -257,11 +257,13 @@ function deleteOLMdeployment () {
     namespace=openshift-marketplace 
     kubectl delete --force catalogsource operator-application-catalog -n $namespace 
     
-    oc get clusterserviceversion -all-namespaces
+    oc get clusterserviceversion --all-namespaces
+   
     #deleteApplicationOperatorCSVs
     namespace=openshift-operators 
     oc delete --force clusterserviceversion operator-application.v0.0.1 -n $namespace
     oc get clusterserviceversion | grep operator-application.v0.0.1 -n $namespace
+    
     namespace=openshift-marketplace
     oc delete --force clusterserviceversion operator-application.v0.0.1 -n $namespace
     oc get clusterserviceversion | grep operator-application.v0.0.1 -n $namespace
@@ -292,9 +294,6 @@ function deleteOLMdeployment () {
     oc delete --force clusterserviceversion operator-database.v0.0.1 -n $namespace
     oc get clusterserviceversion | grep operator-database.v0.0.1 -n $namespace
 
-    echo "*** delete cluster service versions"
-    #deleteDatabaseOperatorCSVs 
-
     echo "*** delete subscription and catalogsource database"
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
@@ -308,12 +307,25 @@ function deleteOLMdeployment () {
     kubectl delete -f $ROOT_FOLDER/bundle/manifests/operator-database.clusterserviceversion.yaml
     kubectl get clusterserviceversion operator-database.v0.0.1
 
+    #echo "*** delete cluster service versions"
+    #deleteDatabaseOperatorCSVs
+
+    echo "*** delete custom resource definition application"
+    oc get customresourcedefinition --all-namespaces | grep application
+    oc delete --force customresourcedefinition applications.application.sample.ibm.com
+    echo "*** delete custom resource definition database"
+    oc get customresourcedefinition --all-namespaces | grep database
+    oc delete --force customresourcedefinition databasebackups.database.sample.third.party
+    oc delete --force customresourcedefinition databaseclusters.database.sample.third.party
+    oc delete --force customresourcedefinition databases.database.sample.third.party
+
+
     TYPE='Info'
     INFO='deleteOLMdeployment -> was executed'
     customLog $TYPE $INFO
 
     rm -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
-    rm -f $ROOT_FOLDER/scripts/openshift-database-subsciption.yaml 
+    rm -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml 
 
     #kubectl delete installplans -n openshift-operators --all
     #echo "Press any key to move on"
