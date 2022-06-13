@@ -258,7 +258,7 @@ function deleteOLMdeployment () {
     kubectl delete --force catalogsource operator-application-catalog -n $namespace 
     
     oc get clusterserviceversion -all-namespaces
-    deleteApplicationOperatorCSVs
+    #deleteApplicationOperatorCSVs
     oc get clusterserviceversion | grep operator-application.v0.0.1 -n $namespace
 
     rm -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
