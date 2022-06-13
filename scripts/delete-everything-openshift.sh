@@ -242,14 +242,19 @@ function deleteOLMdeployment () {
     sed "s+APPLICATION_CATALOG_IMAGE+$CATALOG_NAME+g" $APPLICATION_TEMPLATE_FOLDER/openshift-application-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
     cp -nf $APPLICATION_TEMPLATE_FOLDER/openshift-application-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-application-subscription.yaml 
    
+    namespace=openshift-operators
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml -n $namespace
+
+    namespace=openshift-marketplace
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml -n $namespace
      
     oc get catalogsource --all-namespaces
     oc get subscription --all-namespaces
     
     echo "*** delete subscription and catalogsource application"
-    kubectl delete --force subscriptions operator-application-v0-0-1-sub -n $namespace  
+    namespace=openshift-operators
+    kubectl delete --force subscriptions operator-application-v0-0-1-sub -n $namespace 
+    namespace=openshift-marketplace 
     kubectl delete --force catalogsource operator-application-catalog -n $namespace 
     
     oc get clusterserviceversion -all-namespaces
@@ -265,13 +270,17 @@ function deleteOLMdeployment () {
     cp -nf $DATABASE_TEMPLATE_FOLDER/openshift-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/openshift-database-subscription.yaml 
     
     echo "*** delete subscription and catalogsource database"
-    kubectl delete --force subscriptions operator-database-v0-0-1-sub -n $namespace  
+    namespace=openshift-operators
+    kubectl delete --force subscriptions operator-database-v0-0-1-sub -n $namespace
+
+    namespace=openshift-marketplace   
     kubectl delete --force catalogsource operator-database-catalog -n $namespace 
 
     oc get subscription --all-namespaces
     oc get catalogsource --all-namespaces
 
     echo "*** delete clusterserviceversion database"
+    namespace=openshift-operators 
     oc delete --force clusterserviceversion operator-database.v0.0.1 -n $namespace
     oc get clusterserviceversion | grep operator-database.v0.0.1 -n $namespace
 
@@ -281,9 +290,11 @@ function deleteOLMdeployment () {
     echo "*** delete subscription and catalogsource database"
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-subscription.yaml
     kubectl delete -f $ROOT_FOLDER/scripts/openshift-database-catalogsource.yaml
-   
-    kubectl get catalogsource -n $namespace
+
+    namespace=openshift-operators 
     kubectl get subscription -n $namespace
+    namespace=openshift-marketplace
+    kubectl get catalogsource -n $namespace
 
     echo "*** delete clusterserviceversion database"
     kubectl delete -f $ROOT_FOLDER/bundle/manifests/operator-database.clusterserviceversion.yaml
