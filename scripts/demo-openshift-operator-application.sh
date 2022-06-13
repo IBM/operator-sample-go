@@ -268,7 +268,7 @@ function createApplicationInstance () {
     echo "*** create application instances"
     
     kubectl get pods -n openshift-operators | grep "application"
-    kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml -n application-beta
+    kubectl create -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml -n application-beta
     kubectl get pods -n application-beta | grep "application"
     #kubectl apply -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     #kubectl get pods -n application-alpha | grep "application"
@@ -340,6 +340,10 @@ function verifyApplication() {
     kubectl logs -n $NAMESPACE $(kubectl get pods -n $NAMESPACE | awk '/operator-application-controller-manager/ {print $1;exit}') -c manager &> $ROOT_FOLDER/scripts/temp.log
     INFO=$(cat  $ROOT_FOLDER/scripts/temp.log)
     customLog "$TYPE" "$INFO"
+
+    #remove backup files
+    rm $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml 
+    rm $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml
 }
 
 # **********************************************************************************
