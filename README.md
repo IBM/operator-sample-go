@@ -5,14 +5,19 @@ This project contains Kubernetes operator samples that demonstrate best practice
 ### Brief Overview
 
 The repo contains two operators:
-1) Application operator: Deploys and manages a simple microservice application, providing a front-end UI.
-2) Database operator: Deploys and manages a simple database. Used by the front-end application.
+* [Application operator](https://github.com/IBM/operator-sample-go/tree/main/operator-application): Deploys and manages a front-end micro-service application which provides a simple web UI.
+* [Database operator](https://github.com/IBM/operator-sample-go/tree/main/operator-database): Deploys and manages a simple database. Used by the front-end application.
 
-Additionally the repo contains four more components:
-1) [Simple micorservice](simple-microservice/README.md) managed by the application operator
-2) [Database service](database-service/README.md) managed by the database operator
-3) [Database controller extension](operator-database-backup/README.md) to automatically backups of data
-4) [Application controller extension](operator-application-scaler/README.md) to automatically scale up the microservice
+Additionally the repo contains four more application components:
+
+* [simple-microservice](https://github.com/IBM/operator-sample-go/tree/main/simple-microservice) - A front end web application, written in Java using Quarkus
+* [database-service](https://github.com/IBM/operator-sample-go/tree/main/database-service) - A simple database application deployed by the database operator, written in Java using Quarkus
+* [operator-database-backup](https://github.com/IBM/operator-sample-go/tree/main/operator-database-backup) - A Go application to query the database and upload the data to cloud object storage.  This container is launched on a schedule by the database operator
+* [operator-application-scaler](https://github.com/IBM/operator-sample-go/tree/main/operator-application-scaler) - A Go application used to make autoscaling decisions for the front-end.  It queries Prometheus metrics exposed by the simple-microservice, and if necessary, modifies the custom resource which defines the size of the front-end deployment.  This container is launched on a schedule by the application operator
+
+Scripts are provided to automate build and deployment:
+
+* [scripts](https://github.com/IBM/operator-sample-go/tree/main/scripts) - Automation to verify workstation prerequisites, build all container images and deploy to a Kubernetes or OpenShift cluster.  Alternatively, the scripts can deploy pre-built 'golden' container images.
 
 Check out this 1-minute demo video of the operators<br>
 [![Operator Sample Go Demo 1 min](https://img.youtube.com/vi/iblGZ8mmbGo/0.jpg)](https://www.youtube.com/watch?v=iblGZ8mmbGo "Click play on YouTube")
