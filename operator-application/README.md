@@ -1,3 +1,3 @@
 # Application Operator
 
-See project [readme](../README.md).
+Refer to the documentation: https://github.com/IBM/operator-sample-go-documentation
