@@ -39,7 +39,6 @@ Introduction to IBM Build Labs<br>
 Our 40-minute masterclass video provides a useful inroduction to operators and why to use them<br>
 [![Operators Masterclass](https://img.youtube.com/vi/D6njEyXPieg/0.jpg)](https://www.youtube.com/watch?v=D6njEyXPieg "Click play on youtube")
 
-
 ### Additional Resources
 
 * [Operator Sample Go Project Documentation](https://ibm.github.io/operator-sample-go-documentation/)
@@ -47,3 +46,12 @@ Our 40-minute masterclass video provides a useful inroduction to operators and w
 * [Kubebuilder Book](https://book.kubebuilder.io/)
 * [Operator Framework (OLM) Documentation](https://olm.operatorframework.io/docs/)
 * [Kubernetes API Conventions](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md)
+
+### Credits
+
+  * [Niklas Heidloff](https://twitter.com/nheidloff)
+  * [Alain Airom](https://twitter.com/AAairom)
+  * [Adam de Leeuw](https://www.linkedin.com/in/deleeuwa/) 
+  * [Diwakar Tiwari](https://twitter.com/diwakarptiwari)
+  * [Thomas Südbröcker](https://twitter.com/tsuedbroecker)
+  * [Vishal Ramani](https://www.linkedin.com/in/vishalramani/)
