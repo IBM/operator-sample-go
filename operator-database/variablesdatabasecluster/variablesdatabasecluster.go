@@ -13,7 +13,9 @@ var ContainerName string
 var DataDirectory string = "/data"
 
 var StorageResourceRequirement = "1Gi"
-var StorageClassName string = "ibmc-vpc-block-5iops-tier"
+
+// To improve portability between OpenShift environments, we rely on the cluster providing a default storage class
+//var StorageClassName string = "ibmc-vpc-block-5iops-tier"
 
 const ANNOTATION_TITLE = "applications.application.sample.ibm.com/title"
 const DEFAULT_ANNOTATION_TITLE = "My Title"
