@@ -74,7 +74,8 @@ func (reconciler *DatabaseClusterReconciler) defineStatefulSet(databasecluster *
 							v1.ResourceStorage: resource.MustParse("1Gi"),
 						},
 					},
-					StorageClassName: &variables.StorageClassName,
+					// To improve portability between OpenShift environments, we rely on the cluster providing a default storage class
+					//StorageClassName: &variables.StorageClassName,
 				},
 				Status: v1.PersistentVolumeClaimStatus{},
 			}},
