@@ -75,7 +75,7 @@ function setupDatabase () {
     else
         echo "Delete back-up files."
         rm -f $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
-        rm -f $ROOT_FOLDER/scripts/kubernetes-database-subsciption.yaml 
+        rm -f $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml 
     fi
 }
 
@@ -91,7 +91,7 @@ function setupApplication () {
     else
         echo "Delete back-up files."
         rm -f $ROOT_FOLDER/scripts/kubernetes-application-catalogsource.yaml
-        rm -f $ROOT_FOLDER/scripts/kubernetes-application-subsciption.yaml
+        rm -f $ROOT_FOLDER/scripts/kubernetes-application-subscription.yaml
     fi
 }
 

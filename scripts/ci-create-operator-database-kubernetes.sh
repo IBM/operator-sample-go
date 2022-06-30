@@ -26,6 +26,7 @@ export RESET_PODMAN=$3
 export VERSIONS_FILE=""
 export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/database-operator-templates
 export LOGFILE_NAME=script-automation-kubernetes.log
+export SCRIPTNAME="ci-create-operator-database-kubernetes.sh"
 
 # **********************************************************************************
 # Functions
@@ -390,19 +391,14 @@ function buildDatabaseOperatorCatalog () {
 function createOLMDatabaseOperatorYAMLs () {
     CATALOG_NAME="$REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
     sed "s+DATABASE_CATALOG_IMAGE+$CATALOG_NAME+g" $DATABASE_TEMPLATE_FOLDER/kubernetes-database-catalogsource-TEMPLATE.yaml > $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
-    cp -nf $DATABASE_TEMPLATE_FOLDER/kubernetes-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml 
+    cp -nf $DATABASE_TEMPLATE_FOLDER/kubernetes-database-subscription-TEMPLATE.yaml $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml
 }
 
 function deployDatabaseOperatorOLM () {
+    
     kubectl create -f $ROOT_FOLDER/scripts/kubernetes-database-catalogsource.yaml
-    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml
-
-    kubectl get catalogsource operator-database-catalog -n $NAMESPACE -oyaml
-    kubectl get subscriptions operator-database-v0-0-1-sub -n $NAMESPACE -oyaml
-    kubectl get installplans -n $NAMESPACE
-    kubectl get pods -n $NAMESPACE
-    kubectl get all -n $NAMESPACE
-
+    export max_retrys=20
+    j=0
     array=("operator-database-catalog")
     namespace=operators
     export STATUS_SUCCESS="Running"
@@ -413,14 +409,21 @@ function deployDatabaseOperatorOLM () {
             echo "Check $i"
             while :
             do
+                ((j++))
                 FIND=$i
                 STATUS_CHECK=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $3;}' | sed 's/"//g' | sed 's/,//g')
                 echo "Status: $STATUS_CHECK"
+                kubectl get pods -n $namespace
                 STATUS_VERIFICATION=$(echo "$STATUS_CHECK" | grep $STATUS_SUCCESS)
                 if [ "$STATUS_VERIFICATION" = "$STATUS_SUCCESS" ]; then
                     echo "$(date +'%F %H:%M:%S') Status: $FIND is Ready"
                     echo "------------------------------------------------------------------------"
                     break
+                elif [[ $j -eq $max_retrys ]]; then
+                    echo "$(date +'%F %H:%M:%S') To many loops ($j) reached!"
+                    echo "$(date +'%F %H:%M:%S') Stop the script ($SCRIPTNAME) here !"
+                    echo "------------------------------------------------------------------------"
+                    exit 1   
                 else
                     echo "$(date +'%F %H:%M:%S') Status: $FIND($STATUS_CHECK)"
                     echo "------------------------------------------------------------------------"
@@ -428,7 +431,13 @@ function deployDatabaseOperatorOLM () {
                 sleep 3
             done
         done
+    kubectl get catalogsource operator-database-catalog -n $NAMESPACE -oyaml
 
+    kubectl create -f $ROOT_FOLDER/scripts/kubernetes-database-subscription.yaml
+    kubectl get subscriptions operator-database-v0-0-1-sub -n $NAMESPACE -oyaml
+    kubectl get installplans -n $NAMESPACE
+    kubectl get pods -n $NAMESPACE
+    kubectl get all -n $NAMESPACE
     array=("operator-database.v0.0.1")
     namespace=operators
     search=installplans
@@ -570,41 +579,55 @@ echo "************************************"
 echo " Build 'database service'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_SERVICE"
 echo "************************************"
+startTimer
 buildDatabaseService
+endTimer
 
 echo "************************************"
 echo " Build 'operator database backup'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_BACKUP"
 echo "************************************"
+startTimer
 buildDatabaseBackup
+endTimer
 
 echo "************************************"
 echo " Configure CR samples for the 'database operator'"
 echo "************************************"
+startTimer
 configureCRs_DatabaseOperator
+endTimer
 
 echo "************************************"
 echo " Build 'database operator'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR"
 echo "************************************"
+startTimer
 buildDatabaseOperator
+endTimer
 
 echo "************************************"
 echo " Build 'database operator bundle'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_BUNDLE"
 echo "************************************"
+startTimer
 buildDatabaseOperatorBundle
+endTimer
 
 echo "************************************"
 echo " Build 'database operator catalog'"
 echo " Push image to $REGISTRY/$ORG/$IMAGE_DATABASE_OPERATOR_CATALOG"
 echo "************************************"
+startTimer
 buildDatabaseOperatorCatalog
+endTimer
 
 echo "************************************"
 echo " Create OLM yamls"
 echo "************************************"
+startTimer
 createOLMDatabaseOperatorYAMLs
+endTimer
 
 echo "************************************"
 echo " Deploy Database Operator OLM"
