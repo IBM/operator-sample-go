@@ -69,6 +69,7 @@ func main() {
 	if err = (&applicationcontroller.ApplicationReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
+		//recorder: mgr.GetRecorder("containerset-controller"),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Application")
 		os.Exit(1)

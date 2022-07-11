@@ -145,6 +145,7 @@ func (reconciler *ApplicationReconciler) deleteCondition(ctx context.Context, ap
 	if err != nil {
 		log.Info("Application resource status update failed.")
 	}
+	reconciler.recorder.Event(application, "Warning", "Warning", "Application resource status update failed.")
 	return nil
 }
 
