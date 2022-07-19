@@ -95,6 +95,7 @@ func (reconciler *ApplicationReconciler) reconcileDeployment(ctx context.Context
 				log.Info("Failed to create deployment resource. Re-running reconcile.")
 				return ctrl.Result{}, err
 			}
+			reconciler.Recorder.Eventf(application, corev1.EventTypeWarning, "Created", "Created deployment %s", deploymentDefinition.Name)
 		} else {
 			log.Info("Failed to get deployment resource " + variables.DeploymentName + ". Re-running reconcile.")
 			return ctrl.Result{}, err

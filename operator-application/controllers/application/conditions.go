@@ -5,6 +5,7 @@ import (
 
 	applicationsamplev1beta1 "github.com/ibm/operator-sample-go/operator-application/api/v1beta1"
 	"github.com/ibm/operator-sample-go/operator-application/utilities"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
@@ -22,6 +23,7 @@ func (reconciler *ApplicationReconciler) setConditionResourceFound(ctx context.C
 	application *applicationsamplev1beta1.Application) error {
 
 	if !reconciler.containsCondition(ctx, application, CONDITION_REASON_RESOURCE_FOUND) {
+		reconciler.Recorder.Event(application, corev1.EventTypeNormal, CONDITION_REASON_RESOURCE_FOUND, CONDITION_MESSAGE_RESOURCE_FOUND)
 		return utilities.AppendCondition(ctx, reconciler.Client, application, CONDITION_TYPE_RESOURCE_FOUND, CONDITION_STATUS_TRUE,
 			CONDITION_REASON_RESOURCE_FOUND, CONDITION_MESSAGE_RESOURCE_FOUND)
 	}
@@ -38,6 +40,7 @@ func (reconciler *ApplicationReconciler) setConditionInstallReady(ctx context.Co
 
 	reconciler.deleteCondition(ctx, application, CONDITION_TYPE_FAILED, CONDITION_REASON_FAILED_INSTALL_READY)
 	if !reconciler.containsCondition(ctx, application, CONDITION_REASON_INSTALL_READY) {
+		reconciler.Recorder.Event(application, corev1.EventTypeNormal, CONDITION_TYPE_INSTALL_READY, CONDITION_MESSAGE_INSTALL_READY)
 		return utilities.AppendCondition(ctx, reconciler.Client, application, CONDITION_TYPE_INSTALL_READY, CONDITION_STATUS_TRUE,
 			CONDITION_REASON_INSTALL_READY, CONDITION_MESSAGE_INSTALL_READY)
 	}
@@ -59,6 +62,7 @@ func (reconciler *ApplicationReconciler) setConditionFailed(ctx context.Context,
 	}
 
 	if !reconciler.containsCondition(ctx, application, reason) {
+		reconciler.Recorder.Event(application, corev1.EventTypeWarning, CONDITION_TYPE_FAILED, CONDITION_MESSAGE_FAILED_INSTALL_READY)
 		return utilities.AppendCondition(ctx, reconciler.Client, application, CONDITION_TYPE_FAILED, CONDITION_STATUS_TRUE,
 			reason, message)
 	}
@@ -79,6 +83,7 @@ func (reconciler *ApplicationReconciler) setConditionDatabaseExists(ctx context.
 	} else {
 		currentStatus := reconciler.getConditionStatus(ctx, application, CONDITION_TYPE_DATABASE_EXISTS)
 		if currentStatus != status {
+			reconciler.Recorder.Event(application, corev1.EventTypeWarning, CONDITION_TYPE_DATABASE_EXISTS, CONDITION_MESSAGE_DATABASE_EXISTS)
 			reconciler.deleteCondition(ctx, application, CONDITION_TYPE_DATABASE_EXISTS, CONDITION_REASON_DATABASE_EXISTS)
 			return utilities.AppendCondition(ctx, reconciler.Client, application, CONDITION_TYPE_DATABASE_EXISTS, status,
 				CONDITION_REASON_DATABASE_EXISTS, CONDITION_MESSAGE_DATABASE_EXISTS)
@@ -96,6 +101,7 @@ func (reconciler *ApplicationReconciler) setConditionSucceeded(ctx context.Conte
 	application *applicationsamplev1beta1.Application) error {
 
 	if !reconciler.containsCondition(ctx, application, CONDITION_REASON_SUCCEEDED) {
+		reconciler.Recorder.Event(application, corev1.EventTypeNormal, CONDITION_REASON_SUCCEEDED, CONDITION_MESSAGE_SUCCEEDED)
 		return utilities.AppendCondition(ctx, reconciler.Client, application, CONDITION_TYPE_SUCCEEDED, CONDITION_STATUS_TRUE,
 			CONDITION_REASON_SUCCEEDED, CONDITION_MESSAGE_SUCCEEDED)
 	}
@@ -111,6 +117,7 @@ func (reconciler *ApplicationReconciler) setConditionDeletionRequestReceived(ctx
 	application *applicationsamplev1beta1.Application) error {
 
 	if !reconciler.containsCondition(ctx, application, CONDITION_REASON_DELETION_REQUEST_RECEIVED) {
+		reconciler.Recorder.Event(application, corev1.EventTypeNormal, CONDITION_TYPE_DELETION_REQUEST_RECEIVED, CONDITION_MESSAGE_DELETION_REQUEST_RECEIVED)
 		return utilities.AppendCondition(ctx, reconciler.Client, application, CONDITION_TYPE_DELETION_REQUEST_RECEIVED, CONDITION_STATUS_TRUE,
 			CONDITION_REASON_DELETION_REQUEST_RECEIVED, CONDITION_MESSAGE_DELETION_REQUEST_RECEIVED)
 	}
@@ -129,6 +136,11 @@ func (reconciler *ApplicationReconciler) getConditionStatus(ctx context.Context,
 	return output
 }
 
+// Note: Status of DELETION_REQUEST_RECEIVED can only be True
+const CONDITION_TYPE_DELETECONDITION = "Update failed"
+const CONDITION_REASON_DELETECONDITION = "Update failed"
+const CONDITION_MESSAGE_DELETECONDITION = "Application resource status update failed."
+
 func (reconciler *ApplicationReconciler) deleteCondition(ctx context.Context, application *applicationsamplev1beta1.Application,
 	typeName string, reason string) error {
 
@@ -143,9 +155,9 @@ func (reconciler *ApplicationReconciler) deleteCondition(ctx context.Context, ap
 
 	err := reconciler.Client.Status().Update(ctx, application)
 	if err != nil {
-		log.Info("Application resource status update failed.")
+		log.Info(CONDITION_MESSAGE_DELETECONDITION)
+		reconciler.Recorder.Event(application, corev1.EventTypeWarning, CONDITION_REASON_DELETECONDITION, CONDITION_MESSAGE_DELETECONDITION)
 	}
-	reconciler.recorder.Event(application, "Warning", "Warning", "Application resource status update failed.")
 	return nil
 }
 

@@ -36,7 +36,7 @@ var countReconcileLaunched = prometheus.NewCounter(
 type ApplicationReconciler struct {
 	client.Client
 	Scheme   *runtime.Scheme
-	recorder record.EventRecorder
+	Recorder record.EventRecorder
 }
 
 //+kubebuilder:rbac:groups=database.sample.third.party,resources=databases,verbs=get;list;watch;create;update;patch;delete
