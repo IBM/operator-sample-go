@@ -155,7 +155,6 @@ func (reconciler *ApplicationReconciler) deleteCondition(ctx context.Context, ap
 
 	err := reconciler.Client.Status().Update(ctx, application)
 	if err != nil {
-		log.Info(CONDITION_MESSAGE_DELETECONDITION)
 		reconciler.Recorder.Event(application, corev1.EventTypeWarning, CONDITION_REASON_DELETECONDITION, CONDITION_MESSAGE_DELETECONDITION)
 	}
 	return nil
