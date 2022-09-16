@@ -23,7 +23,7 @@ export CI_CONFIG=$1
 export RESET=$2
 export VERSIONS_FILE=""
 export DATABASE_TEMPLATE_FOLDER=$ROOT_FOLDER/scripts/database-operator-templates
-export LOGFILE_NAME=script-automation-openshift.log
+export LOGFILE_NAME=demo-script-automation-openshift.log
 export TEMP_FOLDER=temp
 export SCRIPT_NAME=demo-openshift-operator-database.sh
 
