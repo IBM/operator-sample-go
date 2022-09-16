@@ -292,7 +292,6 @@ function buildApplicationOperatorBundle () {
 
 function buildApplicationOperatorCatalog () {
     startTimer
-    
     cd $ROOT_FOLDER/operator-application
 
     # make catalog-build CATALOG_IMG="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_CATALOG" BUNDLE_IMGS="$REGISTRY/$ORG/$IMAGE_APPLICATION_OPERATOR_BUNDLE"
@@ -322,20 +321,6 @@ function deployApplicationOperatorOLM () {
     INFO="deployApplicationOperatorOLM"
     customLog $TYPE $INFO
     startTimer
-
-    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml 
-    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
-
-    namespace=openshift-marketplace
-    kubectl get catalogsource operator-application-catalog -n $namespace -oyaml
-    kubectl get pods -n $namespace
-    kubectl get all -n $namespace
-
-    namespace=openshift-operators
-    kubectl get subscriptions operator-application-v0-0-1-sub -n $namespace -oyaml
-    kubectl get installplans -n $namespace
-    kubectl get pods -n $namespace
-    kubectl get all -n $namespace
 
     array=("operator-application-catalog")
     namespace=openshift-marketplace
@@ -396,7 +381,6 @@ function deployApplicationOperatorOLM () {
     kubectl get pods -n $namespace
     kubectl get all -n $namespace
     
-
     array=("operator-application-controller-manager" )
     namespace=openshift-operators
     export STATUS_SUCCESS="Running"
@@ -492,7 +476,7 @@ function verifyApplication() {
                         STATUS_CHECK='1/1'
                         STATUS_VERIFICATION=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $2;}' | sed 's/"//g' | sed 's/,//g')
                         if [ "$STATUS_VERIFICATION" = "$STATUS_CHECK" ]; then
-                            echo "$(date +'%F %H:%M:%S') Status: $PODNAME is Ready"
+                            echo "$(date +'%F %H:%M:%S') Status: $PODNAME($STATUS_VERIFICATION) is Ready"
                             echo "------------------------------------------------------------------------"
                             break
                         else

@@ -79,7 +79,27 @@ function logInit () {
     customLog "$TYPE" "$INFO"
 }
 
+function startTimer () {
+   export timerstart=$(date +%s)
+   echo "*** Timer start: [$timerstart]"
+   customLog "Timer start" "Start: [$timerstart]"
+}
+
+function endTimer () {
+
+    timerend=$(date +%s)
+    seconds=$(echo "$timerend - $timerstart" | bc)
+    TIMER=$(awk -v t=$seconds 'BEGIN{t=int(t*1000); printf "%d:%02d:%02d\n", t/3600000, t/60000%60, t/1000%60}')
+    echo "*** Timer end - duration: [$TIMER]"
+    customLog "Timer end" "Timer duration [$TIMER]"
+    
+}
+
 function setEnvironmentVariables () {
+    TYPE='function'
+    INFO="setEnvironmentVariables"
+    customLog $TYPE $INFO
+    startTimer
  
     if [[ $CI_CONFIG == "local" ]]; then
         echo "*** Set versions_local.env file as input"
@@ -101,9 +121,15 @@ function setEnvironmentVariables () {
         echo "*** sh $SCRIPT_NAME demo"
         exit 1
     fi
+
+    endTimer
 }
 
 function verifyPreReqs () {
+  TYPE='function'
+  INFO="verifyPreReqs"
+  customLog $TYPE $INFO
+  startTimer
 
   max_retrys=2
   j=0
@@ -138,9 +164,15 @@ function verifyPreReqs () {
             sleep 3
         done
     done 
+    endTimer
 }
 
 function configureCR_SimpleMicroservice () {
+    TYPE='function'
+    INFO="configureCR_SimpleMicroservice"
+    customLog $TYPE $INFO
+    startTimer
+
     oc new-project application-alpha 
     oc new-project application-beta
     IMAGE_NAME="$REGISTRY/$ORG/$IMAGE_MICROSERVICE"
@@ -151,6 +183,8 @@ function configureCR_SimpleMicroservice () {
 
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     sed "s+SIMPLE_APPLICATION_IMAGE+$IMAGE_NAME+g" $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-TEMPLATE.yaml > $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
+
+    endTimer
 }
 
 function createOLMApplicationOperatorYAMLs () {
@@ -160,19 +194,22 @@ function createOLMApplicationOperatorYAMLs () {
 }
 
 function deployApplicationOperatorOLM () {
-    # create catalog
-    namespace=openshift-marketplace
-    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml
-    kubectl get catalogsource operator-application-catalog -n $namespace -oyaml
+    TYPE='function'
+    INFO="deployApplicationOperatorOLM"
+    customLog $TYPE $INFO
+    startTimer
 
+    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-catalogsource.yaml 
+    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
+
+    namespace=openshift-marketplace
+    kubectl get catalogsource operator-application-catalog -n $namespace -oyaml
     kubectl get pods -n $namespace
     kubectl get all -n $namespace
 
-    # create subscription
     namespace=openshift-operators
-    kubectl create -f $ROOT_FOLDER/scripts/openshift-application-subscription.yaml
     kubectl get subscriptions operator-application-v0-0-1-sub -n $namespace -oyaml
-    
+    kubectl get installplans -n $namespace
     kubectl get pods -n $namespace
     kubectl get all -n $namespace
 
@@ -205,12 +242,15 @@ function deployApplicationOperatorOLM () {
                 sleep 3
             done
         done
+
+    namespace=openshift-marketplace
     kubectl get pods -n $namespace
     kubectl get all -n $namespace
     
     array=("operator-application.v0.0.1")
     namespace=openshift-operators
     search=installplans
+
     export STATUS_SUCCESS="true"
     for i in "${array[@]}"
         do 
@@ -234,6 +274,7 @@ function deployApplicationOperatorOLM () {
             done
         done
      
+    namespace=openshift-operators
     kubectl get pods -n $namespace
     kubectl get all -n $namespace
 
@@ -262,10 +303,16 @@ function deployApplicationOperatorOLM () {
                 sleep 3
             done
         done
+    endTimer
 }
 
 function createApplicationInstance () {
     echo "*** create application instances"
+    
+    TYPE='function'
+    INFO="createApplicationInstance"
+    customLog $TYPE $INFO
+    startTimer
     
     kubectl get pods -n openshift-operators | grep "application"
     kubectl create -f $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml -n application-beta
@@ -275,7 +322,8 @@ function createApplicationInstance () {
 
     cp $APPLICATION_TEMPLATE_FOLDER/application.sample_v1alpha1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1alpha1_application.yaml
     cp $APPLICATION_TEMPLATE_FOLDER/application.sample_v1beta1_application-BACKUP.yaml $ROOT_FOLDER/operator-application/config/samples/application.sample_v1beta1_application.yaml
-
+    
+    endTimer
 }
 
 function verifyApplication() {
@@ -315,7 +363,7 @@ function verifyApplication() {
                         STATUS_CHECK='1/1'
                         STATUS_VERIFICATION=$(kubectl get pods -n $namespace | grep "$FIND" | awk '{print $2;}' | sed 's/"//g' | sed 's/,//g')
                         if [ "$STATUS_VERIFICATION" = "$STATUS_CHECK" ]; then
-                            echo "$(date +'%F %H:%M:%S') Status: $PODNAME is Ready"
+                            echo "$(date +'%F %H:%M:%S') Status : $PODNAME($STATUS_VERIFICATION) is Ready"
                             echo "------------------------------------------------------------------------"
                             break
                         else
