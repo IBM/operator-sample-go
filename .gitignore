@@ -63,3 +63,4 @@ versions.env-baskup
 scripts/delete-all-kubernetes.log
 scripts/install-required-kubernetes.log
 scripts/application-operator-templates/kustomization.yaml-BACKUP
+operator-database-backup/kubernetes/secret-custom.yaml
