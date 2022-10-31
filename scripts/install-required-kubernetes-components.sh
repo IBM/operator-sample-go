@@ -5,6 +5,7 @@
 export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 export LOGFILE_NAME="install-required-kubernetes.log"
 export SCRIPTNAME="install-required-kubernetes.sh"
+export OLM_VERSION="v0.20.0"
 
 # **********************************************************************************
 # Functions
@@ -105,7 +106,7 @@ function installOLM () {
   INFO="installOLM"
   customLog $TYPE $INFO
 
-  curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/v0.20.0/install.sh | bash -s v0.20.0
+  curl -sL https://github.com/operator-framework/operator-lifecycle-manager/releases/download/$OLM_VERSION/install.sh | bash -s $OLM_VERSION
   kubectl get pods -n operators
   kubectl get pods -n olm
 
