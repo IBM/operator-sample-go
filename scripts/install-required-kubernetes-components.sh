@@ -6,6 +6,7 @@ export ROOT_FOLDER=$(cd $(dirname $0); cd ..; pwd)
 export LOGFILE_NAME="install-required-kubernetes.log"
 export SCRIPTNAME="install-required-kubernetes.sh"
 export OLM_VERSION="v0.20.0"
+export CERT_MANAGER_VERSION="v1.7.2"
 
 # **********************************************************************************
 # Functions
@@ -71,7 +72,7 @@ function installCertManager () {
   INFO="installCertManager"
   customLog $TYPE $INFO
 
-  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.7.2/cert-manager.yaml
+  kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/$CERT_MANAGER_VERSION/cert-manager.yaml
   kubectl get pods -n cert-manager
 
   array=("cert-manager-cainjector" "cert-manager-webhook")
